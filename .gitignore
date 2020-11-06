@@ -1,0 +1,10 @@
+.idea
+node_modules
+package-lock.json
+.server.js.swo
+.server.js.swp
+app-bundle.js
+*.js.tmp-browserify-67259692621136735191
+config.example.js
+keys/
+.package-lock.json.swp

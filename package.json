@@ -1,0 +1,23 @@
+{
+  "name": "docoex",
+  "version": "0.0.1",
+  "description": "DoCo Webex",
+  "main": "server.js",
+  "scripts": {
+    "start": "browserify client.js -o app-bundle.js; node server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "browserify": "^17.0.0",
+    "express": "^4.16.4",
+    "mediasoup": "^3.6.24",
+    "mediasoup-client": "^3.6.21",
+    "pm2": "^4.5.0",
+    "socket.io": "^2.2.0",
+    "socket.io-client": "^2.2.0"
+  },
+  "devDependencies": {
+    "requirejs": "^2.3.6"
+  }
+}
