@@ -5,9 +5,9 @@ const options = { /* ... */ };
 const io = require('socket.io')(server, options);
 const config = require('./config.js');
 
-const Room = require('./room.js');
-
-
+const createRoom = require('./require/createRoom.js');
+const existRoom = require('./require/existsRoom.js');
+const reqRoom = require('./require/rooms.js')
 
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
@@ -26,10 +26,10 @@ app.use(cors(corsOptions))
 
 
 let worker;
-let webServer;
-let socketServer;
-// Will store the room id and a room object where the room id is the router id
+global.worker = worker;
+
 let rooms = {};
+global.rooms = rooms;
 
 (async () => {
   try {
@@ -41,29 +41,9 @@ let rooms = {};
   }
 })();
 
-// REST api here
-app.get("/createRoom", async (req, res, next) => {
-  const mediaCodecs = config.mediasoup.router.mediaCodecs;
-  const mediasoupRouter = await worker.createRouter({ mediaCodecs });
-  // Might need to put below into database?
-  rooms[mediasoupRouter.id] = new Room(mediasoupRouter.id, mediasoupRouter);
-  res.json({roomId: mediasoupRouter.id, rs: rooms});
-});
-
-app.get("/roomExists", async (req, res, next) => {
-  const roomId = req.query.roomId;
-  // console.log(req.query);
-  res.json({ exists: roomId in rooms });
-  res.send('complete')
-});
-
-
-app.get('/room', async (req, res, next) => {
-  const roomId = req.query.roomId;
-  const data = rooms[roomId].getRouter().rtpCapabilities
-  //res.status(200).json(data)
-  res.render('index.html');
-})
+app.get('/createRoom', createRoom)
+app.get("/roomExists", existRoom)
+app.get('/room', reqRoom)
 
 // Socket IO routes here
 async function createIOServer() {
