@@ -47,6 +47,12 @@ app.get("/roomExists", async (req, res, next) => {
   res.json({ exists: roomId in rooms });
 });
 
+
+app.get('/room', async (req, res, next) => {
+  const roomId = req.query.roomId;
+  const data = rooms[roomId].getRouter().rtpCapabilities
+  res.status(200).json(data)
+})
 // Socket IO routes here
 async function createIOServer() {
   const roomNamespace = io.of('/rooms');
