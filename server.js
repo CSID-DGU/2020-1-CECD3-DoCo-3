@@ -2,7 +2,14 @@ const mediasoup = require('mediasoup');
 const http = require('http');
 const express = require('express');
 const socketIO = require('socket.io');
+const app = express();
 const config = require('./config');
+const cors = require('cors')
+const corsOptions = {
+  origin: 'http://localhost:3000',
+  optionsSuccessStatus: 200
+}
+app.use(cors(corsOptions))
 
 // Global variables
 let worker;
