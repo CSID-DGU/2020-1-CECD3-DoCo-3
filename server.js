@@ -3,6 +3,7 @@ const mediasoup = require('mediasoup');
 const app = require('express')();
 const server = require('http').createServer(app);
 const io = require('socket.io')(server, options);
+const options = { /* ... */ };
 const config = require('./config');
 const cors = require('cors')
 const corsOptions = {
