@@ -47,7 +47,7 @@ app.get("/createRoom", async (req, res, next) => {
   const mediasoupRouter = await worker.createRouter({ mediaCodecs });
   // Might need to put below into database?
   rooms[mediasoupRouter.id] = new Room(mediasoupRouter.id, mediasoupRouter);
-  res.json({roomId: mediasoupRouter.id, rs: rooms});
+  res.json({roomId: mediasoupRouter.id});
 });
 
 app.get("/roomExists", async (req, res, next) => {
