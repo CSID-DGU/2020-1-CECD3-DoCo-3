@@ -1,7 +1,6 @@
 const mediasoup = require('mediasoup-client');
 const socketClient = require('socket.io-client');
 const socketPromise = require('./lib/socket.io-promise').promise;
-const config = require('./config');
 
 const hostname = window.location.hostname;
 
@@ -37,7 +36,7 @@ async function connect() {
   $txtConnection.innerHTML = 'Connecting...';
 
   const opts = {
-    path: '/server',
+    path: '/rooms',
     transports: ['websocket'],
   };
 
