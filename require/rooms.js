@@ -1,4 +1,3 @@
-const mediasoup = require("mediasoup");
 const express = require('express');
 const router = express.Router();
 const Room = require('../room.js');
