@@ -13,7 +13,6 @@ let toRoom = []; //Room 저장하는 변수
 createBtn.addEventListener("submit", function(e){
 
     if(roomName.value === ''){
-
         alert("방 이름을 입력하시오!");
     }
     else{
