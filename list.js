@@ -1,16 +1,6 @@
-<<<<<<< HEAD
-=======
-
->>>>>>> 0e088dedcfdb50d5e19eb1c59fa0b291752d3ba6
 const createBtn = document.querySelector('.createButton'); //방 생성 버튼
 const roomName = document.querySelector('.createRoom'); //방 제목
 const roomList = document.querySelector('.roomList'); //방 리스트
-
-<<<<<<< HEAD
-
-
-=======
->>>>>>> 0e088dedcfdb50d5e19eb1c59fa0b291752d3ba6
 const TORM = "toRoom";
 let toRoom = []; //Room 저장하는 변수
 
