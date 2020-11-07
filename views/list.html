@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="mobile-web-app-capable" content="yes">
+  <link rel="icon" type="image/png" href="mediasoup.png" />
+  <title>Docoex home</title>
+</head>
+<style>
+
+body{
+
+  margin : 0;
+}
+
+.roomList {
+  list-style-type : none;
+  
+}
+
+li{
+
+  font-size: 24px;
+}
+
+a{
+   text-decoration:none;
+   color : black;
+}
+
+a:hover{
+
+  font-weight: bold;
+}
+
+.nav-container{
+
+  display : flex;
+  flex-direction:  row;
+  width : 100%;
+  margin: 0;
+  padding: 0;
+  background-color: white;
+  list-style-type: none;
+  box-shadow: 0 1px 3px 0 rgba(0,0,0,0.50);
+}
+
+.nav-item{
+
+  padding: 15px;
+
+}
+
+input[type=text] {
+  width: 60%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  box-sizing: border-box;
+}
+nav{
+
+  margin-bottom: 30px;
+
+}
+
+.content-box{
+
+  text-align: center;
+}
+
+.cBtn{
+
+
+  padding: 12px 20px;
+  margin: 8px 0;
+  box-sizing: border-box;
+  background-color: black;
+  color : white;
+  cursor: pointer;
+
+
+}
+
+.room-type{
+
+  margin-bottom: 10px;
+
+
+}
+
+</style>
+<body>
+
+<nav>
+  
+  <ul class = "nav-container">
+    <li class="nav-item">Docoex</li>
+
+  </ul>
+
+</nav>
+
+
+<div class="content-box">
+
+<form class="createButton" style="margin-bottom: 25px;">
+<label style="padding-right: 30px; font-weight: 700;">Create Room</label>
+  <input type="text" class="createRoom" size="100" placeholder="방 이름을 입력하시오">
+<button type="submit" class="cBtn">생성</button>
+</form>
+<hr style="color: #a0a0a0;">
+<p style="font-size: 24px; font-weight: 700;">Room List</p>
+<hr>
+<ul class="roomList"></ul>
+
+</div>
+
+<script src="/views/list.js"></script>
+</body>
+
+
+</html>

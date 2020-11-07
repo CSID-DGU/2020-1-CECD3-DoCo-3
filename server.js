@@ -8,6 +8,15 @@ const config = require('./config.js');
 const Room = require('./room.js');
 
 
+
+app.set('views', __dirname + '/views');
+app.set('view engine', 'ejs');
+app.engine('html', require('ejs').renderFile);
+
+app.get('/',function(req,res){
+  res.render('list.html')
+});
+
 const cors = require('cors')
 const corsOptions = {
   origin: 'http://localhost:3000',
@@ -38,7 +47,7 @@ app.get("/createRoom", async (req, res, next) => {
   const mediasoupRouter = await worker.createRouter({ mediaCodecs });
   // Might need to put below into database?
   rooms[mediasoupRouter.id] = new Room(mediasoupRouter.id, mediasoupRouter);
-  res.json({roomId: mediasoupRouter.id});
+  res.json({roomId: mediasoupRouter.id, rs: rooms});
 });
 
 app.get("/roomExists", async (req, res, next) => {
@@ -51,7 +60,8 @@ app.get("/roomExists", async (req, res, next) => {
 app.get('/room', async (req, res, next) => {
   const roomId = req.query.roomId;
   const data = rooms[roomId].getRouter().rtpCapabilities
-  res.status(200).json(data)
+  //res.status(200).json(data)
+  res.render('index.html');
 })
 // Socket IO routes here
 async function createIOServer() {
