@@ -30,11 +30,8 @@ createBtn.addEventListener("submit", function(e){
 function paintRoom(text){
 
     var list = document.createElement('li');
-<<<<<<< HEAD
-    list.innerHTML = `<a href='index.html?${text}'>${text}</a>`;
-=======
-    list.innerHTML = `<a href='index.html/${text}'>${text}</a>`;
->>>>>>> 0e088dedcfdb50d5e19eb1c59fa0b291752d3ba6
+    list.className = "room-type"
+    list.innerHTML = `<a  href='index.html?${text}'>${text}</a>`;
     roomList.appendChild(list);
 
     const RoomObj = {

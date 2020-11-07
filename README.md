@@ -10,10 +10,3 @@ WebRTC기반의 화상 회의에서 성능을 향상을 위한 새로운 구조�
 
 
 [웹사이트](https://docoex.page/)
-<<<<<<< HEAD
-=======
-
-
-
-
->>>>>>> 0e088dedcfdb50d5e19eb1c59fa0b291752d3ba6
