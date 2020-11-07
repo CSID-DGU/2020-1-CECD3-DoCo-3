@@ -7,7 +7,6 @@ const hostname = window.location.hostname;
 
 let device;
 let socket;
-let producer;
 
 const $ = document.querySelector.bind(document);
 const $fsPublish = $('#fs_publish');
