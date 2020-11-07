@@ -42,9 +42,9 @@ global.rooms = rooms;
   }
 })();
 
-app.get('/createRoom', createRoom)
-app.get("/roomExists", existRoom)
-app.get('/room', reqRoom)
+app.use('/createRoom', createRoom)
+app.use("/roomExists", existRoom)
+app.use('/room', reqRoom)
 
 // Socket IO routes here
 async function createIOServer() {
