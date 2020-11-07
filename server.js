@@ -42,7 +42,7 @@ global.rooms = rooms;
 })();
 
 // REST api here
-app.get("/createRoom", require('./require/createRoom.js'));
+app.use("/createRoom", require('./require/createRoom.js'));
 
 app.get("/roomExists", async (req, res, next) => {
   const roomId = req.query.roomId;
