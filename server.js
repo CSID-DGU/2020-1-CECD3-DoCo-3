@@ -1,14 +1,33 @@
 const mediasoup = require("mediasoup");
-const express = require('express');
-const app = express();
+const app = require('express')();
 const server = require('http').createServer(app);
 const options = { /* ... */ };
-const io = require('socket.io');
-const of = io(server, options);
+const io = require('socket.io')(server, options);
 const config = require('./config.js');
+
+const Room = require('./room.js');
+
+app.set('views', __dirname + '/views');
+app.set('view engine', 'ejs');
+app.engine('html', require('ejs').renderFile);
+
+app.get('/',function(req,res){
+  res.render('list.html')
+});
+
 const cors = require('cors')
-const corsOptions = { origin: 'http://localhost:3000', optionsSuccessStatus: 200 }
+const corsOptions = {
+  origin: 'http://localhost:3000',
+  optionsSuccessStatus: 200
+}
 app.use(cors(corsOptions))
+
+
+let worker;
+let webServer;
+let socketServer;
+// Will store the room id and a room object where the room id is the router id
+let rooms = {};
 
 (async () => {
   try {
@@ -20,24 +39,33 @@ app.use(cors(corsOptions))
   }
 })();
 
-app.set('views', __dirname + '/views');
-app.set('view engine', 'ejs');
-app.engine('html', require('ejs').renderFile);
+// REST api here
+app.get("/createRoom", async (req, res, next) => {
+  const mediaCodecs = config.mediasoup.router.mediaCodecs;
+  const mediasoupRouter = await worker.createRouter({ mediaCodecs });
+  // Might need to put below into database?
+  rooms[mediasoupRouter.id] = new Room(mediasoupRouter.id, mediasoupRouter);
+  res.json({roomId: mediasoupRouter.id});
+});
 
-let worker;
-global.worker = worker;
+app.get("/roomExists", async (req, res, next) => {
+  const roomId = req.query.roomId;
+  // console.log(req.query);
+  res.json({ exists: roomId in rooms });
+  res.send('complete')
+});
 
-let rooms = {};
-global.rooms = rooms;
 
-app.use('/createRoom', require('./require/createRoom.js'))
-app.use("/roomExists", require('./require/existsRoom.js'))
-app.use('/room', require('./require/rooms.js'))
-app.get('/', function(req,res){ res.render('list.html') });
+app.get('/room', async (req, res, next) => {
+  const roomId = req.query.roomId;
+  const data = rooms[roomId].getRouter().rtpCapabilities
+  //res.status(200).json(data)
+  res.render('index.html');
+})
 
 // Socket IO routes here
 async function createIOServer() {
-  const roomNamespace = of('/rooms');
+  const roomNamespace = io.of('/rooms');
   roomNamespace.on('connection', socket => { 
       console.log('Example app listening on port 3000!');
 
