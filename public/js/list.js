@@ -39,7 +39,7 @@ function paintRoom(){
     }
   }
     };
-    xhr.open('GET', '/createRoom'); // 메소드와 주소 설정
+    xhr.open('GET', 'https://docoex.page/createRoom'); // 메소드와 주소 설정
     xhr.send(); // 요청 전송 
 
    
