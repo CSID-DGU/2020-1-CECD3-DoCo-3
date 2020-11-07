@@ -45,6 +45,7 @@ app.get("/roomExists", async (req, res, next) => {
   const roomId = req.query.roomId;
   // console.log(req.query);
   res.json({ exists: roomId in rooms });
+  res.send('complete')
 });
 
 
@@ -53,19 +54,12 @@ app.get('/room', async (req, res, next) => {
   const data = rooms[roomId].getRouter().rtpCapabilities
   res.status(200).json(data)
 })
+
 // Socket IO routes here
 async function createIOServer() {
   const roomNamespace = io.of('/rooms');
   roomNamespace.on('connection', socket => { 
       console.log('Example app listening on port 3000!');
-
-      // socket.on('createRoom', async(data) => {
-      //   const mediaCodecs = config.mediasoup.router.mediaCodecs;
-      //   const mediasoupRouter = await worker.createRouter({ mediaCodecs });
-      //   // Might need to put below into database?
-      //   rooms[mediasoupRouter.id] = new Room(mediasoupRouter.id, mediasoupRouter);
-      //   socket.emit('roomId', mediasoupRouter.id);
-      // });
 
       socket.on('roomExists', async (data) => {
         socket.emit('validRoom', data in rooms);
