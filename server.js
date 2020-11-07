@@ -3,31 +3,12 @@ const express = require('express');
 const app = express();
 const server = require('http').createServer(app);
 const options = { /* ... */ };
-const io = require('socket.io')(server, options);
+const io = require('socket.io');
+const of = io(server, options);
 const config = require('./config.js');
-
-app.set('views', __dirname + '/views');
-app.set('view engine', 'ejs');
-app.engine('html', require('ejs').renderFile);
-
-app.get('/',function(req,res){
-  res.render('list.html')
-});
-
-let worker;
-global.worker = worker;
-
-let rooms = {};
-global.rooms = rooms;
-
 const cors = require('cors')
-const corsOptions = {
-  origin: 'http://localhost:3000',
-  optionsSuccessStatus: 200
-}
+const corsOptions = { origin: 'http://localhost:3000', optionsSuccessStatus: 200 }
 app.use(cors(corsOptions))
-
-
 
 (async () => {
   try {
@@ -39,13 +20,24 @@ app.use(cors(corsOptions))
   }
 })();
 
+app.set('views', __dirname + '/views');
+app.set('view engine', 'ejs');
+app.engine('html', require('ejs').renderFile);
+
+let worker;
+global.worker = worker;
+
+let rooms = {};
+global.rooms = rooms;
+
 app.use('/createRoom', require('./require/createRoom.js'))
 app.use("/roomExists", require('./require/existsRoom.js'))
 app.use('/room', require('./require/rooms.js'))
+app.get('/', function(req,res){ res.render('list.html') });
 
 // Socket IO routes here
 async function createIOServer() {
-  const roomNamespace = io.of('/rooms');
+  const roomNamespace = of('/rooms');
   roomNamespace.on('connection', socket => { 
       console.log('Example app listening on port 3000!');
 
