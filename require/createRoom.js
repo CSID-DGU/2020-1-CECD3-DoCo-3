@@ -3,7 +3,7 @@ const express = require('express');
 const router = express.Router();
 const Room = require('../room.js');
 
-router.post('/', async (req, res, next) => {
+router.get('/', async (req, res, next) => {
     const mediaCodecs = config.mediasoup.router.mediaCodecs;
     const mediasoupRouter = await worker.createRouter({ mediaCodecs });
     // Might need to put below into database?
