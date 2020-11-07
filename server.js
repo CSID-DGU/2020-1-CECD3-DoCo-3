@@ -1,22 +1,27 @@
 const mediasoup = require("mediasoup");
-const app = require('express')();
+var express = require('express');
+var app = express();
 const server = require('http').createServer(app);
 const options = { /* ... */ };
 const io = require('socket.io')(server, options);
 const config = require('./config.js');
-
 const Room = require('./room.js');
 
 
-
-app.set('views', __dirname + '/views');
+// view engine setup
 app.set('view engine', 'ejs');
-app.engine('html', require('ejs').renderFile);
+app.use(express.static(__dirname + '/public'));
 
-app.get('/',function(req,res){
-  res.render('list.html')
+app.get('/', function(req,res){ // 2
+  res.render('index', {});
 });
 
+app.get('/list', function(req,res){ // 2
+  res.render('list', {});
+});
+
+
+///구분
 const cors = require('cors')
 const corsOptions = {
   origin: 'http://localhost:3000',
