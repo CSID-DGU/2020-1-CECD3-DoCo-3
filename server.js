@@ -3,12 +3,6 @@ const http = require('http');
 const express = require('express');
 const socketIO = require('socket.io');
 const config = require('./config');
-const cors = require('cors')
-const corsOptions = {
-  origin: 'http://localhost:3000',
-  optionsSuccessStatus: 200
-}
-express.use(cors(corsOptions))
 
 // Global variables
 let worker;
