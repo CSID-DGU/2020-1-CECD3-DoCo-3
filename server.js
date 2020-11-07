@@ -13,6 +13,9 @@ app.get('/',function(req,res){
   res.render('/list.html')
 });
 
+app.set('','/');
+app.set('view engine', 'ejs');
+app.engine('html', require('ejs').renderFile);
 
 const cors = require('cors')
 const corsOptions = {
