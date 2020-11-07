@@ -42,21 +42,8 @@ global.rooms = rooms;
 
 // REST api here
 app.use("/createRoom", require('./require/createRoom.js'));
-
-app.get("/roomExists", async (req, res, next) => {
-  const roomId = req.query.roomId;
-  // console.log(req.query);
-  res.json({ exists: roomId in rooms });
-  res.send('complete')
-});
-
-
-app.get('/room', async (req, res, next) => {
-  const roomId = req.query.roomId;
-  const data = rooms[roomId].getRouter().rtpCapabilities
-  //res.status(200).json(data)
-  res.render('index.html');
-})
+app.use("/existRoom", require('./require/existsRoom.js'));
+app.use('/room', require('./require/rooms.js'));
 
 // Socket IO routes here
 async function createIOServer() {
