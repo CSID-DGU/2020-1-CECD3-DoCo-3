@@ -6,6 +6,12 @@ const io = require('socket.io')(server, options);
 const config = require('./config.js');
 
 const Room = require('./room.js');
+var router = require('./router/main')(app);
+
+
+app.get('/',function(req,res){
+  res.render('list.html')
+});
 
 
 const cors = require('cors')
@@ -51,7 +57,8 @@ app.get("/roomExists", async (req, res, next) => {
 app.get('/room', async (req, res, next) => {
   const roomId = req.query.roomId;
   const data = rooms[roomId].getRouter().rtpCapabilities
-  res.status(200).json(data)
+  //res.status(200).json(data)
+  res.render('index.html');
 })
 // Socket IO routes here
 async function createIOServer() {
