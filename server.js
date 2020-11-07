@@ -1,8 +1,7 @@
 const mediasoup = require('mediasoup');
 //const http = require('http');
-const app = express();
+const app = require('express')();
 const server = require('http').createServer(app);
-const express = require('express');
 const io = require('socket.io');
 const config = require('./config');
 const cors = require('cors')
@@ -14,7 +13,6 @@ app.use(cors(corsOptions))
 
 // Global variables
 let worker;
-let expressApp;
 let consumer;
 
 let rooms = {};
@@ -41,24 +39,6 @@ app.get("/roomExists", async (req, res, next) => {
   res.json({ exists: roomId in rooms });
 });
 
-async function runExpressApp() {
-  expressApp = express();
-  expressApp.use(express.json());
-  expressApp.use(express.static(__dirname));
-
-  expressApp.use((error, req, res, next) => {
-    if (error) {
-      console.warn('Express app error,', error.message);
-
-      error.status = error.status || (error.name === 'TypeError' ? 400 : 500);
-
-      res.statusMessage = error.message;
-      res.status(error.status).send(String(error));
-    } else {
-      next();
-    }
-  });
-}
 
 // Socket IO routes here
 async function createIOServer() {
