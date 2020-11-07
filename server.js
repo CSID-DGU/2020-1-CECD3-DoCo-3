@@ -6,6 +6,12 @@ const io = require('socket.io')(server, options);
 const config = require('./config.js');
 const Room = require('./room.js');
 
+let worker;
+global.worker = worker;
+
+let rooms = {};
+global.rooms = rooms;
+
 const createRoom = require('./require/createRoom.js');
 const existRoom = require('./require/existsRoom.js');
 const reqRoom = require('./require/rooms.js')
@@ -26,11 +32,6 @@ const corsOptions = {
 app.use(cors(corsOptions))
 
 
-let worker;
-global.worker = worker;
-
-let rooms = {};
-global.rooms = rooms;
 
 (async () => {
   try {
