@@ -1,13 +1,11 @@
 const mediasoup = require('mediasoup');
-const fs = require('fs');
 const http = require('http');
-const https = require('https');
 const express = require('express');
 const socketIO = require('socket.io');
 const config = require('./config');
 const cors = require('cors')
 const corsOptions = {
-  origin: 'http://localhost:4200',
+  origin: 'http://localhost:3000',
   optionsSuccessStatus: 200
 }
 express.use(cors(corsOptions))
@@ -23,9 +21,6 @@ let producerTransport;
 let consumerTransport;
 let mediasoupRouter;
 
-let worker;
-let webServer;
-let socketServer;
 let rooms = {};
 
 (async () => {
