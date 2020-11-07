@@ -9,13 +9,15 @@ const Room = require('./room.js');
 //var router = require('./router/main')(app);
 
 
-app.get('/',function(req,res){
-  res.render('/list.html')
-});
+
 
 app.set('','/');
 app.set('view engine', 'ejs');
 app.engine('html', require('ejs').renderFile);
+
+app.get('/',function(req,res){
+  res.render('./list.html')
+});
 
 const cors = require('cors')
 const corsOptions = {
@@ -61,7 +63,7 @@ app.get('/room', async (req, res, next) => {
   const roomId = req.query.roomId;
   const data = rooms[roomId].getRouter().rtpCapabilities
   //res.status(200).json(data)
-  res.render('/index.html');
+  res.render('./index.html');
 })
 // Socket IO routes here
 async function createIOServer() {
