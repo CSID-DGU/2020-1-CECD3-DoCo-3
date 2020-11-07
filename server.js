@@ -41,26 +41,10 @@ global.rooms = rooms;
 })();
 
 // REST api here
-<<<<<<< HEAD
-app.get("/createRoom", async (req, res, next) => {
-  const mediaCodecs = config.mediasoup.router.mediaCodecs;
-  const mediasoupRouter = await worker.createRouter({ mediaCodecs });
-  // Might need to put below into database?
-  rooms[mediasoupRouter.id] = new Room(mediasoupRouter.id, mediasoupRouter);
-  res.json({roomId: mediasoupRouter.id});
-});
-
-app.get("/roomExists", async (req, res, next) => {
-  const roomId = req.query.roomId;
-  // console.log(req.query);
-  res.json({ exists: roomId in rooms });
-});
-
-=======
 app.use("/createRoom", require('./require/createRoom.js'));
 app.use("/existRoom", require('./require/existsRoom.js'));
 app.use('/room', require('./require/rooms.js'));
->>>>>>> 6fbc96ad9b9a077405a4aafb40501f59f8800a86
+app.use('/searchRoom', require('./require/searchRoom.js'));
 
 // Socket IO routes here
 async function createIOServer() {
