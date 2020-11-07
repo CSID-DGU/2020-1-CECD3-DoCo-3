@@ -4,6 +4,7 @@ const server = require('http').createServer(app);
 const options = { /* ... */ };
 const io = require('socket.io')(server, options);
 const config = require('./config.js');
+const Room = require('./room.js');
 
 const createRoom = require('./require/createRoom.js');
 const existRoom = require('./require/existsRoom.js');

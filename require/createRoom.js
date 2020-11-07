@@ -1,6 +1,7 @@
-const config = require('./config.js');
+const config = require('../config.js');
 const express = require('express');
 const router = express.Router();
+const Room = require('./room.js');
 
 router.post('/', async (req, res, next) => {
     const mediaCodecs = config.mediasoup.router.mediaCodecs;
