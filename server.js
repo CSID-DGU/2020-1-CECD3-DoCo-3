@@ -2,9 +2,9 @@ const mediasoup = require('mediasoup');
 //const http = require('http');
 const app = require('express')();
 const server = require('http').createServer(app);
-const io = require('socket.io')(server, options);
 const options = { /* ... */ };
 const config = require('./config');
+const io = require('socket.io')(server, options);
 const cors = require('cors')
 const corsOptions = {
   origin: 'http://localhost:3000',
