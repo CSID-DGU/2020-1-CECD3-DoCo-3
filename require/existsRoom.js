@@ -1,11 +1,11 @@
-const express = require('express');
-const router = express.Router();
+// const express = require('express');
+// const router = express.Router();
 
-router.get('/', async (req, res, _) => {
-    const roomId = req.query.roomId;
-    // console.log(req.query);
-    res.json({ exists: roomId in rooms });
-    res.send('complete')
-});
+// router.get('/', async (req, res, _) => {
+//     const roomId = req.query.roomId;
+//     // console.log(req.query);
+//     res.json({ exists: roomId in rooms });
+//     res.send('complete')
+// });
 
-module.exports = router;
+// module.exports = router;
