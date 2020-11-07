@@ -24,10 +24,12 @@ app.use(cors(corsOptions))
 
 
 let worker;
+global.worker = worker;
 let webServer;
 let socketServer;
 // Will store the room id and a room object where the room id is the router id
 let rooms = {};
+global.rooms = rooms;
 
 (async () => {
   try {
@@ -40,13 +42,7 @@ let rooms = {};
 })();
 
 // REST api here
-app.get("/createRoom", async (req, res, next) => {
-  const mediaCodecs = config.mediasoup.router.mediaCodecs;
-  const mediasoupRouter = await worker.createRouter({ mediaCodecs });
-  // Might need to put below into database?
-  rooms[mediasoupRouter.id] = new Room(mediasoupRouter.id, mediasoupRouter);
-  res.json({roomId: mediasoupRouter.id});
-});
+app.get("/createRoom", require('./require/createRoom'));
 
 app.get("/roomExists", async (req, res, next) => {
   const roomId = req.query.roomId;
