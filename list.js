@@ -3,6 +3,8 @@ const roomName = document.querySelector('.createRoom'); //방 제목
 const roomList = document.querySelector('.roomList'); //방 리스트
 
 
+
+
 const TORM = "toRoom";
 let toRoom = []; //Room 저장하는 변수
 
@@ -16,10 +18,9 @@ createBtn.addEventListener("submit", function(e){
     }
     else{
 
-        sessionStorage.setItem('id',`host-${roomName.value}`);
-        paintRoom(roomName.value);     
-        roomName.value = '';
-        roomName.focus();
+        paintRoom();     
+      //  roomName.value = ''; 
+       // roomName.focus();
 
     }
 
@@ -27,54 +28,33 @@ createBtn.addEventListener("submit", function(e){
 });
 
 //룸 그리기 
-function paintRoom(text){
-
-    var list = document.createElement('li');
-    list.className = "room-type"
-    list.innerHTML = `<a  href='index.html?${text}'>${text}</a>`;
-    roomList.appendChild(list);
-
-    const RoomObj = {
-
-        name : text 
-    };
-
-    toRoom.push(RoomObj);
-    saveRoom();
-
-}
-
-//룸저장하기
-function saveRoom(){ //save localstorage 
-
-    localStorage.setItem(TORM, JSON.stringify(toRoom)); //js object를 string으로 변환 
-}
+function paintRoom(){
 
 
-//방 로딩
-function loadRoom(){
-
-    const loadedRoom = localStorage.getItem(TORM);
-
-    if(loadedRoom !== null){
-
-        const parseToRoom = JSON.parse(loadedRoom); //string -> object [{}, {}, {}]
-        parseToRoom.forEach(function(toDo){
-            paintRoom(toDo.name);
-        });
-
-
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function() { // 요청에 대한 콜백
+    if (xhr.readyState === xhr.DONE) { // 요청이 완료되면
+    if (xhr.status === 200 || xhr.status === 201) {
+      console.log(xhr.responseText);
     } else {
-
-
+      console.error(xhr.responseText);
     }
+  }
+    };
+    xhr.open('GET', '/createRoom'); // 메소드와 주소 설정
+    xhr.send(); // 요청 전송 
+
+   
 }
+
+
+
 
 
 //시작 시 방 로드 
 function init(){
 
-    loadRoom();
+    
 
 }
 

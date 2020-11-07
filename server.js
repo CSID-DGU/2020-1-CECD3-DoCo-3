@@ -5,6 +5,12 @@ const https = require('https');
 const express = require('express');
 const socketIO = require('socket.io');
 const config = require('./config');
+const cors = require('cors')
+const corsOptions = {
+  origin: 'http://localhost:4200',
+  optionsSuccessStatus: 200
+}
+express.use(cors(corsOptions))
 
 // Global variables
 let worker;
@@ -17,6 +23,11 @@ let producerTransport;
 let consumerTransport;
 let mediasoupRouter;
 
+let worker;
+let webServer;
+let socketServer;
+let rooms = {};
+
 (async () => {
   try {
     await runExpressApp();
@@ -27,6 +38,20 @@ let mediasoupRouter;
     console.error(err);
   }
 })();
+
+app.get("/createRoom", async (req, res, next) => {
+  const mediaCodecs = config.mediasoup.router.mediaCodecs;
+  const mediasoupRouter = await worker.createRouter({ mediaCodecs });
+
+  rooms[mediasoupRouter.id] = new Room(mediasoupRouter.id, mediasoupRouter);
+  res.json({roomId: mediasoupRouter.id});
+});
+
+app.get("/roomExists", async (req, res, next) => {
+  const roomId = req.query.roomId;
+  // console.log(req.query);
+  res.json({ exists: roomId in rooms });
+});
 
 async function runExpressApp() {
   expressApp = express();
