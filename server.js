@@ -24,7 +24,6 @@ app.use(cors(corsOptions))
 
 
 let worker;
-global.worker = worker;
 let webServer;
 let socketServer;
 // Will store the room id and a room object where the room id is the router id
@@ -306,7 +305,7 @@ async function runMediasoupWorker() {
     rtcMinPort: config.mediasoup.worker.rtcMinPort,
     rtcMaxPort: config.mediasoup.worker.rtcMaxPort,
   });
-
+  global.worker = worker;
   worker.on('died', () => {
     console.error('mediasoup worker died, exiting in 2 seconds... [pid:%d]', worker.pid);
     setTimeout(() => process.exit(1), 2000);
