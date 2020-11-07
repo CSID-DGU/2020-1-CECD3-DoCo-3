@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-router.get('/', async (req, res, next) => {
+router.get('/', async (req, res, _) => {
     const roomId = req.query.roomId;
     // console.log(req.query);
     res.json({ exists: roomId in rooms });

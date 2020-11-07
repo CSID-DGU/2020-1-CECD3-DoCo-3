@@ -5,17 +5,6 @@ const server = require('http').createServer(app);
 const options = { /* ... */ };
 const io = require('socket.io')(server, options);
 const config = require('./config.js');
-const Room = require('./room.js');
-
-let worker;
-global.worker = worker;
-
-let rooms = {};
-global.rooms = rooms;
-
-const createRoom = require('./require/createRoom.js');
-const existRoom = require('./require/existsRoom.js');
-const reqRoom = require('./require/rooms.js')
 
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
@@ -24,6 +13,12 @@ app.engine('html', require('ejs').renderFile);
 app.get('/',function(req,res){
   res.render('list.html')
 });
+
+let worker;
+global.worker = worker;
+
+let rooms = {};
+global.rooms = rooms;
 
 const cors = require('cors')
 const corsOptions = {
@@ -44,9 +39,9 @@ app.use(cors(corsOptions))
   }
 })();
 
-app.use('/createRoom', createRoom)
-app.use("/roomExists", existRoom)
-app.use('/room', reqRoom)
+app.use('/createRoom', require('./require/createRoom.js'))
+app.use("/roomExists", require('./require/existsRoom.js'))
+app.use('/room', require('./require/rooms.js'))
 
 // Socket IO routes here
 async function createIOServer() {

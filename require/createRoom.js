@@ -3,12 +3,12 @@ const express = require('express');
 const router = express.Router();
 const Room = require('../room.js');
 
-router.get('/', async (req, res, next) => {
+router.get('/', async (req, res, _) => {
     const mediaCodecs = config.mediasoup.router.mediaCodecs;
     const mediasoupRouter = await worker.createRouter({ mediaCodecs });
     // Might need to put below into database?
     rooms[mediasoupRouter.id] = new Room(mediasoupRouter.id, mediasoupRouter);
     res.json({roomId: mediasoupRouter.id, rs: rooms});
-  });
+});
 
 module.exports = router;
