@@ -2,8 +2,8 @@ const express = require('express');
 const router = express.Router();
 
 router.get('/', async (req, res, _) => {
-    rooms.delete(req.query.roomId);
+    console.log(rooms.indexOf(req.query.roomId))
     res.send('ERASE')
 });
 
-module.exports = router;
+module.exports = router
