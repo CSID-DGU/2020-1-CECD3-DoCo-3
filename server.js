@@ -1,28 +1,17 @@
 const mediasoup = require("mediasoup");
-var express = require('express');
-var app = express();
+const config = require('./config.js');
+const express = require('express');
+const app = express();
 const server = require('http').createServer(app);
 const options = { /* ... */ };
 const io = require('socket.io')(server, options);
-const config = require('./config.js');
+
 const Room = require('./room.js');
 
 
 // view engine setup
 app.set('view engine', 'ejs');
 app.use(express.static(__dirname + '/public'));
-
-app.get('/', function(req,res){ // 2
-  res.render('list', {});
-});
-
-app.get('/index', function(req,res){ // 2
-  res.render('index', {});
-});
-
-
-app.get('/')
-
 
 const cors = require('cors')
 const corsOptions = {
@@ -36,7 +25,7 @@ let worker;
 let webServer;
 let socketServer;
 // Will store the room id and a room object where the room id is the router id
-let rooms = {};
+let rooms = new Map();
 global.rooms = rooms;
 
 (async () => {
@@ -54,7 +43,10 @@ app.use("/createRoom",  require('./require/createRoom.js'));
 app.use("/existRoom",   require('./require/existsRoom.js'));
 app.use("/deleteRoom",  require('./require/deleteRoom.js'));
 app.use('/room',        require('./require/rooms.js'));
-app.use('/roomList', require('./require/roomList.js'));
+app.use('/roomList',    require('./require/roomList.js'));
+
+app.get('/', function(req,res){ res.render('index', {}); });
+app.get('/list', function(req,res){ res.render('list', {}); });
 
 
 // Socket IO routes here
@@ -107,14 +99,9 @@ async function createIOServer() {
   
       socket.on('createConsumerTransport', async (data) => {
         try {
-          const roomId = data.roomId;
           const producerTransportId = data.producerTransportId;
-          console.log('Creating Consumer Transport...');
           const { transport, params } = await createWebRtcTransport(roomId);
-          console.log('Created Consumer Transport!');
           rooms[roomId].addActiveConsumerTransport(transport, producerTransportId, data.parentProducerTransportId);
-          console.log('Current consumer Ids: ' + Object.keys(rooms[roomId].consumerTransports));
-          console.log('Just Created Id: ' + params.id);
           socket.emit('consumerTransportParameters', params);
         } catch (err) {
           console.error(err);

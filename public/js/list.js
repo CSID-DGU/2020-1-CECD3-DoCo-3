@@ -5,14 +5,12 @@ const roomList = document.querySelector('.roomList'); //방 리스트
 let Rnum = 1;
 //방 생성 시 
 createBtn.addEventListener("submit", function(e){
-
-    paintRoom();     
-    e.preventDefault();
+    paintRoom(); 
 });
 
 //룸 그리기 
 function paintRoom(){
-
+=
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function() { // 요청에 대한 콜백
     if (xhr.readyState === xhr.DONE) { // 요청이 완료되면
@@ -29,6 +27,7 @@ function paintRoom(){
 
    
 }
+
 
 
 function loadRoom(){
@@ -59,9 +58,7 @@ function loadRoom(){
 
 //시작 시 방 로드 
 function init(){
-
   loadRoom();    
-
 }
 
 init();
