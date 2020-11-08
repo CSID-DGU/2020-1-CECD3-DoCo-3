@@ -84,7 +84,7 @@ router.get('/', async (req, res, _) => {
     const roomId = req.query.roomId;
 
     const { transport, params } = await createWebRtcTransport(roomId);
-    rooms[roomId].addActiveConsumerTransport(transport, roomId + '_host', roomId + '_parents_host');
+    rooms[roomId].addActiveConsumerTransport(transport, roomId + '_host', roomId + '_host');
     console.log(rooms[roomId])
     const ctransport = await rooms[data.roomId].getActiveConsumerTransport(data.transportId).transport.connect({ dtlsParameters: data.dtlsParameters });
 
