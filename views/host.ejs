@@ -18,28 +18,18 @@
         <video id="local_video"  autoplay playsinline ></video>
         <video id="local_video"  autoplay playsinline ></video>
         
-        <div id=<%= rid %> class="rid"></div>
-        <div id=<%= pid %> class="pid"></div>
-        <form action='/host' method='POST' enctype='multipart/form-data'>
-            <font>a</font>
+        
+        <form action='/host' method='POST' enctype='multipart/form-data' name='stream_data'>
+            
             <video id="my_video" style="position: fixed; width: 400px; height: 300px; right: 0%; bottom: 0%" autoplay playsinline ></video>
+            <div id=<%= rid %> class="rid"></div>
+            <div id=<%= pid %> class="pid"></div>
         </form>
         <script type="text/javascript">
             navigator.mediaDevices.getUserMedia({video : true, audio: true}).then(function(stream){
                 document.querySelector('#my_video').srcObject = stream
-
-                var xhr = new XMLHttpRequest();
-                xhr.onreadystatechange = function() { // 요청에 대한 콜백
-                    if (xhr.readyState === xhr.DONE) { // 요청이 완료되면
-                        if (xhr.status === 200 || xhr.status === 201) {
-                            
-                        } else {
-                            console.error(xhr.responseText);
-                        }
-                    }
-                };
-                xhr.open('POST', 'https://docoex.page/host'); // 메소드와 주소 설정
-                xhr.send('stream=' + stream + '&roomId=' + document.querySelector('.rid').id + '&prodId=' + document.querySelector('.pid').id); 
+                let form = document.stream_data
+                form.submit;
             })
         </script>
     </body>
