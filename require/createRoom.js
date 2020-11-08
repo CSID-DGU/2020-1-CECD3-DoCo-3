@@ -32,7 +32,7 @@ router.get('/', async (req, res, _) => {
       currentRoom.addActiveProducerTransport({
         transport,
         params: {
-          id: roomId + '_host',
+          id: mediasoupRouter.id + '_host',
           iceParameters: transport.iceParameters,
           iceCandidates: transport.iceCandidates,
           dtlsParameters: transport.dtlsParameters
