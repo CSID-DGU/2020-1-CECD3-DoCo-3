@@ -205,50 +205,6 @@ async function createIOServer() {
 }
 
 
-async function createConsumer(producerTransportId, kind, rtpCapabilities, consumerTransportId, roomId) {
-  console.log("In createConsumer...");
-  console.log(Object.keys(rooms[roomId].getActiveConsumerTransports()));
-  console.log(consumerTransportId);
-  const producerTransport = rooms[roomId].getActiveProducerTransport(producerTransportId);
-  // console.log(producerTransport);
-  var producer = kind === "video" ? producerTransport.videoProducer : producerTransport.audioProducer;
-  if (!rooms[roomId].getRouter().canConsume(
-    {
-      producerId: producer.id,
-      rtpCapabilities,
-    })
-  ) {
-    console.error('cannot consume');
-    return;
-  }
-  try {
-    consumer = await rooms[roomId].getActiveConsumerTransport(consumerTransportId).transport.consume({
-      producerId: producer.id,
-      rtpCapabilities,
-      paused: producer.kind === 'video',
-      // paused: false,
-    });
-    rooms[roomId].addActiveConsumerToTransport(consumerTransportId, consumer);
-  } catch (error) {
-    console.error('consume failed', error);
-    return;
-  }
-
-  if (consumer.type === 'simulcast') {
-    await consumer.setPreferredLayers({ spatialLayer: 2, temporalLayer: 2 });
-  }
-
-  return {
-    producerId: producer.id,
-    producerTransportId: producerTransportId,
-    id: consumer.id,
-    consumerTransportId: consumerTransportId,
-    kind: consumer.kind,
-    rtpParameters: consumer.rtpParameters,
-    type: consumer.type,
-    producerPaused: consumer.producerPaused
-  };
-}
 
 
 async function runMediasoupWorker() {
