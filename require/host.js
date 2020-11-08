@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Room = require('../room.js');
-const navigator = require('navigator')
+const navigator = require('getusermedia');
 
 router.get('/', async (req, res, _) => {
     const roomId = req.query.roomId;
@@ -15,7 +15,7 @@ router.get('/', async (req, res, _) => {
 
 
     try {
-      stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      stream = await getUserMedia({ video: true });
       const track = stream.getVideoTracks()[0];
       const params = { track };
     //   if ($chkSimulcast.checked) {
