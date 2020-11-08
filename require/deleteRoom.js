@@ -3,8 +3,7 @@ const router = express.Router();
 
 router.get('/', async (req, res, _) => {
     const id = req.query.roomId
-    rooms.erase(id);
-    rooms.splice(idx, 1)
+    rooms.delete(id);
     res.send(rooms)
 });
 module.exports = router
