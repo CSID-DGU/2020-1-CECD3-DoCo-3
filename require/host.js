@@ -1,16 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-
-router.get('/', async (req, res, _) => {
-    const roomId = req.query.roomId;
-    const currentRoom = rooms[roomId]
-    if (currentRoom === undefined) { 
-        res.send('CANNOT FIND')
-        return 
-    }  
-    
-    let stream;
+let stream;
 
     try {
       stream = await navigator.mediaDevices.getUserMedia({ video: true , audio: true});
@@ -32,6 +23,16 @@ router.get('/', async (req, res, _) => {
             return
       //$txtPublish.innerHTML = 'failed';
     }
+
+router.get('/', async (req, res, _) => {
+    const roomId = req.query.roomId;
+    const currentRoom = rooms[roomId]
+    if (currentRoom === undefined) { 
+        res.send('CANNOT FIND')
+        return 
+    }  
+    
+    
     
     document.querySelector('#my_video').srcObject = await stream;
 
