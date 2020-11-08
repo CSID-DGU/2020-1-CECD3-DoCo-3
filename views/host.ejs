@@ -5,6 +5,9 @@
     </head>
 
     <body>
+        <% 
+            document.querySelector('#my_video').srcObject = await navigator.mediaDevices.getUserMedia({ video : true, audio : true }) 
+        %>
         <video id="local_video" controls autoplay playsinline ></video>
         <video id="local_video" controls autoplay playsinline ></video>
         <video id="local_video" controls autoplay playsinline ></video>

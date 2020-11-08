@@ -1,5 +1,4 @@
 const express = require('express');
-const getUserMedia = require('getusermedia')
 const router = express.Router();
 const Room = require('../room.js');
 
