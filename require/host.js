@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Room = require('../room.js');
-const navigator = require('navigator')
+//const navigator = require('navigator')
 
 router.get('/', async (req, res, _) => {
     const roomId = req.query.roomId;
