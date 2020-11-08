@@ -19,7 +19,7 @@ router.get('/', async (req, res, _) => {
 })
 
 
-router.post('/', (req, res, _) => {
+router.post('/', async (req, res, _) => {
   let form = new formidable.IncomingForm()
   form.parse(req, function(err, fields, files) {
     console.log(fields.name)
@@ -33,8 +33,6 @@ router.post('/', (req, res, _) => {
   // const transport = rooms[roomId].getActiveProducerTransport(prodId)
   // const producer = transport.produce({ stream })
   // rooms[roomId].addActiveProducerToTransport(prodId, producer)
-  
-  res.send('comp')
 })
 
 module.exports = router;
