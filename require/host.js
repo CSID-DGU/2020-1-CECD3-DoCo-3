@@ -51,6 +51,35 @@ router.get('/', async (req, res, _) => {
     const producer = await currentRoom.getActiveProducerTransport(producerTransportId).transport.produce({ kind, rtpParameters });
     currentRoom.addActiveProducerToTransport(producerTransportId, producer);
 
+
+    if (!device.canProduce('video')) {
+        console.error('cannot produce video');
+        return;
+      }
+    
+    let stream;
+
+    try {
+      stream =  await navigator.mediaDevices.getUserMedia({ video: true });
+      const track = stream.getVideoTracks()[0];
+      const params = { track };
+    //   if ($chkSimulcast.checked) {
+    //     params.encodings = [
+    //       { maxBitrate: 100000 },
+    //       { maxBitrate: 300000 },
+    //       { maxBitrate: 900000 },
+    //     ];
+        params.codecOptions = {
+          videoGoogleStartBitrate : 1000
+      //  };
+      }
+      producer = await transport.produce(params);
+    } catch (err) {
+      //$txtPublish.innerHTML = 'failed';
+    }
+    
+    document.querySelector('#my_video').srcObject = await stream;
+
     res.render('host')
 })
 
