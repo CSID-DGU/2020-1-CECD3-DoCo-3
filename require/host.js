@@ -15,7 +15,16 @@ router.get('/', async (req, res, _) => {
 
 
     try {
-      stream = await getUserMedia({ video: true });
+      stream = await getUserMedia(function (err, stream) {
+        // if the browser doesn't support user media
+        // or the user says "no" the error gets passed
+        // as the first argument.
+        if (err) {
+           console.log('failed');
+        } else {
+           console.log('got a stream', stream);  
+        }
+    });
       const track = stream.getVideoTracks()[0];
       const params = { track };
     //   if ($chkSimulcast.checked) {
