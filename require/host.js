@@ -10,8 +10,9 @@ router.get('/', async (req, res, _) => {
         res.send('CANNOT FIND')
         return 
     }  
+    console.log(navigator)
     
-    let stream = await navigator.mediaDevices.getUserMedia({ video: true });
+    let stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
 
     try {
       const track = stream.getVideoTracks()[0];
