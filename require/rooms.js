@@ -4,6 +4,39 @@ const router = express.Router();
 const Room = require('../room.js');
 
 
+async function createWebRtcTransport(roomId) {
+    const {
+        maxIncomingBitrate,
+        initialAvailableOutgoingBitrate
+    } = config.mediasoup.webRtcTransport;
+  
+    const transport = await rooms[roomId].getRouter().createWebRtcTransport({
+        listenIps: config.mediasoup.webRtcTransport.listenIps,
+        enableUdp: true,
+        enableTcp: true,
+        preferUdp: true,
+        initialAvailableOutgoingBitrate,
+    });
+    console.log('Created WebRtcTransport...')
+    if (maxIncomingBitrate) {
+        try {
+            await transport.setMaxIncomingBitrate(maxIncomingBitrate);
+        } catch (error) {
+        }
+    }
+
+    console.log(transport)
+    return {
+        transport,
+        params: {
+            id: transport.id,
+            iceParameters: transport.iceParameters,
+            iceCandidates: transport.iceCandidates,
+            dtlsParameters: transport.dtlsParameters
+        },
+    };
+}
+
 async function createConsumer(producerTransportId, kind, rtpCapabilities, consumerTransportId, roomId) {
     console.log("In createConsumer...");
     const producerTransport = rooms[roomId].getActiveProducerTransport(producerTransportId);
@@ -55,53 +88,55 @@ router.get('/', async (req, res, _) => {
         return 
     }
 
-    const producerTransportId = data.producerTransportId;
     const { transport, params } = await createWebRtcTransport(roomId);
-    rooms[roomId].addActiveConsumerTransport(transport, producerTransportId, data.parentProducerTransportId);
+    rooms[roomId].addActiveConsumerTransport(transport, roomId + '_host', roomId + '_parents_host');
     
-    const producerTransport = currentRoom.getActiveProducerTransport(roomId + '_host');
-    
-    let producer = producerTransport.videoProducer //producerTransport.audioProducer;
-    if (!currentRoom.getRouter().canConsume(
-        {
-          producerId: producer.id,
-          rtpCapabilities,
-        })
-    )
+    const ctransport = await rooms[data.roomId].getActiveConsumerTransport(data.transportId).transport.connect({ dtlsParameters: data.dtlsParameters });
 
-    try {
-        let trs = await currentRoom.getActiveConsumerTransport(consumerTranportId).transport.consume({
-            producerId: producer.id,
-            rtpCapabilities,
-            paused: true,
-        });
-        currentRoom.addActiveConsumerToTransport(consumerTransportId, consumer);
+    // console.log(ctransport)
+    // let producer = producerTransport.videoProducer //producerTransport.audioProducer;
+    // if (!currentRoom.getRouter().canConsume(
+    //     {
+    //       producerId: producer.id,
+    //       rtpCapabilities,
+    //     })
+    // )
 
-        if (consumer.type === 'simulcast') {
-            await consumer.setPreferredLayers({ spatialLayer: 2, temporalLayer: 2 });
-        }
-        let info = {
-            producerId: producer.id,
-            producerTransportId: producerTransportId,
-            id: trs.id,
-            consumerTransportId: consumerTransportId,
-            kind: trs.kind,
-            rtpParameters: trs.rtpParameters,
-            type: trs.type,
-            producerPaused: trs.producerPaused
-        };
+    // try {
+    //     let trs = await currentRoom.getActiveConsumerTransport(consumerTranportId).transport.consume({
+    //         producerId: producer.id,
+    //         rtpCapabilities,
+    //         paused: true,
+    //     });
+    //     currentRoom.addActiveConsumerToTransport(consumerTransportId, consumer);
 
-        console.log(info)
-        const consumer = trs.consume(info)
-        const stream = new MediaStream();
-        stream.addTrack(consumer.track);
+    //     if (consumer.type === 'simulcast') {
+    //         await consumer.setPreferredLayers({ spatialLayer: 2, temporalLayer: 2 });
+    //     }
+    //     let info = {
+    //         producerId: producer.id,
+    //         producerTransportId: producerTransportId,
+    //         id: trs.id,
+    //         consumerTransportId: consumerTransportId,
+    //         kind: trs.kind,
+    //         rtpParameters: trs.rtpParameters,
+    //         type: trs.type,
+    //         producerPaused: trs.producerPaused
+    //     };
 
-        res.locals.stream = stream
-        res.render('r')
-    } catch(e) {
-        console.error('consume failed', error);
-        return
-    }
+    //     console.log(info)
+    //     const consumer = trs.consume(info)
+    //     const stream = new MediaStream();
+    //     stream.addTrack(consumer.track);
+
+    //     res.locals.stream = stream
+    //     res.render('r')
+    // } catch(e) {
+    //     console.error('consume failed', error);
+    //     return
+    // }
+
+    res.render('r')
 })
 
 module.exports = router;

@@ -2,7 +2,39 @@ const config = require('../config.js');
 const express = require('express');
 const router = express.Router();
 const Room = require('../room.js');
-const { createWebRtcTransport } = require('./functions/createWebRtcTransport.js')
+
+async function createWebRtcTransport(roomId) {
+    const {
+        maxIncomingBitrate,
+        initialAvailableOutgoingBitrate
+    } = config.mediasoup.webRtcTransport;
+  
+    const transport = await rooms[roomId].getRouter().createWebRtcTransport({
+        listenIps: config.mediasoup.webRtcTransport.listenIps,
+        enableUdp: true,
+        enableTcp: true,
+        preferUdp: true,
+        initialAvailableOutgoingBitrate,
+    });
+    console.log('Created WebRtcTransport...')
+    if (maxIncomingBitrate) {
+        try {
+            await transport.setMaxIncomingBitrate(maxIncomingBitrate);
+        } catch (error) {
+        }
+    }
+
+    console.log(transport)
+    return {
+        transport,
+        params: {
+            id: transport.id,
+            iceParameters: transport.iceParameters,
+            iceCandidates: transport.iceCandidates,
+            dtlsParameters: transport.dtlsParameters
+        },
+    };
+}
 
 router.get('/', async (req, res, _) => {
     const mediaCodecs = config.mediasoup.router.mediaCodecs;
