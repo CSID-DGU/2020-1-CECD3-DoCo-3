@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Room = require('../room.js');
+const formidable = require('formidable')
 
 router.get('/', async (req, res, _) => {
     const roomId = req.query.roomId;
@@ -19,16 +20,8 @@ router.get('/', async (req, res, _) => {
 
 
 router.post('/', (req, res, _) => {
-  console.log(req.body)
-  const stream = req.body.stream
-  const prodId = req.body.prodId
-  const roomId = req.body.roomId
-
-  if (rooms[roomId] === undefined) { 
-      res.send('CANNOT FIND')
-      return 
-  }  
-
+  let form = new formidable.IncomingForm()
+  console.log(form)
   const transport = rooms[roomId].getActiveProducerTransport(prodId)
   const producer = transport.produce({ stream })
   rooms[roomId].addActiveProducerToTransport(prodId, producer)
