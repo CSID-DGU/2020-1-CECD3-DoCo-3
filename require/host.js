@@ -9,11 +9,6 @@ router.get('/', async (req, res, _) => {
         res.send('CANNOT FIND')
         return 
     }  
-
-    if (!device.canProduce('video')) {
-        console.error('cannot produce video');
-        return;
-      }
     
     let stream;
 
