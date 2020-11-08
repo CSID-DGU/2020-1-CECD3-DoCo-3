@@ -47,7 +47,6 @@ app.use('/roomList',    require('./require/roomList.js'));
 app.get('/', function(req,res){ res.render('index', {}); });
 app.get('/list', function(req,res){ res.render('list', {}); });
 
-
 // Socket IO routes here
 async function createIOServer() {
   const roomNamespace = io.of('/rooms');

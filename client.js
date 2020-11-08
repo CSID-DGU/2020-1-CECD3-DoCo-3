@@ -33,7 +33,7 @@ if (typeof navigator.mediaDevices.getDisplayMedia === 'undefined') {
 
 async function connect() {
   $btnConnect.disabled = true;
-  $txtConnection.innerHTML = 'Connecting...';
+  $txtConnection.innerHTML = 'Connecting...'; // delete
 
   const opts = {
     path: '/rooms',
