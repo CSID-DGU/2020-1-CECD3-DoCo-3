@@ -13,27 +13,9 @@ router.get('/', async (req, res, _) => {
     
     let stream;
 
-    async function getUserMedia(transport, isWebcam) {
-        if (!device.canProduce('video')) {
-          console.error('cannot produce video');
-          return;
-        }
-      
-        let stream;
-        try {
-          stream = isWebcam ?
-            await navigator.mediaDevices.getUserMedia({ video: true }) :
-            await navigator.mediaDevices.getDisplayMedia({ video: true });
-        } catch (err) {
-          console.error('getUserMedia() failed:', err.message);
-          throw err;
-        }
-        return stream;
-      }
-
 
     try {
-      stream =  await navigator.mediaDevices.getUserMedia({ video: true });
+      stream = await navigator.mediaDevices.getUserMedia({ video: true });
       const track = stream.getVideoTracks()[0];
       const params = { track };
     //   if ($chkSimulcast.checked) {
