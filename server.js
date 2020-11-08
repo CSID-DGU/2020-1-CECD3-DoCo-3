@@ -54,8 +54,7 @@ app.use("/deleteRoom",  require('./require/deleteRoom.js'));
 app.use('/room',        require('./require/rooms.js'));
 app.use('/roomList',    require('./require/roomList.js'));
 
-app.get('/', function(req,res){ res.render('index', {}); });
-app.get('/list', function(req,res){ res.render('list', {}); });
+app.get('/', function(req,res){ res.render('list', {}); });
 
 // Socket IO routes here
 async function createIOServer() {
