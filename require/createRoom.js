@@ -24,6 +24,7 @@ async function createWebRtcTransport(roomId) {
         }
     }
 
+    console.log(transport.id)
     return {
         transport,
         params: {

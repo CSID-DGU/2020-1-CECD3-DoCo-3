@@ -17,7 +17,7 @@ async function createWebRtcTransport(roomId) {
         preferUdp: true,
         initialAvailableOutgoingBitrate,
     });
-    console.log('Created WebRtcTransport...')
+
     if (maxIncomingBitrate) {
         try {
             await transport.setMaxIncomingBitrate(maxIncomingBitrate);
@@ -25,7 +25,6 @@ async function createWebRtcTransport(roomId) {
         }
     }
 
-    console.log(transport)
     return {
         transport,
         params: {
@@ -39,6 +38,7 @@ async function createWebRtcTransport(roomId) {
 
 async function createConsumer(producerTransportId, kind, rtpCapabilities, consumerTransportId, roomId) {
     console.log("In createConsumer...");
+    console.log(rooms[roomId].getActiveProducerTransports())
     const producerTransport = rooms[roomId].getActiveProducerTransport(producerTransportId);
     var producer = kind === "video" ? producerTransport.videoProducer : producerTransport.audioProducer;
     if (!rooms[roomId].getRouter().canConsume(
