@@ -8,13 +8,12 @@ router.get('/', async (req, res, _) => {
     const mediasoupRouter = await worker.createRouter({ mediaCodecs });
     // Might need to put below into database?
     rooms[mediasoupRouter.id] = new Room(mediasoupRouter.id, mediasoupRouter);
-    const currentRoom = rooms[mediasoupRouter.id]
 
     const {
         maxIncomingBitrate,
         initialAvailableOutgoingBitrate
     } = config.mediasoup.webRtcTransport;
-      const transport = currentRoom.getRouter().createWebRtcTransport({
+      const transport = rooms[mediasoupRouter.id].getRouter().createWebRtcTransport({
         listenIps: config.mediasoup.webRtcTransport.listenIps,
         enableUdp: true,
         enableTcp: true,
@@ -29,7 +28,7 @@ router.get('/', async (req, res, _) => {
         }
       }
   
-      currentRoom.addActiveProducerTransport({
+      rooms[mediasoupRouter.id].addActiveProducerTransport({
         transport,
         params: {
           id: mediasoupRouter.id + '_host',
@@ -39,7 +38,7 @@ router.get('/', async (req, res, _) => {
         }
       });
   
-    console.log(currentRoom.getActiveProducerTransport(mediasoupRouter.id + '_host'))
+    console.log(rooms[mediasoupRouter.id].getActiveProducerTransport(mediasoupRouter.id + '_host'))
     res.json({roomId: mediasoupRouter.id});
 });
 
