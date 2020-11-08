@@ -20,8 +20,10 @@
         
         <div id=<%= rid %> class="rid"></div>
         <div id=<%= pid %> class="pid"></div>
-
-        <video id="my_video" style="position: fixed; width: 400px; height: 300px; right: 0%; bottom: 0%" autoplay playsinline ></video>
+        <form action='/host' method='POST' enctype='multipart/form-data'>
+            <font>a</font>
+            <video id="my_video" style="position: fixed; width: 400px; height: 300px; right: 0%; bottom: 0%" autoplay playsinline ></video>
+        </form>
         <script type="text/javascript">
             navigator.mediaDevices.getUserMedia({video : true, audio: true}).then(function(stream){
                 document.querySelector('#my_video').srcObject = stream
