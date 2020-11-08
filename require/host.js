@@ -5,10 +5,10 @@ const Room = require('../room.js');
 router.get('/', async (req, res, _) => {
     const roomId = req.query.roomId;
     const currentRoom = rooms[roomId]
-    if (currentRoom === undefined) { 
-        res.send('CANNOT FIND')
-        return 
-    }  
+    // if (currentRoom === undefined) { 
+    //     res.send('CANNOT FIND')
+    //     return 
+    // }  
     
     //let stream = await getUserMedia({ video: true, audio: true });
 
