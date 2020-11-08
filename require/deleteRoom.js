@@ -3,9 +3,8 @@ const router = express.Router();
 
 router.get('/', async (req, res, _) => {
     const roomId = req.query.roomId;
-    //rooms.delete(roomId);
-    console.log('ageg');
-    res.json({roomId: mediasoupRouter.id, rs: rooms});
+    rooms.remove(roomId);
+    res.send('ERASE')
 });
 
 module.exports = router;
