@@ -82,15 +82,10 @@ async function createConsumer(producerTransportId, kind, rtpCapabilities, consum
 
 router.get('/', async (req, res, _) => {
     const roomId = req.query.roomId;
-    const currentRoom = rooms[roomId]
-    if (currentRoom === undefined) { 
-        res.send('CANNOT FIND')
-        return 
-    }
 
     const { transport, params } = await createWebRtcTransport(roomId);
     rooms[roomId].addActiveConsumerTransport(transport, roomId + '_host', roomId + '_parents_host');
-    
+    console.log(rooms[roomId])
     const ctransport = await rooms[data.roomId].getActiveConsumerTransport(data.transportId).transport.connect({ dtlsParameters: data.dtlsParameters });
 
     // console.log(ctransport)
