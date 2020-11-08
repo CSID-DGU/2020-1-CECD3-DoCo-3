@@ -2,9 +2,6 @@ const express = require('express');
 const router = express.Router();
 const Room = require('../room.js');
 
-
-const hostname = window.location.hostname;
-
 router.get('/', async (req, res, _) => {
     const roomId = req.query.roomId;
     const currentRoom = rooms[roomId]
