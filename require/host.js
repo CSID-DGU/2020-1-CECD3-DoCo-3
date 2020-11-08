@@ -13,7 +13,7 @@ router.get('/', async (req, res, _) => {
     let stream;
 
     try {
-      stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      stream = await navigator.mediaDevices.getUserMedia({ video: true , audio: true});
       const track = stream.getVideoTracks()[0];
       const params = { track };
     //   if ($chkSimulcast.checked) {
