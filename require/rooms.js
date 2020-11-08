@@ -86,9 +86,9 @@ router.get('/', async (req, res, _) => {
 
     const { transport, params } = await createWebRtcTransport(roomId);
     rooms[roomId].addActiveConsumerTransport(transport, prodId, prodId);
-    console.log(rooms[roomId])
+    
     const ctransport = await rooms[data.roomId].getActiveConsumerTransport(data.transportId).transport.connect({ dtlsParameters: data.dtlsParameters });
-
+    console.log(ctransport)
     // console.log(ctransport)
     // let producer = producerTransport.videoProducer //producerTransport.audioProducer;
     // if (!currentRoom.getRouter().canConsume(
