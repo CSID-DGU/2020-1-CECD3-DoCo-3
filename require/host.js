@@ -11,13 +11,13 @@ router.get('/', async (req, res, _) => {
         return 
     }
 
-     function createWebRtcTransport(roomId) {
+    async function createWebRtcTransport(roomId) {
         const {
           maxIncomingBitrate,
           initialAvailableOutgoingBitrate
         } = config.mediasoup.webRtcTransport;
       
-        const transport =  currentRoom.getRouter().createWebRtcTransport({
+        const transport = await currentRoom.getRouter().createWebRtcTransport({
           listenIps: config.mediasoup.webRtcTransport.listenIps,
           enableUdp: true,
           enableTcp: true,
@@ -27,7 +27,7 @@ router.get('/', async (req, res, _) => {
         console.log('Created WebRtcTransport...')
         if (maxIncomingBitrate) {
           try {
-             transport.setMaxIncomingBitrate(maxIncomingBitrate);
+            await transport.setMaxIncomingBitrate(maxIncomingBitrate);
           } catch (error) {
           }
         }
