@@ -44,6 +44,7 @@ router.get('/', async (req, res, _) => {
 
     const { transport, params } = await createWebRtcTransport(mediasoupRouter.id)
     rooms[mediasoupRouter.id].addActiveProducerTransport(transport);
+    
     res.json({roomId: mediasoupRouter.id});
 });
 
