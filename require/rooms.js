@@ -20,7 +20,7 @@ router.get('/', async (req, res, _) => {
     )
 
     try {
-        let trs = await currentRoom.getActiveConsumerTransport(consumerTransportId).transport.consume({
+        let trs = await currentRoom.getActiveConsumerTransport(consumerTranportId).transport.consume({
             producerId: producer.id,
             rtpCapabilities,
             paused: true,

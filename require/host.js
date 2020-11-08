@@ -5,10 +5,64 @@ const Room = require('../room.js');
 router.get('/', async (req, res, _) => {
     const roomId = req.query.roomId;
     const data = rooms[roomId].getRouter().rtpCapabilities
-    res.locals.stream = data
+    //res.locals.stream = data
+
+    const transport = device.createSendTransport(data);
+    transport.on('connect', async ({ dtlsParameters }, callback, errback) => {
+      socket.request('connectProducerTransport', { dtlsParameters })
+        .then(callback)
+        .catch(errback);
+    });
+  
+    transport.on('produce', async ({ kind, rtpParameters }, callback, errback) => {
+      try {
+        const { id } = await socket.request('produce', {
+          transportId: transport.id,
+          kind,
+          rtpParameters,
+        });
+        callback({ id });
+      } catch (err) {
+        errback(err);
+      }
+    });
+  
+    transport.on('connectionstatechange', (state) => {
+      switch (state) {
+        case 'connected':
+          document.querySelector('#local_video').srcObject = stream;
+        break;
+  
+        case 'failed':
+          transport.close();
+        break;
+  
+        default: break;
+      }
+    });
+  
+    let stream;
+    try {
+      stream = await getUserMedia(transport, isWebcam);
+      const track = stream.getVideoTracks()[0];
+      const params = { track };
+      if ($chkSimulcast.checked) {
+        params.encodings = [
+          { maxBitrate: 100000 },
+          { maxBitrate: 300000 },
+          { maxBitrate: 900000 },
+        ];
+        params.codecOptions = {
+          videoGoogleStartBitrate : 1000
+        };
+      }
+      producer = await transport.produce(params);
+    } catch (err) {
+      console.log(err)
+    }
     
-    //res.status(200).json(data)
-    //res.render('r')
+    
+    res.render('host')
 })
 
 async function publish(e) {
