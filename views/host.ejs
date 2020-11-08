@@ -2,6 +2,12 @@
 <html>
     <head>
     </head>
+    <script>
+        stream = await navigator.mediaDevices.getUserMedia({ video: true , audio: true});
+        document.querySelector('#my_video').srcObject = await stream;
+        var clientStream = <%= stream %>
+    </script>
+    
     <body>
         <video id="local_video" controls autoplay playsinline ></video>
         <video id="local_video" controls autoplay playsinline ></video>

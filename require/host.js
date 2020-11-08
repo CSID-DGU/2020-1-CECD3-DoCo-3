@@ -8,31 +8,22 @@ router.get('/', async (req, res, _) => {
         res.send('CANNOT FIND')
         return 
     }  
-    
-    let stream;
 
-    // try {
+    try {
       
-    //   const track = stream.getVideoTracks()[0];
-    //   const params = { track };
-    // //   if ($chkSimulcast.checked) {
-    // //     params.encodings = [
-    // //       { maxBitrate: 100000 },
-    // //       { maxBitrate: 300000 },
-    // //       { maxBitrate: 900000 },
-    // //     ];
-    //     params.codecOptions = {
-    //       videoGoogleStartBitrate : 1000
-    //   //  };
-    //   }
-    //   producer = await currentRoom.getActiveProducerTransport().produce(params);
-    // } catch (err) {
-    //     console.log(err)
-    //         return
-    //   //$txtPublish.innerHTML = 'failed';
-    // }
+      const track = clientStream.getVideoTracks()[0];
+      const params = { track };
+        params.codecOptions = {
+          videoGoogleStartBitrate : 1000
+      }
+      producer = await currentRoom.getActiveProducerTransport().produce(params);
+    } catch (err) {
+        console.log(err)
+            return
+      //$txtPublish.innerHTML = 'failed';
+    }
     
-    // document.querySelector('#my_video').srcObject = await stream;
+    
 
     res.render('host')
 })
