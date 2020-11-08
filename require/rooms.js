@@ -10,6 +10,7 @@ router.get('/', async (req, res, _) => {
         res.send('CANNOT FIND')
         return 
     }
+    
     const producerTransport = currentRoom.getActiveProducerTransport(roomId + '_host');
     let producer = producerTransport.videoProducer //producerTransport.audioProducer;
     if (!currentRoom.getRouter().canConsume(
