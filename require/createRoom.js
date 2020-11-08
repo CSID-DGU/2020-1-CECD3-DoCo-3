@@ -14,7 +14,7 @@ router.get('/', async (req, res, _) => {
         maxIncomingBitrate,
         initialAvailableOutgoingBitrate
     } = config.mediasoup.webRtcTransport;
-      const transport = await currentRoom.getRouter().createWebRtcTransport({
+      const transport = currentRoom.getRouter().createWebRtcTransport({
         listenIps: config.mediasoup.webRtcTransport.listenIps,
         enableUdp: true,
         enableTcp: true,
