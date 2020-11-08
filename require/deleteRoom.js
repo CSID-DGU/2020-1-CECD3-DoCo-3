@@ -3,8 +3,7 @@ const router = express.Router();
 
 router.get('/', async (req, res, _) => {
     const roomId = req.query.roomId;
-    rooms.delete(roomId);
-    console.log('ageg');
+    console.log(typeof rooms)
     res.json({roomId: mediasoupRouter.id, rs: rooms});
 });
 
