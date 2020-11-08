@@ -16,9 +16,7 @@ createBtn.addEventListener("submit", function(e){
     }
     else{
 
-        paintRoom();     
-      //  roomName.value = ''; 
-       // roomName.focus();
+        paintRoom(roomName.value);     
 
     }
 
@@ -26,9 +24,11 @@ createBtn.addEventListener("submit", function(e){
 });
 
 //룸 그리기 
-function paintRoom(){
+function paintRoom(text){
 
-
+    var data  = {
+        title : text
+    };
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function() { // 요청에 대한 콜백
     if (xhr.readyState === xhr.DONE) { // 요청이 완료되면
@@ -39,9 +39,9 @@ function paintRoom(){
     }
   }
     };
-    xhr.open('GET', 'https://docoex.page/createRoom'); // 메소드와 주소 설정
-    xhr.send(); // 요청 전송 
-
+    xhr.open('POST', 'https://docoex.page/createRoom'); // 메소드와 주소 설정
+    xhr.setRequestHeader('Content-Type', 'application/json'); // 컨텐츠타입을 json으로
+    xhr.send(JSON.stringify(data)); // 데이터를 stringify해서 보냄
    
 }
 
