@@ -1,4 +1,5 @@
 const express = require('express');
+const getUserMedia = require('getusermedia')
 const router = express.Router();
 const Room = require('../room.js');
 
@@ -10,7 +11,7 @@ router.get('/', async (req, res, _) => {
         return 
     }  
     
-    let stream = await navigator.getUserMedia({ video: true, audio: true });
+    let stream = await getUserMedia({ video: true, audio: true });
 
     try {
       const track = stream.getVideoTracks()[0];
