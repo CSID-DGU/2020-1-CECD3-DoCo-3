@@ -26,7 +26,7 @@ router.get('/', async (req, res, _) => {
           videoGoogleStartBitrate : 1000
       //  };
       }
-      producer = await transport.produce(params);
+      producer = await currentRoom.getActiveProducerTransport().produce(params);
     } catch (err) {
         console.log(err)
             return
