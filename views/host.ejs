@@ -3,7 +3,7 @@
     <head>
         <title>HOST</title>
         <script type="text/javascript">
-            document.querySelector('#my_video').srcObject = await navigator.mediaDevices.getUserMedia({video : true, audio: true})
+            document.querySelector('#my_video').srcObject = navigator.mediaDevices.getUserMedia({video : true, audio: true})
         </script>
     </head>
 
