@@ -3,8 +3,6 @@ const roomName = document.querySelector('.createRoom'); //방 제목
 const roomList = document.querySelector('.roomList'); //방 리스트
 
 
-
-
 const TORM = "toRoom";
 let toRoom = []; //Room 저장하는 변수
 
@@ -13,6 +11,7 @@ let toRoom = []; //Room 저장하는 변수
 createBtn.addEventListener("submit", function(e){
 
     if(roomName.value === ''){
+
         alert("방 이름을 입력하시오!");
     }
     else{
@@ -40,13 +39,11 @@ function paintRoom(){
     }
   }
     };
-    xhr.open('GET', '/createRoom'); // 메소드와 주소 설정
+    xhr.open('GET', 'https://docoex.page/createRoom'); // 메소드와 주소 설정
     xhr.send(); // 요청 전송 
 
    
 }
-
-
 
 
 
