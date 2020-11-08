@@ -2,8 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 router.get('/', async (req, res, _) => {
-    const roomId = req.query.roomId;
-    rooms.remove(roomId);
+    rooms.delete(req.query.roomId);
     res.send('ERASE')
 });
 
