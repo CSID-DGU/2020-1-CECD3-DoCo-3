@@ -23,7 +23,7 @@ let worker;
 let webServer;
 let socketServer;
 // Will store the room id and a room object where the room id is the router id
-let rooms = {};
+let rooms = Map();
 global.rooms = rooms;
 
 (async () => {
