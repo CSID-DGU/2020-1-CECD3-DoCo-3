@@ -6,7 +6,6 @@ router.get('/', async (req, res, _) => {
     const roomId = req.query.roomId;
     const data = rooms[roomId].getRouter().rtpCapabilities
     //res.locals.stream = data
-
     const transport = device.createSendTransport(data);
     transport.on('connect', async ({ dtlsParameters }, callback, errback) => {
       socket.request('connectProducerTransport', { dtlsParameters })
@@ -43,7 +42,7 @@ router.get('/', async (req, res, _) => {
   
     let stream;
     try {
-      stream = await getUserMedia(transport, isWebcam);
+      stream = await getUserMedia(transport);
       const track = stream.getVideoTracks()[0];
       const params = { track };
       if ($chkSimulcast.checked) {
