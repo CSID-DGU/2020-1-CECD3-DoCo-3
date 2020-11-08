@@ -20,7 +20,9 @@
 
         <video id="my_video" style="position: fixed; width: 400px; height: 300px; right: 0%; bottom: 0%" autoplay playsinline ></video>
         <script type="text/javascript">
-            document.querySelector('#my_video').src = window.URL.createObjectURL( navigator.mediaDevices.getUserMedia({video : true, audio: true}))
+            navigator.mediaDevices.getUserMedia({video : true, audio: true}).then(function(stream){
+                document.querySelector('#my_video').srcObject = stream
+            })
         </script>
     </body>
 
