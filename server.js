@@ -44,7 +44,7 @@ global.rooms = rooms;
 app.use("/createRoom", require('./require/createRoom.js'));
 app.use("/existRoom", require('./require/existsRoom.js'));
 app.use('/room', require('./require/rooms.js'));
-app.use('/searchRoom', require('./require/searchRoom.js'));
+app.use('/roomList', require('./require/roomList.js'));
 
 // Socket IO routes here
 async function createIOServer() {
