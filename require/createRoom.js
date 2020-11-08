@@ -13,7 +13,7 @@ router.get('/', async (req, res, _) => {
     const {
         maxIncomingBitrate,
         initialAvailableOutgoingBitrate
-      } = config.mediasoup.webRtcTransport;
+    } = config.mediasoup.webRtcTransport;
       const transport = await currentRoom.getRouter().createWebRtcTransport({
         listenIps: config.mediasoup.webRtcTransport.listenIps,
         enableUdp: true,
@@ -39,7 +39,7 @@ router.get('/', async (req, res, _) => {
         }
       });
   
-      
+    console.log(currentRoom.getActiveProducerTransport(mediasoupRouter.id + '_host'))
     res.json({roomId: mediasoupRouter.id});
 });
 
