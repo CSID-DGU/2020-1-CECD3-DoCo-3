@@ -18,7 +18,7 @@ app.get('/list', function(req,res){ // 2
   res.render('list', {});
 });
 
-app.get('/')
+//app.get('/')
 
 const cors = require('cors')
 const corsOptions = {
