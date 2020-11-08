@@ -44,7 +44,6 @@ app.use("/deleteRoom",  require('./require/deleteRoom.js'));
 app.use('/room',        require('./require/rooms.js'));
 app.use('/roomList',    require('./require/roomList.js'));
 
-
 app.get('/', function(req,res){ res.render('index', {}); });
 app.get('/list', function(req,res){ res.render('list', {}); });
 
@@ -98,14 +97,9 @@ async function createIOServer() {
   
       socket.on('createConsumerTransport', async (data) => {
         try {
-          const roomId = data.roomId;
           const producerTransportId = data.producerTransportId;
-          console.log('Creating Consumer Transport...');
           const { transport, params } = await createWebRtcTransport(roomId);
-          console.log('Created Consumer Transport!');
           rooms[roomId].addActiveConsumerTransport(transport, producerTransportId, data.parentProducerTransportId);
-          console.log('Current consumer Ids: ' + Object.keys(rooms[roomId].consumerTransports));
-          console.log('Just Created Id: ' + params.id);
           socket.emit('consumerTransportParameters', params);
         } catch (err) {
           console.error(err);
