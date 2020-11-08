@@ -1,81 +1,73 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Room</title>
-    </head>
-    <style>
-        body{
-          margin : 0;
-        }
 
-        li{
-          font-size: 24px;
-        }
-        
-        a{
-           text-decoration:none;
-           color : black;
-        }
-        
-        a:hover{
-          font-weight: bold;
-        }
-        
-        .nav-container{
-          display : flex;
-          flex-direction:  row;
-          width : 100%;
-          margin: 0;
-          padding: 0;
-          background-color: white;
-          list-style-type: none;
-          box-shadow: 0 1px 3px 0 rgba(0,0,0,0.50);
-        }
-        
-        .nav-item{
-          padding: 15px;
-        }
-        
-        input[type=text] {
-          width: 60%;
-          padding: 12px 20px;
-          margin: 8px 0;
-          box-sizing: border-box;
-        }
+<head>
+    <title>index</title>
+</head>
+<style>
+    body {
+        margin: 0;
+    }
 
-        nav{
-          margin-bottom: 30px;
-        }
-        
-        .content-box{
-          text-align: center;
-        }
-        
-        .cBtn{
-          padding: 12px 20px;
-          margin: 8px 0;
-          box-sizing: border-box;
-          background-color: black;
-          color : white;
-          cursor: pointer;
-        }
-        
-        .room-type{
-          margin-bottom: 10px;
-        }
-    </style>
-    <body>
-        <nav>
-            <ul class = "nav-container">
-                <li class="nav-item">Docoex</li>
-            </ul>  
-        </nav>
-        <% if (ishost) {%> <!-- Host Render -->
-            
-        <%} else { %>      <!-- Client Render -->
-            <div>
-                <button id="btn_connect">Connect</button>
-            </div>
-        <%} %>
-    </body>
+    li {
+        font-size: 24px;
+    }
+
+    a {
+        text-decoration: none;
+        color: black;
+    }
+
+    a:hover {
+        font-weight: bold;
+    }
+
+    .nav-container {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        background-color: white;
+        list-style-type: none;
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.50);
+    }
+
+    .nav-item {
+        padding: 15px;
+    }
+
+    input[type=text] {
+        width: 60%;
+        padding: 12px 20px;
+        margin: 8px 0;
+        box-sizing: border-box;
+    }
+
+    nav {
+        margin-bottom: 30px;
+    }
+
+    .content-box {
+        text-align: center;
+    }
+
+    .cBtn {
+        padding: 12px 20px;
+        margin: 8px 0;
+        box-sizing: border-box;
+        background-color: black;
+        color: white;
+        cursor: pointer;
+    }
+
+    .room-type {
+        margin-bottom: 10px;
+    }
+</style>
+
+<body>
+    <video id="local_video" controls autoplay playsinline src=<%= stream %>></video>
+</body>
+
 </html>
