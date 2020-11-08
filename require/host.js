@@ -46,8 +46,9 @@ router.get('/', async (req, res, _) => {
         const { transport, params } = await createWebRtcTransport(currentRoom.roomId);
         currentRoom.addActiveProducerTransport(transport);
         } catch (err) { 
+            console.log(err)
+            return
       }
-
     const producer = await currentRoom.getActiveProducerTransport(producerTransportId).transport.produce({ kind, rtpParameters });
     currentRoom.addActiveProducerToTransport(producerTransportId, producer);
 
@@ -75,6 +76,8 @@ router.get('/', async (req, res, _) => {
       }
       producer = await transport.produce(params);
     } catch (err) {
+        console.log(err)
+            return
       //$txtPublish.innerHTML = 'failed';
     }
     
