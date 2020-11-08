@@ -5,20 +5,17 @@ const roomList = document.querySelector('.roomList'); //방 리스트
 let Rnum = 1;
 //방 생성 시 
 createBtn.addEventListener("submit", function(e){
-
-    paintRoom();     
-    e.preventDefault();
+    paintRoom(); 
 });
 
 //룸 그리기 
 function paintRoom(){
-
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function() { // 요청에 대한 콜백
     if (xhr.readyState === xhr.DONE) { // 요청이 완료되면
     if (xhr.status === 200 || xhr.status === 201) {
       const Room = JSON.parse(xhr.responseText);
-      location.href = `https://docoex.page/host?${Room.roomId}`;
+      location.href = `https://docoex.page/host?roomId=${Room.roomId}`;
     } else {
       console.error(xhr.responseText);
     }
@@ -27,8 +24,8 @@ function paintRoom(){
     xhr.open('GET', 'https://docoex.page/createRoom'); // 메소드와 주소 설정
     xhr.send(); // 요청 전송 
 
-   
 }
+
 
 
 function loadRoom(){
@@ -42,7 +39,7 @@ function loadRoom(){
 
         var li = document.createElement('li');
         li.className = "rlist";
-        li.innerHTML = `<a href='https://docoex.page/index?${RoomList[i]}'>${i+1}방</a> `;
+        li.innerHTML = `<a href='https://docoex.page/room?roomId=${RoomList[i]}'>== ${i+1}번 방 ==</a> `;
         roomList.appendChild(li);
       
     }
@@ -59,9 +56,7 @@ function loadRoom(){
 
 //시작 시 방 로드 
 function init(){
-
   loadRoom();    
-
 }
 
 init();
