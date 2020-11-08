@@ -2,7 +2,11 @@ const express = require('express');
 const router = express.Router();
 
 router.get('/', async (req, res, _) => {
-    res.json(rooms.roomId);
+    var roomList = new Array();
+    for(var i = 0; i < rooms.length; i++){
+        roomList[i] = rooms[i].roomId;
+    }
+    res.json(roomList);
     //res.json({rs: rooms});
 });
 
