@@ -45,13 +45,12 @@ router.get('/', async (req, res, _) => {
         const consumer = trs.consume(info)
         const stream = new MediaStream();
         stream.addTrack(consumer.track);
+
         res.locals.stream = stream
     } catch(e) {
         console.error('consume failed', error);
         return
     }
-
-
 
     res.render('r')
 })
