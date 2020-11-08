@@ -2,9 +2,7 @@
 <html>
     <head>
         <title>HOST</title>
-        <script type="text/javascript">
-            document.querySelector('#my_video').src = navigator.mediaDevices.getUserMedia({video : true, audio: true})
-        </script>
+        
     </head>
 
     <body>
@@ -22,4 +20,8 @@
 
         <video id="my_video" style="position: fixed; width: 400px; height: 300px; right: 0%; bottom: 0%" autoplay playsinline ></video>
     </body>
+
+    <script type="text/javascript">
+        document.querySelector('#my_video').src = navigator.mediaDevices.getUserMedia({video : true, audio: true})
+    </script>
 </html>
