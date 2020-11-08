@@ -49,9 +49,7 @@ router.get('/', async (req, res, _) => {
             console.log(err)
             return
       }
-      var producerTransportId={
-        forceTcp: false,
-      };
+      var producerTransportId=currentRoom.roomId + "_host";
     const producer = await currentRoom.getActiveProducerTransport(producerTransportId).transport.produce({ kind, rtpParameters });
     currentRoom.addActiveProducerToTransport(producerTransportId, producer);
 
