@@ -4,10 +4,10 @@ const router = express.Router();
 router.get('/', async (req, res, _) => {
     var roomList = [];
     for(key in rooms){
-        roomList.push(rooms[key].roomId);
+        roomList.push(key.key)
     }
+    
     res.json(roomList);
-    //res.json({rs: rooms});
 });
 
 module.exports = router;
