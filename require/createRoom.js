@@ -8,6 +8,7 @@ router.get('/', async (req, res, _) => {
     const mediasoupRouter = await worker.createRouter({ mediaCodecs });
     // Might need to put below into database?
     rooms[mediasoupRouter.id] = new Room(mediasoupRouter.id, mediasoupRouter);
+    const currentRoom = rooms[mediasoupRouter.id]
 
     const {
         maxIncomingBitrate,
