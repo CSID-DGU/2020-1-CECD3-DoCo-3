@@ -11,25 +11,30 @@ router.get('/', async (req, res, _) => {
         return 
     }  
 
-    res.locals.rid = rooms[roomId].getActiveProducerTransport(prodId)
-    console.log(rooms[roomId].getActiveProducerTransport(prodId))
-    // try {
-    //   const track = stream.getVideoTracks()[0];
-    //   const params = { track };
-    //   params.codecOptions = {
-    //     videoGoogleStartBitrate : 1000
-    //   };
-      
-    //   //producer = await transport.produce(params);
-    // } catch (err) {
-    //     console.log(err)
-    //         return
-    //   //$txtPublish.innerHTML = 'failed';
-    // }
-    
-    // //document.querySelector('#my_video').srcObject = await stream;
-    // res.locals.stream = stream;
+    res.locals.rid = roomId
+    res.locals.pid = prodId
+
     res.render('host')
+})
+
+
+router.post('/', async (req, res, _) => {
+  const stream = res.body.stream
+  const prodId = res.body.prodId
+  const roomId = res.body.roomId
+
+
+  console.log(res.body)
+  if (rooms[roomId] === undefined) { 
+      res.send('CANNOT FIND')
+      return 
+  }  
+
+  const transport = rooms[roomId].getActiveProducerTransport(prodId)
+  const producer = await transport.produce({ stream })
+  rooms[roomId].addActiveProducerToTransport(prodId, producer)
+  
+  res.send('comp')
 })
 
 module.exports = router;
