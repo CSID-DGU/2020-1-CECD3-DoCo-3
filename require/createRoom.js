@@ -24,6 +24,8 @@ async function createWebRtcTransport(roomId) {
         } catch (error) {
         }
     }
+
+    console.log(transport)
     return {
         transport,
         params: {
@@ -40,11 +42,7 @@ router.get('/', async (req, res, _) => {
     const mediasoupRouter = await worker.createRouter({ mediaCodecs });
     
     rooms[mediasoupRouter.id] = new Room(mediasoupRouter.id, mediasoupRouter);
-
-    const {
-        maxIncomingBitrate,
-        initialAvailableOutgoingBitrate
-    } = config.mediasoup.webRtcTransport;
+    
     const { transport, params } = await createWebRtcTransport(mediasoupRouter.id)
     rooms[mediasoupRouter.id].addActiveProducerTransport(transport);
     res.json({roomId: mediasoupRouter.id});
