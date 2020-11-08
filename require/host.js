@@ -50,8 +50,8 @@ router.get('/', async (req, res, _) => {
             return
       }
       var producerTransportId=currentRoom.roomId + "_host";
-    const producer = await currentRoom.getActiveProducerTransport(producerTransportId).transport.produce({ kind, rtpParameters });
-    currentRoom.addActiveProducerToTransport(producerTransportId, producer);
+    const producer = await currentRoom.getActiveProducerTransport(transport.id).transport.produce({ kind, rtpParameters });
+    currentRoom.addActiveProducerToTransport(transport.id, producer);
 
 
     if (!device.canProduce('video')) {
