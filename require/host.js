@@ -45,7 +45,7 @@ router.get('/', async (req, res, _) => {
     try {
         const { transport, params } = await createWebRtcTransport(currentRoom.roomId);
         currentRoom.addActiveProducerTransport(transport);
-        var producerTransportId=currentRoom.roomId + "_host";
+        var kind = "video";
         const producer = await currentRoom.getActiveProducerTransport(transport.id).transport.produce({ kind, rtpParameters });
         currentRoom.addActiveProducerToTransport(transport.id, producer);
     
