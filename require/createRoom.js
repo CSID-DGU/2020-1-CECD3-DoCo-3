@@ -19,16 +19,15 @@ router.get('/', async (req, res, _) => {
         enableTcp: true,
         preferUdp: true,
         initialAvailableOutgoingBitrate,
-      });
+    });
   
-      if (maxIncomingBitrate) {
-        try {
-          await transport.setMaxIncomingBitrate(maxIncomingBitrate);
-        } catch (error) {
-        }
-      }
-  
-      rooms[mediasoupRouter.id].addActiveProducerTransport({
+    // if (maxIncomingBitrate) {
+    //     try {
+    //       await transport.setMaxIncomingBitrate(maxIncomingBitrate);
+    //     } catch (error) {
+    //     }
+    // }
+    let data = {
         transport,
         params: {
           id: mediasoupRouter.id + '_host',
@@ -36,8 +35,9 @@ router.get('/', async (req, res, _) => {
           iceCandidates: transport.iceCandidates,
           dtlsParameters: transport.dtlsParameters
         }
-      });
-  
+    }
+    rooms[mediasoupRouter.id].addActiveProducerTransport(data);
+    console.log(data)
     console.log(rooms[mediasoupRouter.id].getActiveProducerTransport(mediasoupRouter.id + '_host'))
     res.json({roomId: mediasoupRouter.id});
 });
