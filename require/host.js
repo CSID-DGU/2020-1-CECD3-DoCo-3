@@ -15,6 +15,8 @@ router.get('/', async (req, res, _) => {
     res.locals.rid = roomId
     res.locals.pid = prodId
 
+    console.log(rooms[roomId].getActiveProducerTransport(prodId).produceData())
+
     res.render('host')
 })
 
