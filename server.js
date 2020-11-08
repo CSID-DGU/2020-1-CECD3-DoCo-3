@@ -20,6 +20,7 @@ app.get('/list', function(req,res){ // 2
   res.render('list', {});
 });
 
+app.get('/')
 
 
 const cors = require('cors')
@@ -53,6 +54,7 @@ app.use("/existRoom",   require('./require/existsRoom.js'));
 app.use("/deleteRoom",  require('./require/deleteRoom.js'));
 app.use('/room',        require('./require/rooms.js'));
 app.use('/roomList', require('./require/roomList.js'));
+
 
 // Socket IO routes here
 async function createIOServer() {

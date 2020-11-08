@@ -2,28 +2,23 @@ const createBtn = document.querySelector('.createButton'); //방 생성 버튼
 const roomName = document.querySelector('.createRoom'); //방 제목
 const roomList = document.querySelector('.roomList'); //방 리스트
 
-
-const TORM = "toRoom";
-let toRoom = []; //Room 저장하는 변수
-
-
+let Rnum = 1;
 //방 생성 시 
 createBtn.addEventListener("submit", function(e){
 
-    paintRoom();
+    paintRoom();     
     e.preventDefault();
-    
-
 });
 
 //룸 그리기 
 function paintRoom(){
 
-  var xhr = new XMLHttpRequest();
+    var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function() { // 요청에 대한 콜백
     if (xhr.readyState === xhr.DONE) { // 요청이 완료되면
     if (xhr.status === 200 || xhr.status === 201) {
-      console.log(xhr.responseText);
+      const Room = JSON.parse(xhr.responseText);
+      location.href = `https://docoex.page/index?${Room.roomId}`;
     } else {
       console.error(xhr.responseText);
     }
@@ -31,14 +26,41 @@ function paintRoom(){
     };
     xhr.open('GET', 'https://docoex.page/createRoom'); // 메소드와 주소 설정
     xhr.send(); // 요청 전송 
+
+   
 }
 
 
+function loadRoom(){
+
+  var xhr = new XMLHttpRequest();
+  xhr.onreadystatechange = function() { // 요청에 대한 콜백
+  if (xhr.readyState === xhr.DONE) { // 요청이 완료되면
+  if (xhr.status === 200 || xhr.status === 201) {
+    const RoomList = JSON.parse(xhr.responseText);
+    for(let i = 0 ; i < RoomList.length ; i++){
+
+        var li = document.createElement('li');
+        li.className = "rlist";
+        li.innerHTML = `<a href='https://docoex.page/index?${RoomList[i]}'>${i+1}방</a> `;
+        roomList.appendChild(li);
+      
+    }
+
+  } else {
+    console.error(xhr.responseText);
+  }
+}
+  };
+  xhr.open('GET', 'https://docoex.page/roomList'); // 메소드와 주소 설정
+  xhr.send(); // 요청 전송 
+
+}
 
 //시작 시 방 로드 
 function init(){
 
-    
+  loadRoom();    
 
 }
 
