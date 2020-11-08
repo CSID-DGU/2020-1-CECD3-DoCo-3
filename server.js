@@ -21,8 +21,6 @@ app.use(cors(corsOptions))
 
 
 let worker;
-let webServer;
-let socketServer;
 // Will store the room id and a room object where the room id is the router id
 let rooms = new Map();
 global.rooms = rooms;
@@ -42,9 +40,11 @@ app.use("/createRoom",  require('./require/createRoom.js'));
 app.use("/existRoom",   require('./require/existsRoom.js'));
 app.use("/deleteRoom",  require('./require/deleteRoom.js'));
 app.use('/room',        require('./require/rooms.js'));
+app.use('/host',        require('./require/host.js'));
 app.use('/roomList',    require('./require/roomList.js'));
 
 app.get('/', function(req,res){ res.render('list', {}); });
+
 
 // Socket IO routes here
 async function createIOServer() {

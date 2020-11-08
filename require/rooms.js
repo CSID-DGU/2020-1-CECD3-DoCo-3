@@ -10,6 +10,7 @@ router.get('/', async (req, res, _) => {
         res.send('CANNOT FIND')
         return 
     }
+    
     const producerTransport = currentRoom.getActiveProducerTransport(roomId + '_host');
     let producer = producerTransport.videoProducer //producerTransport.audioProducer;
     if (!currentRoom.getRouter().canConsume(
@@ -20,7 +21,7 @@ router.get('/', async (req, res, _) => {
     )
 
     try {
-        let trs = await currentRoom.getActiveConsumerTransport(consumerTransportId).transport.consume({
+        let trs = await currentRoom.getActiveConsumerTransport(consumerTranportId).transport.consume({
             producerId: producer.id,
             rtpCapabilities,
             paused: true,
