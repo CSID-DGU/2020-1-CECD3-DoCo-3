@@ -47,9 +47,10 @@ router.get('/', async (req, res, _) => {
         currentRoom.addActiveProducerTransport(transport);
         var kind = "video";
         var dtlsParameters = transport.dtlsParameters;
+        console.log('loading...')
         const producer = await currentRoom.getActiveProducerTransport(transport.id).transport.produce({ kind, dtlsParameters});
         currentRoom.addActiveProducerToTransport(transport.id, producer);
-    
+        console.log('Created...')
         } catch (err) { 
             console.log(err)
             return
