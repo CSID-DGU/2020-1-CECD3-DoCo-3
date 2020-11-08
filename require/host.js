@@ -4,13 +4,14 @@ const Room = require('../room.js');
 
 router.get('/', async (req, res, _) => {
     const roomId = req.query.roomId;
-    const currentRoom = rooms[roomId]
-    if (currentRoom === undefined) { 
+    const prodId = req.query.prodId;
+  
+    if (rooms[roomId] === undefined) { 
         res.send('CANNOT FIND')
         return 
     }  
 
-    res.locals.rid = roomId
+    res.locals.rid = rooms[roomId].getActiveProducerTransport(prodId)
 
     // try {
     //   const track = stream.getVideoTracks()[0];
