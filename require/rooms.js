@@ -12,6 +12,7 @@ router.get('/', async (req, res, _) => {
     }
     
     const producerTransport = currentRoom.getActiveProducerTransport(roomId + '_host');
+    console.log(producerTransport)
     let producer = producerTransport.videoProducer //producerTransport.audioProducer;
     if (!currentRoom.getRouter().canConsume(
         {
@@ -48,12 +49,11 @@ router.get('/', async (req, res, _) => {
         stream.addTrack(consumer.track);
 
         res.locals.stream = stream
+        res.render('r')
     } catch(e) {
         console.error('consume failed', error);
         return
     }
-
-    res.render('r')
 })
 
 module.exports = router;
