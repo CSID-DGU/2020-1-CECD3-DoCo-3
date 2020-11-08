@@ -21,14 +21,8 @@ router.get('/', async (req, res, _) => {
 
 router.post('/', async (req, res, _) => {
   let form = new formidable.IncomingForm()
-  form.parse(req, function(err, fields, files) {
-    console.log(fields.name)
-  });
-
-  form.on('end', function(fields, files) {
-    console.log(files)
-    console.log(fields)
-  });
+  console.log(req)
+  console.log(form)
 
   // const transport = rooms[roomId].getActiveProducerTransport(prodId)
   // const producer = transport.produce({ stream })
