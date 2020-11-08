@@ -9,6 +9,8 @@ const io = require('socket.io')(server, options);
 
 const Room = require('./room.js');
 
+
+// view engine setup
 app.set('view engine', 'ejs');
 app.use(express.static(__dirname + '/public'));
 
@@ -44,6 +46,7 @@ app.use('/host',        require('./require/host.js'));
 app.use('/roomList',    require('./require/roomList.js'));
 
 app.get('/', function(req,res){ res.render('list', {}); });
+
 
 
 // Socket IO routes here

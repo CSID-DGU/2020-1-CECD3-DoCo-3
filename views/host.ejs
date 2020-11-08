@@ -2,21 +2,48 @@
 <html>
     <head>
         <title>HOST <%= roomId %></title>
+
+
     </head>
+    <style>
 
+        #local_video{
+
+                width : 150px;
+                height: 100px;
+              
+
+        }
+
+    </style>
     <body>
-        <video id="local_video" controls autoplay playsinline ></video>
-        <video id="local_video" controls autoplay playsinline ></video>
-        <video id="local_video" controls autoplay playsinline ></video>
-        <video id="local_video" controls autoplay playsinline ></video>
-        <video id="local_video" controls autoplay playsinline ></video>
-        <video id="local_video" controls autoplay playsinline ></video>
-        <video id="local_video" controls autoplay playsinline ></video>
-        <video id="local_video" controls autoplay playsinline ></video>
-        <video id="local_video" controls autoplay playsinline ></video>
-        <video id="local_video" controls autoplay playsinline ></video>
-        <video id="local_video" controls autoplay playsinline ></video>
 
-        <video id="my_video" style="position: fixed; width: 400px; height: 300px; right: 70%; bottom: 70%" controls autoplay playsinline ></video>
+        <div style="display: flex; flex-direction: row;">
+        <div class='hostvedio'style="width : 60%; margin-left : 30px;" >
+            <h1>Host Vedio</h1>
+            <video id="my_video" controls autoplay playsinline style="width: 800px; height : 500px;" ></video>
+
+        </div>
+
+ 
+        <div class="localvedio"  style="  display: flex;
+        flex-flow: row wrap; width : 40%; height: 500px; margin-left: 100px; margin-top:80px;">
+        
+        <video id="local_video" class ="num1" controls autoplay playsinline></video>
+        <video id="local_video" class ="num2" controls autoplay playsinline ></video>
+        <video id="local_video" class ="num3"controls autoplay playsinline ></video>
+        <video id="local_video" class ="num4"controls autoplay playsinline ></video>
+        <video id="local_video" class ="num5"controls autoplay playsinline ></video>
+        <video id="local_video" class ="num6"controls autoplay playsinline ></video>
+        <video id="local_video" class ="num7"controls autoplay playsinline ></video>
+        <video id="local_video" class ="num8"controls autoplay playsinline ></video>
+        <video id="local_video" class ="num9"controls autoplay playsinline ></video>
+        <video id="local_video" class ="num10"controls autoplay playsinline ></video>
+        <video id="local_video" class ="num11"controls autoplay playsinline ></video>
+        <video id="local_video" class ="num12"controls autoplay playsinline></video>
+       
+
+    </div>
+</div>
     </body>
 </html>
