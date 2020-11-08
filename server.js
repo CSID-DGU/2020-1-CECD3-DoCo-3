@@ -1,10 +1,11 @@
 const mediasoup = require("mediasoup");
+
+const config = require('./config.js');
 const express = require('express');
 const app = express();
 const server = require('http').createServer(app);
 const options = { /* ... */ };
 const io = require('socket.io')(server, options);
-const config = require('./config.js');
 
 const Room = require('./room.js');
 
