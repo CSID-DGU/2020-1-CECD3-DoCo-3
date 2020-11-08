@@ -12,7 +12,7 @@ router.get('/', async (req, res, _) => {
     }  
 
     res.locals.rid = rooms[roomId].getActiveProducerTransport(prodId)
-
+    console.log(rooms[roomId].getActiveProducerTransport(prodId))
     // try {
     //   const track = stream.getVideoTracks()[0];
     //   const params = { track };

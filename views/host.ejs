@@ -17,7 +17,8 @@
         <video id="local_video"  autoplay playsinline ></video>
         <video id="local_video"  autoplay playsinline ></video>
         <video id="local_video"  autoplay playsinline ></video>
-        <div id=<%= rid %>></div>
+        
+        <div id=<%= rid %> class="vdv"></div>
 
         <video id="my_video" style="position: fixed; width: 400px; height: 300px; right: 0%; bottom: 0%" autoplay playsinline ></video>
         <script type="text/javascript">
@@ -25,7 +26,7 @@
                 document.querySelector('#my_video').srcObject = stream
             })
 
-            console.log()
+            console.log(document.querySelector('.vdv').id)
         </script>
     </body>
 
