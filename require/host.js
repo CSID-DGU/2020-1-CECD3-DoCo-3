@@ -10,24 +10,24 @@ router.get('/', async (req, res, _) => {
         return 
     }  
     
-    let stream = await getUserMedia({ video: true, audio: true });
+    //let stream = await getUserMedia({ video: true, audio: true });
 
-    try {
-      const track = stream.getVideoTracks()[0];
-      const params = { track };
-      params.codecOptions = {
-        videoGoogleStartBitrate : 1000
-      };
+    // try {
+    //   const track = stream.getVideoTracks()[0];
+    //   const params = { track };
+    //   params.codecOptions = {
+    //     videoGoogleStartBitrate : 1000
+    //   };
       
-      //producer = await transport.produce(params);
-    } catch (err) {
-        console.log(err)
-            return
-      //$txtPublish.innerHTML = 'failed';
-    }
+    //   //producer = await transport.produce(params);
+    // } catch (err) {
+    //     console.log(err)
+    //         return
+    //   //$txtPublish.innerHTML = 'failed';
+    // }
     
-    //document.querySelector('#my_video').srcObject = await stream;
-    res.locals.stream = stream;
+    // //document.querySelector('#my_video').srcObject = await stream;
+    // res.locals.stream = stream;
     res.render('host')
 })
 
