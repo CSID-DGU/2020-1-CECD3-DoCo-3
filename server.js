@@ -21,7 +21,7 @@ app.get('/list', function(req,res){ // 2
 });
 
 
-///구분
+
 const cors = require('cors')
 const corsOptions = {
   origin: 'http://localhost:3000',
