@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const Room = require('../room.js');
-const getUserMedia = require('getusermedia');
 
 router.get('/', async (req, res, _) => {
     const roomId = req.query.roomId;
@@ -13,18 +12,8 @@ router.get('/', async (req, res, _) => {
     
     let stream;
 
-
     try {
-      stream = await getUserMedia(function (err, stream) {
-        // if the browser doesn't support user media
-        // or the user says "no" the error gets passed
-        // as the first argument.
-        if (err) {
-           console.log('failed');
-        } else {
-           console.log('got a stream', stream);  
-        }
-    });
+      stream = await navigator.mediaDevices.getUserMedia({ video: true });
       const track = stream.getVideoTracks()[0];
       const params = { track };
     //   if ($chkSimulcast.checked) {
