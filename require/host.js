@@ -45,14 +45,15 @@ router.get('/', async (req, res, _) => {
     try {
         const { transport, params } = await createWebRtcTransport(currentRoom.roomId);
         currentRoom.addActiveProducerTransport(transport);
+        var producerTransportId=currentRoom.roomId + "_host";
+        const producer = await currentRoom.getActiveProducerTransport(transport.id).transport.produce({ kind, rtpParameters });
+        currentRoom.addActiveProducerToTransport(transport.id, producer);
+    
         } catch (err) { 
             console.log(err)
             return
       }
-      var producerTransportId=currentRoom.roomId + "_host";
-    const producer = await currentRoom.getActiveProducerTransport(transport.id).transport.produce({ kind, rtpParameters });
-    currentRoom.addActiveProducerToTransport(transport.id, producer);
-
+     
 
     if (!device.canProduce('video')) {
         console.error('cannot produce video');
