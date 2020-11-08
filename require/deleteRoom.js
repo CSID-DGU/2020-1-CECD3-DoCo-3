@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 router.get('/', async (req, res, _) => {
-    console.log(rooms.indexOf(req.query.roomId))
+    console.log(rooms)
     res.send('ERASE')
 });
 
