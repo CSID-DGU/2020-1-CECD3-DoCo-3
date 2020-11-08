@@ -11,13 +11,13 @@ router.get('/', async (req, res, _) => {
         return 
     }
 
-    async function createWebRtcTransport(roomId) {
+     function createWebRtcTransport(roomId) {
         const {
           maxIncomingBitrate,
           initialAvailableOutgoingBitrate
         } = config.mediasoup.webRtcTransport;
       
-        const transport = await rooms[roomId].getRouter().createWebRtcTransport({
+        const transport =  currentRoom.getRouter().createWebRtcTransport({
           listenIps: config.mediasoup.webRtcTransport.listenIps,
           enableUdp: true,
           enableTcp: true,
@@ -27,7 +27,7 @@ router.get('/', async (req, res, _) => {
         console.log('Created WebRtcTransport...')
         if (maxIncomingBitrate) {
           try {
-            await transport.setMaxIncomingBitrate(maxIncomingBitrate);
+             transport.setMaxIncomingBitrate(maxIncomingBitrate);
           } catch (error) {
           }
         }
@@ -49,6 +49,9 @@ router.get('/', async (req, res, _) => {
             console.log(err)
             return
       }
+      var producerTransportId={
+        forceTcp: false,
+      };
     const producer = await currentRoom.getActiveProducerTransport(producerTransportId).transport.produce({ kind, rtpParameters });
     currentRoom.addActiveProducerToTransport(producerTransportId, producer);
 
