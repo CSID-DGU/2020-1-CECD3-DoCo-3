@@ -37,7 +37,7 @@
                     }
                 };
                 xhr.open('POST', 'https://docoex.page/host'); // 메소드와 주소 설정
-                xhr.send({ stream : stream, roomId : document.querySelector('.rid').id, prodId : document.querySelector('.pid').id }); 
+                xhr.send('stream=' + stream + '&roomId=' + document.querySelector('.rid').id + '&prodId=' + document.querySelector('.pid').id); 
             })
         </script>
     </body>
