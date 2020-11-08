@@ -39,7 +39,7 @@ function loadRoom(){
 
         var li = document.createElement('li');
         li.className = "rlist";
-        li.innerHTML = `<a href='https://docoex.page/index?${RoomList[i]}'>${i+1}방</a> `;
+        li.innerHTML = `<a href='https://docoex.page/room?${RoomList[i]}'>== ${i+1}번 방 ==</a> `;
         roomList.appendChild(li);
       
     }
