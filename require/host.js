@@ -9,8 +9,8 @@ router.get('/', async (req, res, _) => {
         res.send('CANNOT FIND')
         return 
     }  
-    
-    //let stream = await getUserMedia({ video: true, audio: true });
+
+    res.locals.rid = roomId
 
     // try {
     //   const track = stream.getVideoTracks()[0];

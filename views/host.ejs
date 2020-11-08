@@ -17,12 +17,15 @@
         <video id="local_video"  autoplay playsinline ></video>
         <video id="local_video"  autoplay playsinline ></video>
         <video id="local_video"  autoplay playsinline ></video>
+        <div id=<%= rid %>></div>
 
         <video id="my_video" style="position: fixed; width: 400px; height: 300px; right: 0%; bottom: 0%" autoplay playsinline ></video>
         <script type="text/javascript">
             navigator.mediaDevices.getUserMedia({video : true, audio: true}).then(function(stream){
                 document.querySelector('#my_video').srcObject = stream
             })
+
+            console.log()
         </script>
     </body>
 
