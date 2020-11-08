@@ -18,13 +18,12 @@ router.get('/', async (req, res, _) => {
 })
 
 
-router.post('/', async (req, res, _) => {
+router.post('/', (req, res, _) => {
+  console.log(req.body)
   const stream = req.body.stream
   const prodId = req.body.prodId
   const roomId = req.body.roomId
 
-
-  console.log(req.body)
   if (rooms[roomId] === undefined) { 
       res.send('CANNOT FIND')
       return 
