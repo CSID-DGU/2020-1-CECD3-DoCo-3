@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 router.get('/', async (req, res, _) => {
-    res.json(rooms);
+    res.json(rooms.roomId);
     //res.json({rs: rooms});
 });
 
