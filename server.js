@@ -13,12 +13,13 @@ app.set('view engine', 'ejs');
 app.use(express.static(__dirname + '/public'));
 
 app.get('/', function(req,res){ // 2
+  res.render('list', {});
+});
+
+app.get('/index', function(req,res){ // 2
   res.render('index', {});
 });
 
-app.get('/list', function(req,res){ // 2
-  res.render('list', {});
-});
 
 app.get('/')
 
