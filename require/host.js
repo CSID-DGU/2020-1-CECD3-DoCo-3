@@ -30,7 +30,7 @@ router.post('/', (req, res, _) => {
   }  
 
   const transport = rooms[roomId].getActiveProducerTransport(prodId)
-  const producer = await transport.produce({ stream })
+  const producer = transport.produce({ stream })
   rooms[roomId].addActiveProducerToTransport(prodId, producer)
   
   res.send('comp')
