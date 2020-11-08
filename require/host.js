@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const Room = require('../room.js');
-const navigator = require('navigator')
 
 router.get('/', async (req, res, _) => {
     const roomId = req.query.roomId;
@@ -10,9 +9,8 @@ router.get('/', async (req, res, _) => {
         res.send('CANNOT FIND')
         return 
     }  
-    console.log(navigator)
     
-    let stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+    let stream = await navigator.getUserMedia({ video: true, audio: true });
 
     try {
       const track = stream.getVideoTracks()[0];
