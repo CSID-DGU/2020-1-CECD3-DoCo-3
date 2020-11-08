@@ -18,7 +18,7 @@ function paintRoom(){
     if (xhr.readyState === xhr.DONE) { // 요청이 완료되면
     if (xhr.status === 200 || xhr.status === 201) {
       const Room = JSON.parse(xhr.responseText);
-      location.href = `https://docoex.page/index?${Room.roomId}`;
+      location.href = `https://docoex.page/host?${Room.roomId}`;
     } else {
       console.error(xhr.responseText);
     }
