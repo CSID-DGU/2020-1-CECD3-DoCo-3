@@ -7,13 +7,17 @@ const config = require('./config.js');
 
 const Room = require('./room.js');
 
-app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
-app.engine('html', require('ejs').renderFile);
+app.use(express.static(__dirname + '/public'));
 
-app.get('/',function(req,res){
-  res.render('list.html')
+app.get('/', function(req,res){ // 2
+  res.render('index', {});
 });
+
+app.get('/list', function(req,res){ // 2
+  res.render('list', {});
+});
+
 
 const cors = require('cors')
 const corsOptions = {
@@ -41,9 +45,11 @@ global.rooms = rooms;
 })();
 
 // REST api here
-app.use("/createRoom", require('./require/createRoom.js'));
-app.use("/existRoom", require('./require/existsRoom.js'));
-app.use('/room', require('./require/rooms.js'));
+app.use("/createRoom",  require('./require/createRoom.js'));
+app.use("/existRoom",   require('./require/existsRoom.js'));
+app.use("/deleteRoom",  require('./require/deleteRoom.js'));
+app.use('/room',        require('./require/rooms.js'));
+app.use('/roomList', require('./require/roomList.js'));
 
 // Socket IO routes here
 async function createIOServer() {
