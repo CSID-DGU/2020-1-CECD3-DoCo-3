@@ -1,4 +1,4 @@
-module.exports = {
+ module.exports = {
   listenIp: '0.0.0.0',
   listenPort: 3000,
   sslCrt: './keys/server.crt',

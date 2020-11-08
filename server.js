@@ -35,6 +35,7 @@ let webServer;
 let socketServer;
 // Will store the room id and a room object where the room id is the router id
 let rooms = {};
+global.rooms = rooms;
 
 (async () => {
   try {
@@ -47,40 +48,17 @@ let rooms = {};
 })();
 
 // REST api here
-app.get("/createRoom", async (req, res, next) => {
-  const mediaCodecs = config.mediasoup.router.mediaCodecs;
-  const mediasoupRouter = await worker.createRouter({ mediaCodecs });
-  // Might need to put below into database?
-  rooms[mediasoupRouter.id] = new Room(mediasoupRouter.id, mediasoupRouter);
-  res.json({roomId: mediasoupRouter.id});
-});
+app.use("/createRoom",  require('./require/createRoom.js'));
+app.use("/existRoom",   require('./require/existsRoom.js'));
+app.use("/deleteRoom",  require('./require/deleteRoom.js'));
+app.use('/room',        require('./require/rooms.js'));
+app.use('/roomList', require('./require/roomList.js'));
 
-app.get("/roomExists", async (req, res, next) => {
-  const roomId = req.query.roomId;
-  // console.log(req.query);
-  res.json({ exists: roomId in rooms });
-});
-
-
-app.get('/room', async (req, res, next) => {
-  const roomId = req.query.roomId;
-  const data = rooms[roomId].getRouter().rtpCapabilities
-  //res.status(200).json(data)
-  res.render('index.html');
-})
 // Socket IO routes here
 async function createIOServer() {
   const roomNamespace = io.of('/rooms');
   roomNamespace.on('connection', socket => { 
       console.log('Example app listening on port 3000!');
-
-      // socket.on('createRoom', async(data) => {
-      //   const mediaCodecs = config.mediasoup.router.mediaCodecs;
-      //   const mediasoupRouter = await worker.createRouter({ mediaCodecs });
-      //   // Might need to put below into database?
-      //   rooms[mediasoupRouter.id] = new Room(mediasoupRouter.id, mediasoupRouter);
-      //   socket.emit('roomId', mediasoupRouter.id);
-      // });
 
       socket.on('roomExists', async (data) => {
         socket.emit('validRoom', data in rooms);
@@ -323,7 +301,7 @@ async function runMediasoupWorker() {
     rtcMinPort: config.mediasoup.worker.rtcMinPort,
     rtcMaxPort: config.mediasoup.worker.rtcMaxPort,
   });
-
+  global.worker = worker;
   worker.on('died', () => {
     console.error('mediasoup worker died, exiting in 2 seconds... [pid:%d]', worker.pid);
     setTimeout(() => process.exit(1), 2000);
