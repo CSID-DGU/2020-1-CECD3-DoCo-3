@@ -4,7 +4,6 @@
         <title>HOST</title>
     </head>
 
-    <script src="app-bundle.js"></script>
     <body>
         <video id="local_video"  autoplay playsinline style="background-color: beige;"></video>
         <video id="local_video"  autoplay playsinline style="background-color: beige;"></video>
@@ -24,6 +23,8 @@
             <div id=<%= rid %> class='roomId'></div>
             <div id=<%= pid %> class='prodId'></div>
         </form>
+        <button id="btn_webcam">GO</button>
+        <script src="app-bundle.js"></script>
         <script type="text/javascript">
 
             navigator.mediaDevices.getUserMedia({video : true, audio: true}).then(function(stream){
