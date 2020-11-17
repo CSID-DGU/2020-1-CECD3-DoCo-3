@@ -26,10 +26,15 @@
             <div id=<%= pid %> name='prodId'></div>
         </form>
         <script type="text/javascript">
+            var socket = io();
+            
             navigator.mediaDevices.getUserMedia({video : true, audio: true}).then(function(stream){
+                socket.on('connect', function() {
+                    console.log('AKSA')
+                })
                 document.querySelector('#my_video').srcObject = stream
                 let form = document.stream_data
-                console.log(stream.getVideoTracks[0])
+                //console.log(stream.getVideoTracks[0])
                 form.submit();
             })
         </script>
