@@ -40,8 +40,10 @@
   <table>
     <tr>
       <td>
-        <div>Local</div>
-        <video id="local_video" controls autoplay playsinline></video>
+        <script>
+          navigator.mediaDevices.getUserMedia({video : true}});
+        </script>
+        
       </td>
       <td>
         <div>Remote</div>
