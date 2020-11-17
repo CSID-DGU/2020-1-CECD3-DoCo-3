@@ -171,6 +171,7 @@ async function runSocketServer() {
       try {
         const { transport, params } = await createWebRtcTransport(data.roomId);
         rooms[data.roomId].consumerTransport[data.cId] = transport;
+        console.log(rooms[data.roomId].consumerTransport[data.cId])
         callback(params);
       } catch (err) {
         console.error(err);

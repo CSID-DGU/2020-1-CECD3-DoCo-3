@@ -229,6 +229,7 @@ function subscribe_b() {
       console.log(data.clientId)
       if (data.exists === 'true') {
         sessionStorage.setItem('CLIENTID', Room.clientId);
+        console.log('subscribe')
         subscribe();
       }
     } else {
@@ -244,6 +245,7 @@ function subscribe_b() {
 }
 
 async function subscribe() {
+  console.log(sessionStorage.getItem('CLIENTID'))
   const data = await socket.request('createConsumerTransport', {
     roomId : sessionStorage.getItem('ROOMID'),
     cId : sessionStorage.getItem('CLIENTID'),
