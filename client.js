@@ -71,20 +71,20 @@ async function connect() {
   });
 
   const xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = function() { // 요청에 대한 콜백
-    if (xhr.readyState === xhr.DONE) { // 요청이 완료되면
-    if (xhr.status === 200 || xhr.status === 201) {
-      const Room = JSON.parse(xhr.responseText);
-      console.log(Room.roomId)
+      xhr.onreadystatechange = function() { // 요청에 대한 콜백
+      if (xhr.readyState === xhr.DONE) { // 요청이 완료되면
+      if (xhr.status === 200 || xhr.status === 201) {
+        const Room = JSON.parse(xhr.responseText);
+        console.log(Room.roomId)
 
-      sessionStorage.setItem('ROOMID', Room.roomId);
-    } else {
-      console.error(xhr.responseText);
+        sessionStorage.setItem('ROOMID', Room.roomId);
+      } else {
+        console.error(xhr.responseText);
+      }
     }
-  }
-    };
-    xhr.open('GET', 'https://docoex.page/createRoom'); // 메소드와 주소 설정
-    xhr.send(); // 요청 전송 
+  };
+  xhr.open('GET', 'https://docoex.page/createRoom'); // 메소드와 주소 설정
+  xhr.send(); // 요청 전 
 }
 
 async function loadDevice(routerRtpCapabilities) {
@@ -242,6 +242,26 @@ async function subscribe() {
   });
 
   const stream = consume(transport);
+
+  const xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function() { // 요청에 대한 콜백
+    if (xhr.readyState === xhr.DONE) { // 요청이 완료되면
+    if (xhr.status === 200 || xhr.status === 201) {
+      const data = JSON.parse(xhr.responseText);
+      console.log(data.exists)
+      console.log(data.clientId)
+      if (data.exists === 'true') {
+        sessionStorage.setItem('CLIENTID', Room.clientId);
+      }
+
+      
+    } else {
+      console.error(xhr.responseText);
+    }
+  }
+    };
+    xhr.open('GET', 'https://docoex.page/roomExists?roomId='+sessionStorage.getItem('ROOMID')); // 메소드와 주소 설정
+    xhr.send(); // 요청 전송 
 }
 
 async function consume(transport) {
