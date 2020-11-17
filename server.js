@@ -191,7 +191,7 @@ async function runSocketServer() {
     socket.on('produce', async (data, callback) => {
       const {kind, rtpParameters} = data;
       rooms[data.roomId].producer = await rooms[data.roomId].producerTransport.produce({ kind, rtpParameters });
-      callback({ id: producer.id });
+      callback({ id: rooms[data.roomId].producer.id });
 
       // inform clients about new producer
       socket.broadcast.to(socket.id).emit('newProducer');
@@ -200,7 +200,7 @@ async function runSocketServer() {
     socket.on('clientproduce', async (data, callback) => {
       const {kind, rtpParameters} = data;
       producer = await rooms[data.roomId].consumerTransport[data.cId].produce({ kind, rtpParameters });
-      callback({ id: producer.id });
+      callback({ id: rooms[data.roomId].producer.id });
 
       // inform clients about new producer
       socket.broadcast.to(socket.id).emit('newProducer');
