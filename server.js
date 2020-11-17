@@ -221,7 +221,7 @@ async function createWebRtcTransport(roomId) {
     initialAvailableOutgoingBitrate
   } = config.mediasoup.webRtcTransport;
 
-  const transport = await rooms[roomId].mediasoupRouter.createWebRtcTransport({
+  const transport = await rooms[roomId].hostRouterObj.createWebRtcTransport({
     listenIps: config.mediasoup.webRtcTransport.listenIps,
     enableUdp: true,
     enableTcp: true,
@@ -246,7 +246,7 @@ async function createWebRtcTransport(roomId) {
 }
 
 async function createConsumer(producer, rtpCapabilities, roomId, cId) {
-  if (!mediasoupRouter.canConsume(
+  if (!rooms[roomId].hostRouterObj.canConsume(
     {
       producerId: producer.id,
       rtpCapabilities,
