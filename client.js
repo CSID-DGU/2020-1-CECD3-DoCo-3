@@ -200,6 +200,7 @@ async function publish(e) {
     }
     producer = await transport.produce(params);
   } catch (err) {
+    console.log(err)
     $txtPublish.innerHTML = 'failed';
   }
 }
@@ -227,14 +228,11 @@ function subscribe_b() {
     if (xhr.readyState === xhr.DONE) { // 요청이 완료되면
     if (xhr.status === 200 || xhr.status === 201) {
       const data = JSON.parse(xhr.responseText);
-      console.log(data.exists)
       console.log(data.clientId)
       if (data.exists === 'true') {
         sessionStorage.setItem('CLIENTID', Room.clientId);
         subscribe();
       }
-
-      
     } else {
       console.error(xhr.responseText);
     }
