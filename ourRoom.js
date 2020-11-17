@@ -5,7 +5,7 @@ class Room {
         this.otherRouters = {};
         this.producer;
         this.producerTransport;
-        this.consumerTransports = {};
+        this.consumerTransport = {};
         this.consumers = {};
     }
 }
