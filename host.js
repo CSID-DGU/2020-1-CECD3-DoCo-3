@@ -35,8 +35,13 @@ let device;
 let socket;
 
 async function connect() {
-  const serverUrl = `https://docoex.page`;
-  socket = socketClient(serverUrl, {path: '/rooms'});
+  const opts = {
+    path: '/server',
+    transports: ['websocket'],
+  };
+  
+  const serverUrl = `https://docoex.page:3000`;
+  socket = socketClient(serverUrl, opts);
   console.log(socket);
   socket.request = socketPromise(socket);
 
