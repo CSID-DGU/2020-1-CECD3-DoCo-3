@@ -136,6 +136,7 @@ async function publish(e) {
   }
 
   const transport = device.createSendTransport(data);
+  console.log(transport)
   transport.on('connect', async ({ dtlsParameters }, callback, errback) => {
     socket.request('connectProducerTransport', { roomId : sessionStorage.getItem('ROOMID'), dtlsParameters })
       .then(callback)
@@ -220,6 +221,7 @@ async function getUserMedia(transport, isWebcam) {
 }
 
 function subscribe_b() {
+  if (!sessionStorage.getItem('CLIENTID')) {
   const xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function() { // 요청에 대한 콜백
     if (xhr.readyState === xhr.DONE) { // 요청이 완료되면
@@ -240,6 +242,9 @@ function subscribe_b() {
     };
     xhr.open('GET', 'https://docoex.page/roomExists?roomId='+sessionStorage.getItem('ROOMID')); // 메소드와 주소 설정
     xhr.send(); // 요청 전송 
+  } else {
+    subscribe();
+  }
 }
 
 async function subscribe() {
