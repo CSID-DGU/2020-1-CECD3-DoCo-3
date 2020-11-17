@@ -57,6 +57,15 @@ async function runExpressApp() {
     res.json({ exists: roomId in rooms, clientId: mediasoupRouter.id });
   });
 
+  expressApp.get("/roomList", async (req, res) => {
+    var roomList = [];
+    for(key in rooms){
+        roomList.push(rooms[key].roomId);
+    }
+
+    res.json(roomList);
+  })
+
   expressApp.use((error, req, res, next) => {
     if (error) {
       console.warn('Express app error,', error.message);
