@@ -4,7 +4,7 @@
   "description": "DoCo Webex",
   "main": "server.js",
   "scripts": {
-    "start": "browserify ./public/js/list.js -o app-bundle.js; node server.js"
+    "start": "browserify client.js -o app-bundle.js; node server.js"
   },
   "author": "",
   "license": "ISC",

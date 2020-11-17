@@ -55,8 +55,7 @@ async function loadDevice(routerRtpCapabilities) {
   await device.load({ routerRtpCapabilities });
 }
 
-async function publish(e) {
-  const isWebcam = (e.target.id === 'btn_webcam');
+async function publish() {
 
   const data = await socket.request('createProducerTransport', {
     forceTcp: false,
