@@ -23,7 +23,7 @@ const $txtScreen = $('#screen_status');
 const $txtSubscription = $('#sub_status');
 let $txtPublish;
 
-$btnConnect.addEventListener('click', connect);
+$btnConnect.addEventListener('click', create);
 $btnWebcam.addEventListener('click', publish);
 $btnSubscribe.addEventListener('click', subscribe);
 $btnList.addEventListener('click', initialize);
@@ -49,7 +49,7 @@ function initialize() {
   xhr.send();
 }
 
-async function connect() {
+function create() {
   const xhr = new XMLHttpRequest();
   xhr.onreadystatechange = function() { // 요청에 대한 콜백
       if (xhr.readyState === xhr.DONE) { // 요청이 완료되면
@@ -58,7 +58,7 @@ async function connect() {
           console.log(Room.roomId)
 
           sessionStorage.setItem('ROOMID', Room.roomId);
-          
+          connect()
         } else {
           console.error(xhr.responseText);
        }
@@ -66,7 +66,9 @@ async function connect() {
   };
   xhr.open('GET', 'https://docoex.page/createRoom'); // 메소드와 주소 설정
   xhr.send(); // 요청 전 
+}
 
+async function connect() {
   $btnConnect.disabled = true;
   $txtConnection.innerHTML = 'Connecting...';
 

@@ -130,13 +130,14 @@ async function runSocketServer() {
       callback(rooms[data.roomId].hostRouterObj.rtpCapabilities);
     });
 
-    socket.on('getGuestRouterRtpCapabilities', (data, callback) => {
-      var roomList = [];
-      for(router in rooms[roomId].otherRouters){
-          roomList.push(router.rtpCapabilities);
-      }
-      callback(roomList);
-    });
+    // !< FOR GUEST
+    // socket.on('getGuestRouterRtpCapabilities', (data, callback) => {
+    //   var roomList = [];
+    //   for(router in rooms[roomId].otherRouters){
+    //       roomList.push(router.rtpCapabilities);
+    //   }
+    //   callback(roomList);
+    // });
 
     socket.on('createProducerTransport', async (data, callback) => {
       try {
