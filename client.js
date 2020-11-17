@@ -3,7 +3,7 @@ const socketClient = require('socket.io-client');
 const socketPromise = require('./lib/socket.io-promise').promise;
 
 const hostname = window.location.hostname;
-const urlparam = window.loacation.split('/');
+const urlparam = window.loacation.href.split('/');
 
 let device;
 let socket;
