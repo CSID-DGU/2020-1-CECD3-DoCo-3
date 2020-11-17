@@ -42,7 +42,7 @@ async function connect() {
     transports: ['websocket'],
   };
 
-  const serverUrl = `http://docoex.page:3000`;
+  const serverUrl = `https://${hostname}`;
   socket = socketClient(serverUrl, opts);
   socket.request = socketPromise(socket);
 
