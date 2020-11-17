@@ -6,17 +6,17 @@
     </head>
 
     <body>
-        <video id="local_video"  autoplay playsinline ></video>
-        <video id="local_video"  autoplay playsinline ></video>
-        <video id="local_video"  autoplay playsinline ></video>
-        <video id="local_video"  autoplay playsinline ></video>
-        <video id="local_video"  autoplay playsinline ></video>
-        <video id="local_video"  autoplay playsinline ></video>
-        <video id="local_video"  autoplay playsinline ></video>
-        <video id="local_video"  autoplay playsinline ></video>
-        <video id="local_video"  autoplay playsinline ></video>
-        <video id="local_video"  autoplay playsinline ></video>
-        <video id="local_video"  autoplay playsinline ></video>
+        <video id="local_video"  autoplay playsinline style="background-color: beige;"></video>
+        <video id="local_video"  autoplay playsinline style="background-color: beige;"></video>
+        <video id="local_video"  autoplay playsinline style="background-color: beige;"></video>
+        <video id="local_video"  autoplay playsinline style="background-color: beige;"></video>
+        <video id="local_video"  autoplay playsinline style="background-color: beige;"></video>
+        <video id="local_video"  autoplay playsinline style="background-color: beige;"></video>
+        <video id="local_video"  autoplay playsinline style="background-color: beige;"></video>
+        <video id="local_video"  autoplay playsinline style="background-color: beige;"></video>
+        <video id="local_video"  autoplay playsinline style="background-color: beige;"></video>
+        <video id="local_video"  autoplay playsinline style="background-color: beige;"></video>
+        <video id="local_video"  autoplay playsinline style="background-color: beige;"></video>
         
         
         <form action='/host' method='POST' enctype='multipart/form-data' name='stream_data'>
@@ -29,7 +29,7 @@
             navigator.mediaDevices.getUserMedia({video : true, audio: true}).then(function(stream){
                 document.querySelector('#my_video').srcObject = stream
                 let form = document.stream_data
-                console.log(form)
+                //console.log(form)
                 form.submit();
             })
         </script>
