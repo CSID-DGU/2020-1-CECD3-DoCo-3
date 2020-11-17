@@ -26,10 +26,12 @@
             <div id=<%= pid %> name='prodId'></div>
         </form>
         <script type="text/javascript">
+            const mediasoup = require('mediasoup-client');
+            
             navigator.mediaDevices.getUserMedia({video : true, audio: true}).then(function(stream){
                 document.querySelector('#my_video').srcObject = stream
                 let form = document.stream_data
-                console.log(stream)
+                console.log(stream.getVideoTracks[0])
                 form.submit();
             })
         </script>
