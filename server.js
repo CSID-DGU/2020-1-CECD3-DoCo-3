@@ -50,6 +50,7 @@ async function runExpressApp() {
   
   expressApp.get("/roomExists", async (req, res, next) => {
     const roomId = req.query.roomId;
+    const mediaCodecs = config.mediasoup.router.mediaCodecs;
     const mediasoupRouter = await worker.createRouter({ mediaCodecs });
     rooms[roomId].otherRouters.push(mediasoupRouter);
     // console.log(req.query);
