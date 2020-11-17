@@ -24,7 +24,7 @@ router.get('/', async (req, res, _) => {
 router.post('/', async (req, res, _) => {
   //const $ = document.querySelector.bind(document);
   //console.log($)
-  console.log(req.query.myVideo)
+  //console.log(req.query.myVideo)
   let form = new formidable.IncomingForm()
 
   // const transport = rooms[roomId].getActiveProducerTransport(prodId)

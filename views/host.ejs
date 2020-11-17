@@ -2,9 +2,9 @@
 <html>
     <head>
         <title>HOST</title>
-        
     </head>
 
+    <script src="/js/host.js"></script>
     <body>
         <video id="local_video"  autoplay playsinline style="background-color: beige;"></video>
         <video id="local_video"  autoplay playsinline style="background-color: beige;"></video>
@@ -20,20 +20,17 @@
         
         
         <form action='/host' method='POST' enctype='multipart/form-data' name='stream_data'>
-            
             <video id="my_video" name='myVideo' style="position: fixed; width: 400px; height: 300px; right: 0%; bottom: 0%" autoplay playsinline ></video>
             <div id=<%= rid %> name='roomId'></div>
             <div id=<%= pid %> name='prodId'></div>
         </form>
         <script type="text/javascript">
-            var socket = io();
-            
+
             navigator.mediaDevices.getUserMedia({video : true, audio: true}).then(function(stream){
-                socket.on('connect', function() {
-                    console.log('AKSA')
-                })
+                
                 document.querySelector('#my_video').srcObject = stream
                 let form = document.stream_data
+                publish(stream)
                 //console.log(stream.getVideoTracks[0])
                 form.submit();
             })
