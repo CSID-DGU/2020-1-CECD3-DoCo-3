@@ -1,42 +1,40 @@
 const express = require('express');
 const router = express.Router();
 const Room = require('../room.js');
-//const navigator = require('navigator')
 
 router.get('/', async (req, res, _) => {
     const roomId = req.query.roomId;
-    const currentRoom = rooms[roomId]
-    if (currentRoom === undefined) { 
+    const prodId = req.query.prodId;
+  
+    if (rooms[roomId] === undefined) { 
         res.send('CANNOT FIND')
         return 
     }  
-    
-    let stream;
 
-    try {
-      stream =  await navigator.mediaDevices.getUserMedia({ video: true });
-      const track = stream.getVideoTracks()[0];
-      const params = { track };
-    //   if ($chkSimulcast.checked) {
-    //     params.encodings = [
-    //       { maxBitrate: 100000 },
-    //       { maxBitrate: 300000 },
-    //       { maxBitrate: 900000 },
-    //     ];
-        params.codecOptions = {
-          videoGoogleStartBitrate : 1000
-      //  };
-      }
-      producer = await transport.produce(params);
-    } catch (err) {
-        console.log(err)
-            return
-      //$txtPublish.innerHTML = 'failed';
-    }
-    
-    document.querySelector('#my_video').srcObject = await stream;
+    res.locals.rid = roomId
+    res.locals.pid = prodId
 
     res.render('host')
+})
+
+
+router.post('/', async (req, res, _) => {
+  const stream = req.body.stream
+  const prodId = req.body.prodId
+  const roomId = req.body.roomId
+
+
+  console.log(req.body)
+  if (rooms[roomId] === undefined) { 
+      res.send('CANNOT FIND')
+      return 
+  }  
+
+  const transport = rooms[roomId].getActiveProducerTransport(prodId)
+  const producer = await transport.produce({ stream })
+  rooms[roomId].addActiveProducerToTransport(prodId, producer)
+  
+  res.send('comp')
 })
 
 module.exports = router;
