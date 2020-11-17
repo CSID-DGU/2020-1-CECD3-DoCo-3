@@ -8,3 +8,5 @@ class Room {
         this.consumers = {};
     }
 }
+
+module.exports = Room;
