@@ -49,7 +49,7 @@ app.get('/', function(req,res){ res.render('list', {}); });
 // Socket IO routes here
 async function createIOServer() {
   const roomNamespace = io.of('/rooms');
-  io.on('connection', socket => { 
+  roomNamespace.on('connection', socket => { 
       console.log('Example app listening on port 3000!');
 
       socket.on('roomExists', async (data) => {

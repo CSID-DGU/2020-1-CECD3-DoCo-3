@@ -35,8 +35,8 @@ let device;
 let socket;
 
 async function connect() {
-  const serverUrl = `https://docoex.page:3000`;
-  socket = socketClient(serverUrl);
+  const serverUrl = `https://docoex.page`;
+  socket = socketClient(serverUrl, {path: '/rooms'});
   console.log(socket);
   socket.request = socketPromise(socket);
 
@@ -47,7 +47,7 @@ async function connect() {
 
 
   socket.on('connect_error', (error) => {
-    console.error('could not connect to %s%s (%s)', serverUrl, opts.path, error.message);
+    console.error('could not connect to %s (%s)', serverUrl, error.message);
   });
 
 }

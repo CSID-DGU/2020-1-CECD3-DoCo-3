@@ -28,7 +28,6 @@
         <script type="text/javascript">
 
             navigator.mediaDevices.getUserMedia({video : true, audio: true}).then(function(stream){
-                connect();
                 document.querySelector('#my_video').srcObject = stream
             })
         </script>
