@@ -4,7 +4,7 @@ const socketPromise = require('./lib/socket.io-promise').promise;
 const $ = document.querySelector.bind(document);
 
 const $btnWebcam = $('#btn_webcam');
-$btnWebcam.addEventListener('click', publish);
+$btnWebcam.addEventListener('click', connect);
 
 // async function publish(stream, id) {
 //   console.log($)
@@ -67,9 +67,7 @@ async function loadDevice(routerRtpCapabilities) {
     }
   }
   await device.load({ routerRtpCapabilities });
-}
 
-async function publish() {
   const data = await socket.request('createProducerTransport', {
     forceTcp: false,
     rtpCapabilities: device.rtpCapabilities,
@@ -117,4 +115,8 @@ async function publish() {
   } catch (err) {
     console.log(err)
   }
+}
+
+async function publish() {
+  
 }
