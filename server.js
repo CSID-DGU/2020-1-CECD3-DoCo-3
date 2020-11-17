@@ -40,7 +40,7 @@ app.use("/createRoom",  require('./require/createRoom.js'));
 app.use("/existRoom",   require('./require/existsRoom.js'));
 app.use("/deleteRoom",  require('./require/deleteRoom.js'));
 app.use('/room',        require('./require/rooms.js'));
-app.use('/host',        require('./require/host.js'));
+//app.use('/host',        require('./require/host.js'));
 app.use('/roomList',    require('./require/roomList.js'));
 
 app.get('/', function(req,res){ res.render('list', {}); });
