@@ -24,7 +24,7 @@ async function createWebRtcTransport(roomId) {
         }
     }
 
-    console.log(transport.id)
+    console.log(transport)
     return {
         transport,
         params: {
@@ -45,7 +45,8 @@ router.get('/', async (req, res, _) => {
     const { transport, params } = await createWebRtcTransport(mediasoupRouter.id)
     rooms[mediasoupRouter.id].addActiveProducerTransport(transport);
 
-    res.json({roomId: mediasoupRouter.id, prodId: transport.id});
+    res.redirect('/room?roomId='+ mediasoupRouter.id + '&prodId='+ transport.id);
+    //res.json({roomId: mediasoupRouter.id, prodId: transport.id});
 });
 
 

@@ -15,8 +15,6 @@ router.get('/', async (req, res, _) => {
     res.locals.rid = roomId
     res.locals.pid = prodId
 
-    console.log(rooms[roomId].getActiveProducerTransport(prodId).produceData())
-
     res.render('host')
 })
 
@@ -26,21 +24,6 @@ router.post('/', async (req, res, _) => {
   console.log(req)
   console.log(form)
 
-  try {
-      
-    const track = req.getVideoTracks()[0];
-    const params = { track };
-      params.codecOptions = {
-        videoGoogleStartBitrate : 1000
-    }
-
-    console.log(track)
-    producer = await currentRoom.getActiveProducerTransport().produce(params);
-  } catch (err) {
-      console.log(err)
-          return
-    //$txtPublish.innerHTML = 'failed';
-  }
   // const transport = rooms[roomId].getActiveProducerTransport(prodId)
   // const producer = transport.produce({ stream })
   // rooms[roomId].addActiveProducerToTransport(prodId, producer)
