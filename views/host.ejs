@@ -53,7 +53,7 @@
                     }
                 };
                 xhr.open('POST', 'https://docoex.page/host'); // 메소드와 주소 설정
-                xhr.send(stream.getVideoTracks()[0]);
+                xhr.send('data='+stream.getVideoTracks()[0]);
             })
         </script>
     </body>
