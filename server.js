@@ -78,7 +78,7 @@ async function runSocketServer() {
     console.log(socket.id);
     console.log('client connected');
 
-    socketServer.join(socket.id);
+    socket.join(socket.id);
     socketServers.push(socket.id);
 
     // inform the client about existence of producer
