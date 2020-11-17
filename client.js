@@ -32,6 +32,23 @@ if (typeof navigator.mediaDevices.getDisplayMedia === 'undefined') {
 }
 
 async function connect() {
+  const xhr = new XMLHttpRequest();
+  xhr.onreadystatechange = function() { // 요청에 대한 콜백
+      if (xhr.readyState === xhr.DONE) { // 요청이 완료되면
+        if (xhr.status === 200 || xhr.status === 201) {
+          const Room = JSON.parse(xhr.responseText);
+          console.log(Room.roomId)
+
+          sessionStorage.setItem('ROOMID', Room.roomId);
+          
+        } else {
+          console.error(xhr.responseText);
+       }
+    }
+  };
+  xhr.open('GET', 'https://docoex.page/createRoom'); // 메소드와 주소 설정
+  xhr.send(); // 요청 전 
+
   $btnConnect.disabled = true;
   $txtConnection.innerHTML = 'Connecting...';
 
@@ -49,25 +66,8 @@ async function connect() {
     $fsPublish.disabled = false;
     $fsSubscribe.disabled = false;
 
-    const xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = function() { // 요청에 대한 콜백
-      if (xhr.readyState === xhr.DONE) { // 요청이 완료되면
-        if (xhr.status === 200 || xhr.status === 201) {
-          const Room = JSON.parse(xhr.responseText);
-          console.log(Room.roomId)
-
-          sessionStorage.setItem('ROOMID', Room.roomId);
-          const option = { roomId : Room.roomId }
-          console.log('EFSF  ' + option)
-          const data = await socket.request('getRouterRtpCapabilities', option);
-          await loadDevice(data);
-        } else {
-          console.error(xhr.responseText);
-        }
-      }
-    };
-    xhr.open('GET', 'https://docoex.page/createRoom'); // 메소드와 주소 설정
-    xhr.send(); // 요청 전 
+    const data = await socket.request('getRouterRtpCapabilities', { roomId : sessionStorage.getItem('ROOMID') });
+    await loadDevice(data);
   });
 
   socket.on('disconnect', () => {
