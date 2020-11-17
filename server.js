@@ -131,7 +131,7 @@ async function runSocketServer() {
     });
 
     socket.on('getRouterRtpCapabilities', (data, callback) => {
-      console.log('getRouterRtpCapabilities::::' + data)
+      console.log('getRouterRtpCapabilities::::' + JSON.parse(data))
       callback(mediasoupRouter.rtpCapabilities);
     });
 

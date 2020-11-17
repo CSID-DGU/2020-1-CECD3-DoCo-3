@@ -57,7 +57,9 @@ async function connect() {
           console.log(Room.roomId)
 
           sessionStorage.setItem('ROOMID', Room.roomId);
-          const data = await socket.request('getRouterRtpCapabilities', { roomId : Room.roomId });
+          const option = { roomId : Room.roomId }
+          console.log('EFSF  ' + option)
+          const data = await socket.request('getRouterRtpCapabilities', option);
           await loadDevice(data);
         } else {
           console.error(xhr.responseText);
