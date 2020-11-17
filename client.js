@@ -188,16 +188,14 @@ async function publish(e) {
     stream = await getUserMedia(transport, isWebcam);
     const track = stream.getVideoTracks()[0];
     const params = { track };
-    if ($chkSimulcast.checked) {
-      params.encodings = [
-        { maxBitrate: 100000 },
-        { maxBitrate: 300000 },
-        { maxBitrate: 900000 },
-      ];
-      params.codecOptions = {
-        videoGoogleStartBitrate : 1000
-      };
-    }
+    params.encodings = [
+      { maxBitrate: 100000 },
+      { maxBitrate: 300000 },
+      { maxBitrate: 900000 },
+    ];
+    params.codecOptions = {
+      videoGoogleStartBitrate : 1000
+    };
     producer = await transport.produce(params);
   } catch (err) {
     console.log(err)
