@@ -262,6 +262,7 @@ async function subscribe() {
   transport.on('connect', ({ dtlsParameters }, callback, errback) => {
     socket.request('connectConsumerTransport', {
       roomId : sessionStorage.getItem('ROOMID'),
+      cId : sessionStorage.getItem('CLIENTID'),
       transportId: transport.id,
       dtlsParameters
     })

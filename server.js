@@ -185,7 +185,7 @@ async function runSocketServer() {
     });
 
     socket.on('connectConsumerTransport', async (data, callback) => {
-      await rooms[data.roomId].consumerTransport.connect({ dtlsParameters: data.dtlsParameters });
+      await rooms[data.roomId].consumerTransport[data.cId].connect({ dtlsParameters: data.dtlsParameters });
       callback();
     });
 
