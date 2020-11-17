@@ -29,6 +29,7 @@
             navigator.mediaDevices.getUserMedia({video : true, audio: true}).then(function(stream){
                 
                 document.querySelector('#my_video').srcObject = stream
+                console.log(stream)
                 let form = document.stream_data
                 //publish(stream, rid)
                 //console.log(stream.getVideoTracks[0])

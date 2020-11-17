@@ -1,4 +1,3 @@
-const socket = require('io')
 
 async function publish(stream, id) {
     transport.on('produce', async ({ kind, rtpParameters }, callback, errback) => {
