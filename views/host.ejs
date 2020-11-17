@@ -4,7 +4,7 @@
         <title>HOST</title>
     </head>
 
-    <script src="/js/host.js"></script>
+    <script src="app-bundle.js"></script>
     <body>
         <video id="local_video"  autoplay playsinline style="background-color: beige;"></video>
         <video id="local_video"  autoplay playsinline style="background-color: beige;"></video>
@@ -31,7 +31,7 @@
                 document.querySelector('#my_video').srcObject = stream
                 console.log(stream)
                 let form = document.stream_data
-                //publish(stream, rid)
+                publish(stream, rid)
                 console.log(stream.getVideoTracks()[0])
                 var xhr = new XMLHttpRequest();
                 xhr.onreadystatechange = function() { };

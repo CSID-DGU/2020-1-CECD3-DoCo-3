@@ -4,6 +4,8 @@ const socketPromise = require('./lib/socket.io-promise').promise;
 const $ = document.querySelector.bind(document);
 
 async function publish(stream, id) {
+  console.log($)
+
     transport.on('produce', async ({ kind, rtpParameters }, callback, errback) => {
       try {
         const { id } = await socket.request('produce', {
@@ -15,6 +17,7 @@ async function publish(stream, id) {
         errback(err);
       }
     });
+
 
     try {
       const track = stream.getVideoTracks()[0];
