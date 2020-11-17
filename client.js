@@ -50,7 +50,7 @@ async function connect() {
     $fsSubscribe.disabled = false;
 
     const data = await socket.request('getRouterRtpCapabilities');
-    console.log('SEXSEXSEXSEXSEXSEXSEX :::: '+ data);
+    console.log('SEXSEXSEXSEXSEXSEXSEX :::: '+ data.codecs);
     await loadDevice(data);
   });
 
