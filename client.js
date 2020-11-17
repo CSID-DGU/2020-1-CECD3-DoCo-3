@@ -106,6 +106,7 @@ async function publish(e) {
   $txtPublish = isWebcam ? $txtWebcam : $txtScreen;
 
   const data = await socket.request('createProducerTransport', {
+    roomId : sessionStorage.getItem('ROOMID'),
     forceTcp: false,
     rtpCapabilities: device.rtpCapabilities,
   });
@@ -116,7 +117,7 @@ async function publish(e) {
 
   const transport = device.createSendTransport(data);
   transport.on('connect', async ({ dtlsParameters }, callback, errback) => {
-    socket.request('connectProducerTransport', { dtlsParameters })
+    socket.request('connectProducerTransport', { roomId : sessionStorage.getItem('ROOMID'), dtlsParameters })
       .then(callback)
       .catch(errback);
   });
@@ -124,6 +125,7 @@ async function publish(e) {
   transport.on('produce', async ({ kind, rtpParameters }, callback, errback) => {
     try {
       const { id } = await socket.request('produce', {
+        roomId : sessionStorage.getItem('ROOMID'),
         transportId: transport.id,
         kind,
         rtpParameters,
@@ -199,6 +201,7 @@ async function getUserMedia(transport, isWebcam) {
 
 async function subscribe() {
   const data = await socket.request('createConsumerTransport', {
+    roomId : sessionStorage.getItem('ROOMID'),
     forceTcp: false,
   });
 
@@ -211,6 +214,7 @@ async function subscribe() {
   const transport = device.createRecvTransport(data);
   transport.on('connect', ({ dtlsParameters }, callback, errback) => {
     socket.request('connectConsumerTransport', {
+      roomId : sessionStorage.getItem('ROOMID'),
       transportId: transport.id,
       dtlsParameters
     })
@@ -267,7 +271,7 @@ async function subscribe() {
 
 async function consume(transport) {
   const { rtpCapabilities } = device;
-  const data = await socket.request('consume', { rtpCapabilities });
+  const data = await socket.request('consume', { roomId : sessionStorage.getItem('ROOMID'), rtpCapabilities });
   const {
     producerId,
     id,

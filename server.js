@@ -42,7 +42,7 @@ async function runExpressApp() {
   expressApp.get("/createRoom", async (req, res, next) => {
     const mediaCodecs = config.mediasoup.router.mediaCodecs;
     const mediasoupRouter = await worker.createRouter({ mediaCodecs });
-    // Might need to put below into database?
+
     rooms[mediasoupRouter.id] = new Room(mediasoupRouter.id, mediasoupRouter);
     res.json({roomId: mediasoupRouter.id});
   });
@@ -51,8 +51,8 @@ async function runExpressApp() {
     const roomId = req.query.roomId;
     const mediaCodecs = config.mediasoup.router.mediaCodecs;
     const mediasoupRouter = await worker.createRouter({ mediaCodecs });
-    rooms[roomId].otherRouters.push(mediasoupRouter);
-    // console.log(req.query);
+
+    rooms[roomId].otherRouters[mediasoupRouter.id] = mediasoupRouter;
     res.json({ exists: roomId in rooms, clientId: mediasoupRouter.id });
   });
 
@@ -131,14 +131,21 @@ async function runSocketServer() {
     });
 
     socket.on('getRouterRtpCapabilities', (data, callback) => {
-      console.log('getRouterRtpCapabilities::::' + data.roomId)
-      callback(mediasoupRouter.rtpCapabilities);
+      callback(rooms[data.roomId].hostRouterObj.rtpCapabilities);
+    });
+
+    socket.on('getGuestRouterRtpCapabilities', (data, callback) => {
+      var roomList = [];
+      for(router in rooms[roomId].otherRouters){
+          roomList.push(router.rtpCapabilities);
+      }
+      callback(roomList);
     });
 
     socket.on('createProducerTransport', async (data, callback) => {
       try {
         const { transport, params } = await createWebRtcTransport();
-        producerTransport = transport;
+        rooms[data.roomId].producerTransport = transport;
         callback(params);
       } catch (err) {
         console.error(err);
@@ -149,7 +156,7 @@ async function runSocketServer() {
     socket.on('createConsumerTransport', async (data, callback) => {
       try {
         const { transport, params } = await createWebRtcTransport();
-        consumerTransport = transport;
+        rooms[data.roomId].consumerTransport[data.cId] = transport;
         callback(params);
       } catch (err) {
         console.error(err);
@@ -158,18 +165,27 @@ async function runSocketServer() {
     });
 
     socket.on('connectProducerTransport', async (data, callback) => {
-      await producerTransport.connect({ dtlsParameters: data.dtlsParameters });
+      await rooms[data.roomId].producerTransport.connect({ dtlsParameters: data.dtlsParameters });
       callback();
     });
 
     socket.on('connectConsumerTransport', async (data, callback) => {
-      await consumerTransport.connect({ dtlsParameters: data.dtlsParameters });
+      await rooms[data.roomId].consumerTransport.connect({ dtlsParameters: data.dtlsParameters });
       callback();
     });
 
     socket.on('produce', async (data, callback) => {
       const {kind, rtpParameters} = data;
-      producer = await producerTransport.produce({ kind, rtpParameters });
+      rooms[data.roomId].producer = await rooms[data.roomId].producerTransport.produce({ kind, rtpParameters });
+      callback({ id: producer.id });
+
+      // inform clients about new producer
+      socket.broadcast.to(socket.id).emit('newProducer');
+    });
+
+    socket.on('clientproduce', async (data, callback) => {
+      const {kind, rtpParameters} = data;
+      producer = await rooms[data.roomId].consumerTransport[data.cId].produce({ kind, rtpParameters });
       callback({ id: producer.id });
 
       // inform clients about new producer
@@ -177,7 +193,7 @@ async function runSocketServer() {
     });
 
     socket.on('consume', async (data, callback) => {
-      callback(await createConsumer(producer, data.rtpCapabilities));
+      callback(await createConsumer(rooms[data.roomId].producer, data.rtpCapabilities));
     });
 
     socket.on('resume', async (data, callback) => {
