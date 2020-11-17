@@ -10,7 +10,7 @@ const io = require('socket.io')(server, options);
 const Room = require('./room.js');
 
 app.set('view engine', 'ejs');
-app.use(express.static(__dirname + '/public'));
+app.use(express.static(__dirname));
 
 const cors = require('cors')
 const corsOptions = {
