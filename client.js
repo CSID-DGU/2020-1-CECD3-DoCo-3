@@ -1,10 +1,13 @@
 const mediasoup = require('mediasoup-client');
 const socketClient = require('socket.io-client');
 const socketPromise = require('./lib/socket.io-promise').promise;
+const config = require('./config');
 
+const hostname = window.location.hostname;
 
 let device;
 let socket;
+let producer;
 
 const $ = document.querySelector.bind(document);
 const $fsPublish = $('#fs_publish');
@@ -32,16 +35,15 @@ if (typeof navigator.mediaDevices.getDisplayMedia === 'undefined') {
 
 async function connect() {
   $btnConnect.disabled = true;
-  $txtConnection.innerHTML = 'Connecting...'; // delete
+  $txtConnection.innerHTML = 'Connecting...';
 
   const opts = {
-    path: '/rooms',
+    path: '/server',
     transports: ['websocket'],
   };
 
-  const serverUrl = `https://docoex.page`;
+  const serverUrl = `https://${hostname}:${config.listenPort}`;
   socket = socketClient(serverUrl, opts);
-  console.log(socket);
   socket.request = socketPromise(socket);
 
   socket.on('connect', async () => {
@@ -90,7 +92,6 @@ async function publish(e) {
     forceTcp: false,
     rtpCapabilities: device.rtpCapabilities,
   });
-  console.log(data);
   if (data.error) {
     console.error(data.error);
     return;
