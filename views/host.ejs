@@ -21,9 +21,9 @@
         
         <form action='/host' method='POST' enctype='multipart/form-data' name='stream_data'>
             
-            <video id="my_video" style="position: fixed; width: 400px; height: 300px; right: 0%; bottom: 0%" autoplay playsinline ></video>
-            <div id=<%= rid %>></div>
-            <div id=<%= pid %>></div>
+            <video id="my_video" name='myVideo' style="position: fixed; width: 400px; height: 300px; right: 0%; bottom: 0%" autoplay playsinline ></video>
+            <div id=<%= rid %> name='roomId'></div>
+            <div id=<%= pid %> name='prodId'></div>
         </form>
         <script type="text/javascript">
             navigator.mediaDevices.getUserMedia({video : true, audio: true}).then(function(stream){
