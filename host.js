@@ -1,5 +1,4 @@
 const mediasoup = require('mediasoup-client');
-const io = require('socket.io');
 const socketPromise = require('./lib/socket.io-promise').promise;
 const $ = document.querySelector.bind(document);
 
@@ -35,8 +34,7 @@ $btnWebcam.addEventListener('click', connect);
 let device;
 
 async function connect() {
-  const socket = io();
-  socket.emit('publish', $webcam.srcObject) 
+  io.emit('publish', $webcam.srcObject) 
 }
 
 async function loadDevice(routerRtpCapabilities) {
