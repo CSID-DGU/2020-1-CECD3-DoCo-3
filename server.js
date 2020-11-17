@@ -4,8 +4,7 @@ const config = require('./config.js');
 const express = require('express');
 const app = express();
 const server = require('http').createServer(app);
-const options = { /* ... */ };
-const io = require('socket.io')(server, options);
+const io = require('socket.io');
 
 const Room = require('./room.js');
 
@@ -44,7 +43,6 @@ app.use('/host',        require('./require/host.js'));
 app.use('/roomList',    require('./require/roomList.js'));
 
 app.get('/', function(req,res){ res.render('list', {}); });
-
 
 // Socket IO routes here
 async function createIOServer() {
