@@ -34,7 +34,7 @@ $btnWebcam.addEventListener('click', connect);
 let device;
 let socket;
 
-async function connect() {
+function connect() {
 
   const opts = {
     path: '/rooms',
