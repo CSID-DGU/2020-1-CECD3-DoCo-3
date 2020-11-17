@@ -5,13 +5,13 @@ const Room = require('../room.js');
 router.get('/', async (req, res, _) => {
     const roomId = req.query.roomId;
     const currentRoom = rooms[roomId]
-    
+    /*
     if (currentRoom === undefined) { 
         res.send('CANNOT FIND')
         return 
     }
+    */
     
-
     res.locals.roomId = roomId
 
     // const transport = device.createSendTransport(data);

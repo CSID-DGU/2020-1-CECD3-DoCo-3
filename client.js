@@ -66,7 +66,8 @@ async function connect() {
     $txtConnection.innerHTML = 'Connection failed';
     $btnConnect.disabled = false;
   });
-
+    
+  
   socket.on('newProducer', () => {
     $fsSubscribe.disabled = false;
   });
