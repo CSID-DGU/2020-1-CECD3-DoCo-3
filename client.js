@@ -40,8 +40,6 @@ async function connect() {
     transports: ['websocket'],
   };
 
-  console.log(urlparam)
-
   const serverUrl = `https://${hostname}`;
   socket = socketClient(serverUrl, opts);
   socket.request = socketPromise(socket);
