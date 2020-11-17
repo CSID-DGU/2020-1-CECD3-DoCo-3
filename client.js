@@ -31,6 +31,22 @@ if (typeof navigator.mediaDevices.getDisplayMedia === 'undefined') {
   $btnScreen.disabled = true;
 }
 
+function initialize() {
+  const xhr = new XMLHttpRequest();
+  xhr.onreadystatechange = function() { // 요청에 대한 콜백
+      if (xhr.readyState === xhr.DONE) { // 요청이 완료되면
+        if (xhr.status === 200 || xhr.status === 201) {
+          const Room = JSON.parse(xhr.responseText);
+          console.log(Room)
+        } else {
+          console.error(xhr.responseText);
+       }
+    }
+  };
+  xhr.open('GET', 'https://docoex.page/roomList'); // 메소드와 주소 설정
+  xhr.send();
+}
+
 async function connect() {
   const xhr = new XMLHttpRequest();
   xhr.onreadystatechange = function() { // 요청에 대한 콜백
@@ -202,6 +218,7 @@ async function getUserMedia(transport, isWebcam) {
 async function subscribe() {
   const data = await socket.request('createConsumerTransport', {
     roomId : sessionStorage.getItem('ROOMID'),
+    cId : sessionStorage.getItem('CLIENTID'),
     forceTcp: false,
   });
 
@@ -271,7 +288,7 @@ async function subscribe() {
 
 async function consume(transport) {
   const { rtpCapabilities } = device;
-  const data = await socket.request('consume', { roomId : sessionStorage.getItem('ROOMID'), rtpCapabilities });
+  const data = await socket.request('consume', { roomId : sessionStorage.getItem('ROOMID'), cId : sessionStorage.getItem('CLIENTID'), rtpCapabilities });
   const {
     producerId,
     id,

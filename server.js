@@ -15,9 +15,6 @@ let expressApp;
 
 let producer;
 let consumer;
-let producerTransport;
-let consumerTransport;
-let mediasoupRouter;
 
 let rooms = {};
 
@@ -26,7 +23,6 @@ let rooms = {};
     await runExpressApp();
     await runWebServer();
     await runSocketServer();
-    await runMediasoupWorker();
   } catch (err) {
     console.error(err);
   }
@@ -193,7 +189,7 @@ async function runSocketServer() {
     });
 
     socket.on('consume', async (data, callback) => {
-      callback(await createConsumer(rooms[data.roomId].producer, data.rtpCapabilities));
+      callback(await createConsumer(rooms[data.roomId].producer, data.rtpCapabilities, data.roomId, data.cId));
     });
 
     socket.on('resume', async (data, callback) => {
@@ -203,30 +199,13 @@ async function runSocketServer() {
   });
 }
 
-async function runMediasoupWorker() {
-  worker = await mediasoup.createWorker({
-    logLevel: config.mediasoup.worker.logLevel,
-    logTags: config.mediasoup.worker.logTags,
-    rtcMinPort: config.mediasoup.worker.rtcMinPort,
-    rtcMaxPort: config.mediasoup.worker.rtcMaxPort,
-  });
-
-  worker.on('died', () => {
-    console.error('mediasoup worker died, exiting in 2 seconds... [pid:%d]', worker.pid);
-    setTimeout(() => process.exit(1), 2000);
-  });
-
-  const mediaCodecs = config.mediasoup.router.mediaCodecs;
-  mediasoupRouter = await worker.createRouter({ mediaCodecs });
-}
-
-async function createWebRtcTransport() {
+async function createWebRtcTransport(roomId) {
   const {
     maxIncomingBitrate,
     initialAvailableOutgoingBitrate
   } = config.mediasoup.webRtcTransport;
 
-  const transport = await mediasoupRouter.createWebRtcTransport({
+  const transport = await rooms[roomId].mediasoupRouter.createWebRtcTransport({
     listenIps: config.mediasoup.webRtcTransport.listenIps,
     enableUdp: true,
     enableTcp: true,
@@ -250,7 +229,7 @@ async function createWebRtcTransport() {
   };
 }
 
-async function createConsumer(producer, rtpCapabilities) {
+async function createConsumer(producer, rtpCapabilities, roomId, cId) {
   if (!mediasoupRouter.canConsume(
     {
       producerId: producer.id,
@@ -261,7 +240,7 @@ async function createConsumer(producer, rtpCapabilities) {
     return;
   }
   try {
-    consumer = await consumerTransport.consume({
+    consumer = await rooms[roomId].consumerTransport[cId].consume({
       producerId: producer.id,
       rtpCapabilities,
       paused: producer.kind === 'video',
