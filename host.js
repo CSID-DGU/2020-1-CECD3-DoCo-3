@@ -34,15 +34,9 @@ $btnWebcam.addEventListener('click', connect);
 let device;
 let socket;
 
-function connect() {
-
-  const opts = {
-    path: '/rooms',
-    transports: ['websocket'],
-  };
-
-  const serverUrl = `https://docoex.page`;
-  socket = socketClient(serverUrl, opts);
+async function connect() {
+  const serverUrl = `https://docoex.page:3000`;
+  socket = socketClient(serverUrl);
   console.log(socket);
   socket.request = socketPromise(socket);
 
