@@ -3,6 +3,8 @@ const router = express.Router();
 const Room = require('../room.js');
 const formidable = require('formidable')
 
+
+
 router.get('/', async (req, res, _) => {
     const roomId = req.query.roomId;
     const prodId = req.query.prodId;
@@ -20,6 +22,9 @@ router.get('/', async (req, res, _) => {
 
 
 router.post('/', async (req, res, _) => {
+  const $ = document.querySelector.bind(document);
+  console.log($)
+
   let form = new formidable.IncomingForm()
   console.log(req)
   console.log(form)
