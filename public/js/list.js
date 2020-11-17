@@ -56,7 +56,7 @@ function loadRoom(){
 
 //시작 시 방 로드 
 function init(){
-  loadRoom();    
+  loadRoom();
 }
 
 init();
