@@ -3,6 +3,7 @@ const socketClient = require('socket.io-client');
 const socketPromise = require('./lib/socket.io-promise').promise;
 
 const hostname = window.location.hostname;
+const urlparam = window.loacation.split('/');
 
 let device;
 let socket;
@@ -24,7 +25,6 @@ let $txtPublish;
 
 $btnConnect.addEventListener('click', connect);
 $btnWebcam.addEventListener('click', publish);
-$btnScreen.addEventListener('click', publish);
 $btnSubscribe.addEventListener('click', subscribe);
 
 if (typeof navigator.mediaDevices.getDisplayMedia === 'undefined') {
@@ -40,6 +40,8 @@ async function connect() {
     path: '/server',
     transports: ['websocket'],
   };
+
+  console.log(urlparam)
 
   const serverUrl = `https://${hostname}`;
   socket = socketClient(serverUrl, opts);
@@ -185,6 +187,8 @@ async function subscribe() {
   const data = await socket.request('createConsumerTransport', {
     forceTcp: false,
   });
+
+  console.log(data)
   if (data.error) {
     console.error(data.error);
     return;

@@ -4,12 +4,15 @@ const http = require('http');
 const express = require('express');
 const socketIO = require('socket.io');
 const config = require('./config');
+const Room = require('./ourRoom');
 
 // Global variables
 let worker;
 let webServer;
 let socketServer;
 let expressApp;
+
+
 let producer;
 let consumer;
 let producerTransport;
@@ -17,6 +20,7 @@ let consumerTransport;
 let mediasoupRouter;
 
 let socketServers = [];
+let rooms = {};
 
 (async () => {
   try {
@@ -28,6 +32,22 @@ let socketServers = [];
     console.error(err);
   }
 })();
+
+app.get("/createRoom", async (req, res, next) => {
+  const mediaCodecs = config.mediasoup.router.mediaCodecs;
+  const mediasoupRouter = await worker.createRouter({ mediaCodecs });
+  // Might need to put below into database?
+  rooms[mediasoupRouter.id] = new Room(mediasoupRouter.id, mediasoupRouter);
+  res.json({roomId: mediasoupRouter.id});
+});
+
+app.get("/roomExists", async (req, res, next) => {
+  const roomId = req.query.roomId;
+  const mediasoupRouter = await worker.createRouter({ mediaCodecs });
+  rooms[roomId].otherRouters.push(mediasoupRouter);
+  // console.log(req.query);
+  res.json({ exists: roomId in rooms, clientId: mediasoupRouter.id });
+});
 
 async function runExpressApp() {
   expressApp = express();
@@ -74,26 +94,32 @@ async function runSocketServer() {
   });
 
   socketServer.on('connection', (socket) => {
-    console.log(socket);
-    console.log(socket.id);
-    console.log('client connected');
+    console.log(socket.id + ', client connected');
 
     socket.join(socket.id);
     socketServers.push(socket.id);
 
     // inform the client about existence of producer
     if (producer) {
-      socket.emit('newProducer');
+      socket.to(socket.id).emit('newProducer');
     }
 
+    socket.on('roomExists', async (data) => {
+      socket.emit('validRoom', data in rooms);
+    });
+
+    socket.on('joinRoom', (data) => {
+      // Have the user join a specific room
+      socket.join(data.roomId);
+    });
+
     socket.on('disconnect', () => {
+      socket.leave(socket.id);
       console.log('client disconnected');
     });
 
     socket.on('connect_error', (err) => {
       console.error('client connection error', err);
-      socket.join
-      socket.rooms
     });
 
     socket.on('getRouterRtpCapabilities', (data, callback) => {
@@ -138,7 +164,7 @@ async function runSocketServer() {
       callback({ id: producer.id });
 
       // inform clients about new producer
-      socket.broadcast.emit('newProducer');
+      socket.broadcast.to(socket.id).emit('newProducer');
     });
 
     socket.on('consume', async (data, callback) => {
