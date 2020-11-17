@@ -2,7 +2,6 @@ const mediasoup = require('mediasoup-client');
 const socketClient = require('socket.io-client');
 const socketPromise = require('./lib/socket.io-promise').promise;
 
-const hostname = window.location.hostname;
 
 let device;
 let socket;
@@ -40,7 +39,7 @@ async function connect() {
     transports: ['websocket'],
   };
 
-  const serverUrl = `https://${hostname}`;
+  const serverUrl = `https://docoex.page`;
   socket = socketClient(serverUrl, opts);
   console.log(socket);
   socket.request = socketPromise(socket);

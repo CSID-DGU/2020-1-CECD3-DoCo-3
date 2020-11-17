@@ -2,44 +2,43 @@
 <html>
     <head>
         <title>HOST</title>
-        
     </head>
+
+    <script src="/js/host.js"></script>
     <body>
-        <video id="local_video"  autoplay playsinline ></video>
-        <video id="local_video"  autoplay playsinline ></video>
-        <video id="local_video"  autoplay playsinline ></video>
-        <video id="local_video"  autoplay playsinline ></video>
-        <video id="local_video"  autoplay playsinline ></video>
-        <video id="local_video"  autoplay playsinline ></video>
-        <video id="local_video"  autoplay playsinline ></video>
-        <video id="local_video"  autoplay playsinline ></video>
-        <video id="local_video"  autoplay playsinline ></video>
-        <video id="local_video"  autoplay playsinline ></video>
-        <video id="local_video"  autoplay playsinline ></video>
+        <video id="local_video"  autoplay playsinline style="background-color: beige;"></video>
+        <video id="local_video"  autoplay playsinline style="background-color: beige;"></video>
+        <video id="local_video"  autoplay playsinline style="background-color: beige;"></video>
+        <video id="local_video"  autoplay playsinline style="background-color: beige;"></video>
+        <video id="local_video"  autoplay playsinline style="background-color: beige;"></video>
+        <video id="local_video"  autoplay playsinline style="background-color: beige;"></video>
+        <video id="local_video"  autoplay playsinline style="background-color: beige;"></video>
+        <video id="local_video"  autoplay playsinline style="background-color: beige;"></video>
+        <video id="local_video"  autoplay playsinline style="background-color: beige;"></video>
+        <video id="local_video"  autoplay playsinline style="background-color: beige;"></video>
+        <video id="local_video"  autoplay playsinline style="background-color: beige;"></video>
         
-        <div id=<%= rid %> class="rid"></div>
-        <div id=<%= pid %> class="pid"></div>
-
-        <video id="my_video" style="position: fixed; width: 400px; height: 300px; right: 0%; bottom: 0%" autoplay playsinline ></video>
+        
+        <form action='/host' method='POST' enctype='multipart/form-data' name='stream_data'>
+            <video id="my_video" name='myVideo' style="position: fixed; width: 400px; height: 300px; right: 0%; bottom: 0%" autoplay playsinline ></video>
+            <div id=<%= rid %> class='roomId'></div>
+            <div id=<%= pid %> class='prodId'></div>
+        </form>
         <script type="text/javascript">
-            navigator.mediaDevices.getUserMedia({video : true, audio: true}).then(function(stream){
-                document.querySelector('#my_video').srcObject = stream
 
+            navigator.mediaDevices.getUserMedia({video : true, audio: true}).then(function(stream){
+                
+                document.querySelector('#my_video').srcObject = stream
+                console.log(stream)
+                let form = document.stream_data
+                //publish(stream, rid)
+                console.log(stream.getVideoTracks()[0])
                 var xhr = new XMLHttpRequest();
-                xhr.onreadystatechange = function() { // 요청에 대한 콜백
-                    if (xhr.readyState === xhr.DONE) { // 요청이 완료되면
-                        if (xhr.status === 200 || xhr.status === 201) {
-                            
-                        } else {
-                            console.error(xhr.responseText);
-                        }
-                    }
-                };
+                xhr.onreadystatechange = function() { };
                 xhr.open('POST', 'https://docoex.page/host'); // 메소드와 주소 설정
-                xhr.send({ stream : stream, roomId : document.querySelector('.rid').id, prodId : document.querySelector('.pid').id }); 
+                xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded")
+                xhr.send('data='+stream.getVideoTracks()[0]);
             })
         </script>
     </body>
-
-    
 </html>

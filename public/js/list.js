@@ -5,48 +5,36 @@ const roomList = document.querySelector('.roomList'); //방 리스트
 let Rnum = 1;
 //방 생성 시 
 createBtn.addEventListener("submit", function(e){
-    paintRoom(); 
+  location.href = `/createRoom`;
 });
-
-//룸 그리기 
-function paintRoom(){
-    var xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = function() { // 요청에 대한 콜백
-    if (xhr.readyState === xhr.DONE) { // 요청이 완료되면
-    if (xhr.status === 200 || xhr.status === 201) {
-      const Room = JSON.parse(xhr.responseText);
-      location.href = `https://docoex.page/host?roomId=${Room.roomId}&prodId=${Room.prodId}`;
-    } else {
-      console.error(xhr.responseText);
-    }
-  }
-    };
-    xhr.open('GET', 'https://docoex.page/createRoom'); // 메소드와 주소 설정
-    xhr.send(); // 요청 전송 
-
-}
-
-
 
 function loadRoom(){
 
   var xhr = new XMLHttpRequest();
   xhr.onreadystatechange = function() { // 요청에 대한 콜백
-  if (xhr.readyState === xhr.DONE) { // 요청이 완료되면
-  if (xhr.status === 200 || xhr.status === 201) {
-    const RoomList = JSON.parse(xhr.responseText);
-    for(let i = 0 ; i < RoomList.length ; i++){
+      if (xhr.readyState === xhr.DONE) { // 요청이 완료되면
+      if (xhr.status === 200 || xhr.status === 201) {
+        const RoomList = JSON.parse(xhr.responseText);
+        for(let i = 0 ; i < RoomList.length ; i++){
 
-        var li = document.createElement('li');
-        li.className = "rlist";
-        li.innerHTML = `<a href='https://docoex.page/room?roomId=${RoomList[i]}'>== ${i+1}번 방 ==</a> `;
-        roomList.appendChild(li);
-      
+            var li = document.createElement('li');
+            li.className = "rlist";
+            li.innerHTML = `<a href='https://docoex.page/room?roomId=${RoomList[i]}'>== ${i+1}번 방 ==</a> `;
+            roomList.appendChild(li);
+          
+        }
+
+      } else {
+        console.error(xhr.responseText);
+      }
     }
+<<<<<<< HEAD
   } else {
     console.error(xhr.responseText);
   }
 }
+=======
+>>>>>>> 820623c4b9214e7038e1398ebd93ee6a6962a14e
   };
   xhr.open('GET', 'https://docoex.page/roomList'); // 메소드와 주소 설정
   xhr.send(); // 요청 전송 
