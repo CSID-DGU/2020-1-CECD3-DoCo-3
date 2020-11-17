@@ -1,5 +1,5 @@
 const mediasoup = require('mediasoup-client');
-const socketClient = require('socket.io-client');
+const io = require('socket.io');
 const socketPromise = require('./lib/socket.io-promise').promise;
 const $ = document.querySelector.bind(document);
 
