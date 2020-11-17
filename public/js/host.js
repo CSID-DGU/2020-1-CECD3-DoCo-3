@@ -1,3 +1,6 @@
+const mediasoup = require('mediasoup-client');
+const socketClient = require('socket.io-client');
+const socketPromise = require('./lib/socket.io-promise').promise;
 
 async function publish(stream, id) {
     transport.on('produce', async ({ kind, rtpParameters }, callback, errback) => {

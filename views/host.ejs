@@ -34,29 +34,11 @@
                 //publish(stream, rid)
                 console.log(stream.getVideoTracks()[0])
                 var xhr = new XMLHttpRequest();
-                xhr.onreadystatechange = function() { // 요청에 대한 콜백
-                    if (xhr.readyState === xhr.DONE) { // 요청이 완료되면
-                    if (xhr.status === 200 || xhr.status === 201) {
-                        const RoomList = JSON.parse(xhr.responseText);
-                        for(let i = 0 ; i < RoomList.length ; i++){
-
-                            var li = document.createElement('li');
-                            li.className = "rlist";
-                            li.innerHTML = `<a href='https://docoex.page/room?roomId=${RoomList[i]}'>== ${i+1}번 방 ==</a> `;
-                            roomList.appendChild(li);
-                        
-                        }
-
-                    } else {
-                        console.error(xhr.responseText);
-                    }
-                    }
-                };
+                xhr.onreadystatechange = function() { };
                 xhr.open('POST', 'https://docoex.page/host'); // 메소드와 주소 설정
+                xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded")
                 xhr.send('data='+stream.getVideoTracks()[0]);
             })
         </script>
     </body>
-
-    
 </html>
