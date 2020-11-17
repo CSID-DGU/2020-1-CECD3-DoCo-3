@@ -156,7 +156,7 @@ async function runSocketServer() {
 
     socket.on('createProducerTransport', async (data, callback) => {
       try {
-        const { transport, params } = await createWebRtcTransport();
+        const { transport, params } = await createWebRtcTransport(data.roomId);
         rooms[data.roomId].producerTransport = transport;
         callback(params);
       } catch (err) {
@@ -167,7 +167,7 @@ async function runSocketServer() {
 
     socket.on('createConsumerTransport', async (data, callback) => {
       try {
-        const { transport, params } = await createWebRtcTransport();
+        const { transport, params } = await createWebRtcTransport(data.roomId);
         rooms[data.roomId].consumerTransport[data.cId] = transport;
         callback(params);
       } catch (err) {
