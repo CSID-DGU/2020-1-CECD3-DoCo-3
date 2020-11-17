@@ -33,26 +33,28 @@ let rooms = {};
   }
 })();
 
-app.get("/createRoom", async (req, res, next) => {
-  const mediaCodecs = config.mediasoup.router.mediaCodecs;
-  const mediasoupRouter = await worker.createRouter({ mediaCodecs });
-  // Might need to put below into database?
-  rooms[mediasoupRouter.id] = new Room(mediasoupRouter.id, mediasoupRouter);
-  res.json({roomId: mediasoupRouter.id});
-});
 
-app.get("/roomExists", async (req, res, next) => {
-  const roomId = req.query.roomId;
-  const mediasoupRouter = await worker.createRouter({ mediaCodecs });
-  rooms[roomId].otherRouters.push(mediasoupRouter);
-  // console.log(req.query);
-  res.json({ exists: roomId in rooms, clientId: mediasoupRouter.id });
-});
 
 async function runExpressApp() {
   expressApp = express();
   expressApp.use(express.json());
   expressApp.use(express.static(__dirname));
+
+  expressApp.get("/createRoom", async (req, res, next) => {
+    const mediaCodecs = config.mediasoup.router.mediaCodecs;
+    const mediasoupRouter = await worker.createRouter({ mediaCodecs });
+    // Might need to put below into database?
+    rooms[mediasoupRouter.id] = new Room(mediasoupRouter.id, mediasoupRouter);
+    res.json({roomId: mediasoupRouter.id});
+  });
+  
+  expressApp.get("/roomExists", async (req, res, next) => {
+    const roomId = req.query.roomId;
+    const mediasoupRouter = await worker.createRouter({ mediaCodecs });
+    rooms[roomId].otherRouters.push(mediasoupRouter);
+    // console.log(req.query);
+    res.json({ exists: roomId in rooms, clientId: mediasoupRouter.id });
+  });
 
   expressApp.use((error, req, res, next) => {
     if (error) {
