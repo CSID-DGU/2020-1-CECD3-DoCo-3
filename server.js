@@ -23,6 +23,7 @@ let rooms = {};
     await runExpressApp();
     await runWebServer();
     await runSocketServer();
+    await runMediasoupWorker();
   } catch (err) {
     console.error(err);
   }
@@ -90,6 +91,20 @@ async function runWebServer() {
       console.log(`open https://${ip}:${listenPort} in your web browser`);
       resolve();
     });
+  });
+}
+
+async function runMediasoupWorker() {
+  worker = await mediasoup.createWorker({
+    logLevel: config.mediasoup.worker.logLevel,
+    logTags: config.mediasoup.worker.logTags,
+    rtcMinPort: config.mediasoup.worker.rtcMinPort,
+    rtcMaxPort: config.mediasoup.worker.rtcMaxPort,
+  });
+
+  worker.on('died', () => {
+    console.error('mediasoup worker died, exiting in 2 seconds... [pid:%d]', worker.pid);
+    setTimeout(() => process.exit(1), 2000);
   });
 }
 
