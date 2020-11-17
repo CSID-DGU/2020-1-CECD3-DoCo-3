@@ -19,7 +19,6 @@ let producerTransport;
 let consumerTransport;
 let mediasoupRouter;
 
-let socketServers = [];
 let rooms = {};
 
 (async () => {
@@ -108,9 +107,6 @@ async function runSocketServer() {
   socketServer.on('connection', (socket) => {
     console.log(socket.id + ', client connected');
 
-    socket.join(socket.id);
-    socketServers.push(socket.id);
-
     // inform the client about existence of producer
     if (producer) {
       socket.to(socket.id).emit('newProducer');
@@ -135,6 +131,7 @@ async function runSocketServer() {
     });
 
     socket.on('getRouterRtpCapabilities', (data, callback) => {
+      console.log(mediasoupRouter.rtpCapabilities)
       callback(mediasoupRouter.rtpCapabilities);
     });
 

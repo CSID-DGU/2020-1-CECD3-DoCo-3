@@ -50,6 +50,7 @@ async function connect() {
     $fsSubscribe.disabled = false;
 
     const data = await socket.request('getRouterRtpCapabilities');
+    console.log('SEXSEXSEXSEXSEXSEXSEX :::: '+ data);
     await loadDevice(data);
   });
 
@@ -186,9 +187,7 @@ async function getUserMedia(transport, isWebcam) {
 
   let stream;
   try {
-    stream = isWebcam ?
-      await navigator.mediaDevices.getUserMedia({ video: true }) :
-      await navigator.mediaDevices.getDisplayMedia({ video: true });
+    stream = await navigator.mediaDevices.getUserMedia({ video: true })
   } catch (err) {
     console.error('getUserMedia() failed:', err.message);
     throw err;
