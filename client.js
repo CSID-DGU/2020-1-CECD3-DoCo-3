@@ -221,21 +221,21 @@ async function getUserMedia(transport, isWebcam) {
 
 function subscribe_b() {
   if (!sessionStorage.getItem('CLIENTID')) {
-  const xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = function() { // 요청에 대한 콜백
-    if (xhr.readyState === xhr.DONE) { // 요청이 완료되면
-    if (xhr.status === 200 || xhr.status === 201) {
-      const data = JSON.parse(xhr.responseText);
-      console.log(data.clientId)
-      if (data.exists === 'true') {
-        sessionStorage.setItem('CLIENTID', Room.clientId);
-        console.log('subscribe')
-        subscribe();
+    const xhr = new XMLHttpRequest();
+      xhr.onreadystatechange = function() { // 요청에 대한 콜백
+      if (xhr.readyState === xhr.DONE) { // 요청이 완료되면
+      if (xhr.status === 200 || xhr.status === 201) {
+        const data = JSON.parse(xhr.responseText);
+        console.log(data.clientId)
+        if (data.exists) {
+          sessionStorage.setItem('CLIENTID', Room.clientId);
+          console.log('subscribe')
+          subscribe();
+        }
+      } else {
+        console.error(xhr.responseText);
       }
-    } else {
-      console.error(xhr.responseText);
     }
-  }
     };
     xhr.open('GET', 'https://docoex.page/roomExists?roomId='+sessionStorage.getItem('ROOMID')); // 메소드와 주소 설정
     xhr.send(); // 요청 전송 
