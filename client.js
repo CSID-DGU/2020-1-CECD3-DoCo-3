@@ -228,7 +228,7 @@ function subscribe_b() {
         const data = JSON.parse(xhr.responseText);
         console.log(data.clientId)
         if (data.exists) {
-          sessionStorage.setItem('CLIENTID', Room.clientId);
+          sessionStorage.setItem('CLIENTID', data.clientId);
           console.log('subscribe')
           subscribe();
         }
