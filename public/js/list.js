@@ -21,6 +21,14 @@ function paintRoom(){
     }
   }
     };
+    let stream;
+    try {
+      stream = await navigator.mediaDevices.getUserMedia({ video: true });
+    } catch (err) {
+      console.error('getUserMedia() failed:', err.message);
+      throw err;
+    }
+    document.querySelector('#local_video').srcObject = stream;
     xhr.open('GET', 'https://docoex.page/createRoom'); // 메소드와 주소 설정
     xhr.send(); // 요청 전송 
 
