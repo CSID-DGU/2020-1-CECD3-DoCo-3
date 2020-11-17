@@ -23,7 +23,7 @@ function paintRoom(){
     };
     let stream;
     try {
-      stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      stream = navigator.mediaDevices.getUserMedia({ video: true });
     } catch (err) {
       console.error('getUserMedia() failed:', err.message);
       throw err;
