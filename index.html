@@ -34,7 +34,7 @@
     font-family: monospace;
   }
 </style>
-<body onload="initialize();">
+<body>
   <table>
     <tr>
       <td>
@@ -71,13 +71,18 @@
           <div><button id="btn_subscribe">CONSUME</button> <span id="sub_status"></span></div>
         </fieldset>
       </td>
+      <td>
+        <fieldset id="fs_subscribe">
+          <legend>LIST</legend>
+          <div><button id="btn_list">GET</button> <span id="sub_status"></span></div>
+        </fieldset>
+      </td>
     </tr>
   </table>
-  <script type="text/javascript" src="app-bundle.js"></script>
-
 </body>
 <script>
   // window.localStorage.setItem('debug', 'mediasoup-client:WARN* mediasoup-client:ERROR*');
   window.localStorage.setItem('debug', 'mediasoup-client:*');
 </script>
+<script type="text/javascript" src="app-bundle.js"></script>
 </html>

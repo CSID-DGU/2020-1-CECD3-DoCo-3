@@ -15,6 +15,7 @@ const $btnConnect = $('#btn_connect');
 const $btnWebcam = $('#btn_webcam');
 const $btnScreen = $('#btn_screen');
 const $btnSubscribe = $('#btn_subscribe');
+const $btnList = $('#btn_list');
 const $chkSimulcast = $('#chk_simulcast');
 const $txtConnection = $('#connection_status');
 const $txtWebcam = $('#webcam_status');
@@ -25,6 +26,7 @@ let $txtPublish;
 $btnConnect.addEventListener('click', connect);
 $btnWebcam.addEventListener('click', publish);
 $btnSubscribe.addEventListener('click', subscribe);
+$btnList.addEventListener('click', initialize);
 
 if (typeof navigator.mediaDevices.getDisplayMedia === 'undefined') {
   $txtScreen.innerHTML = 'Not supported';
