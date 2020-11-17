@@ -4,13 +4,12 @@ const config = require('./config.js');
 const express = require('express');
 const app = express();
 const server = require('http').createServer(app);
-const options = { /* ... */ };
-const io = require('socket.io')(server, options);
+const io = require('socket.io');
 
 const Room = require('./room.js');
 
 app.set('view engine', 'ejs');
-app.use(express.static(__dirname + '/public'));
+app.use(express.static(__dirname));
 
 const cors = require('cors')
 const corsOptions = {
@@ -45,11 +44,15 @@ app.use('/roomList',    require('./require/roomList.js'));
 
 app.get('/', function(req,res){ res.render('list', {}); });
 
-
 // Socket IO routes here
 async function createIOServer() {
-  const roomNamespace = io.of('/rooms');
-  roomNamespace.on('connection', socket => { 
+  socketServer = io(server, {
+    serveClient: false,
+    path: '/server',
+    log: false,
+  })
+
+  socketServer.on('connection', socket => { 
       console.log('Example app listening on port 3000!');
 
       socket.on('roomExists', async (data) => {

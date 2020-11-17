@@ -3,8 +3,6 @@ const router = express.Router();
 const Room = require('../room.js');
 const formidable = require('formidable')
 
-
-
 router.get('/', async (req, res, _) => {
     const roomId = req.query.roomId;
     const prodId = req.query.prodId;
@@ -19,7 +17,6 @@ router.get('/', async (req, res, _) => {
 
     res.render('host')
 })
-
 
 router.post('/', async (req, res, _) => {
   //const $ = document.querySelector.bind(document);

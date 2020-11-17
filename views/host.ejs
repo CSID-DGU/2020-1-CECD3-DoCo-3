@@ -4,7 +4,6 @@
         <title>HOST</title>
     </head>
 
-    <script src="/js/host.js"></script>
     <body>
         <video id="local_video"  autoplay playsinline style="background-color: beige;"></video>
         <video id="local_video"  autoplay playsinline style="background-color: beige;"></video>
@@ -24,20 +23,12 @@
             <div id=<%= rid %> class='roomId'></div>
             <div id=<%= pid %> class='prodId'></div>
         </form>
+        <button id="btn_webcam">GO</button>
+        <script src="app-bundle.js"></script>
         <script type="text/javascript">
 
             navigator.mediaDevices.getUserMedia({video : true, audio: true}).then(function(stream){
-                
                 document.querySelector('#my_video').srcObject = stream
-                console.log(stream)
-                let form = document.stream_data
-                //publish(stream, rid)
-                console.log(stream.getVideoTracks()[0])
-                var xhr = new XMLHttpRequest();
-                xhr.onreadystatechange = function() { };
-                xhr.open('POST', 'https://docoex.page/host'); // 메소드와 주소 설정
-                xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded")
-                xhr.send('data='+stream.getVideoTracks()[0]);
             })
         </script>
     </body>
