@@ -1,22 +1,6 @@
+const socket = require('io')
 
-async function publish(stream) {
-    const data = await socket.request('createProducerTransport', {
-      forceTcp: false,
-      rtpCapabilities: device.rtpCapabilities,
-    });
-    console.log(data);
-    if (data.error) {
-      console.error(data.error);
-      return;
-    }
-  
-    const transport = device.createSendTransport(data);
-    transport.on('connect', async ({ dtlsParameters }, callback, errback) => {
-      socket.request('connectProducerTransport', { dtlsParameters })
-        .then(callback)
-        .catch(errback);
-    });
-  
+async function publish(stream, id) {
     transport.on('produce', async ({ kind, rtpParameters }, callback, errback) => {
       try {
         const { id } = await socket.request('produce', {
@@ -24,7 +8,6 @@ async function publish(stream) {
           kind,
           rtpParameters,
         });
-        callback({ id });
       } catch (err) {
         errback(err);
       }
