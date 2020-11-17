@@ -55,9 +55,7 @@ router.get('/', async (req, res, _) => {
     //   //$txtPublish.innerHTML = 'failed';
     // }
     
-    
-
-    res.send();
+    res.redirect('/host?roomId='+ roomId);
 })
 
 module.exports = router;
