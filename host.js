@@ -4,6 +4,7 @@ const socketPromise = require('./lib/socket.io-promise').promise;
 const $ = document.querySelector.bind(document);
 
 const $btnWebcam = $('#btn_webcam');
+const $webcam = $('#my_video');
 $btnWebcam.addEventListener('click', connect);
 
 // async function publish(stream, id) {
@@ -32,29 +33,10 @@ $btnWebcam.addEventListener('click', connect);
 
 
 let device;
-let socket;
 
 async function connect() {
-  const opts = {
-    path: '/server',
-    transports: ['websocket'],
-  };
-  
-  const serverUrl = `https://docoex.page:3000`;
-  socket = socketClient(serverUrl, opts);
-  console.log(socket);
-  socket.request = socketPromise(socket);
-
-  socket.on('connect', async () => {
-    const data = await socket.request('getRouterRtpCapabilities');
-    await loadDevice(data);
-  });
-
-
-  socket.on('connect_error', (error) => {
-    console.error('could not connect to %s (%s)', serverUrl, error.message);
-  });
-
+  const socket = io();
+  socket.emit('publish', $webcam.srcObject) 
 }
 
 async function loadDevice(routerRtpCapabilities) {
