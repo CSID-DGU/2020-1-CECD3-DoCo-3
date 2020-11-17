@@ -208,6 +208,8 @@ async function runSocketServer() {
     });
 
     socket.on('consume', async (data, callback) => {
+      console.log(rooms[data.roomId].producer)
+      console.log(rooms[data.roomId].producer.id)
       callback(await createConsumer(rooms[data.roomId].producer, data.rtpCapabilities, data.roomId, data.cId));
     });
 
