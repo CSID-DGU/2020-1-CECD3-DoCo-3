@@ -225,6 +225,12 @@ async function publish_c(e) {
     return;
   }
 
+  transport.on('connect', async ({ dtlsParameters }, callback, errback) => {
+    socket.request('connectProducerTransport', { roomId : sessionStorage.getItem('ROOMID'), dtlsParameters })
+      .then(callback)
+      .catch(errback);
+  });
+
   const transport = device.createSendTransport(data);
   transport.on('produce', async ({ kind, rtpParameters }, callback, errback) => {
     try {
@@ -283,7 +289,6 @@ async function publish_c(e) {
     producer = await transport.produce(params);
   } catch (err) {
     console.log(err)
-    $txtPublish.innerHTML = 'failed';
   }
 }
 
