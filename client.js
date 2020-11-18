@@ -368,13 +368,13 @@ async function subscribeh(cid, x) {
     }
   });
 
-  const stream = consumeh(transport);
+  const stream = consumeh(cid, transport);
 }
 
 
-async function consumeh(transport) {
+async function consumeh(cid, transport) {
   const { rtpCapabilities } = device;
-  const data = await socket.request('consumehost', { roomId : sessionStorage.getItem('ROOMID'), cId : sessionStorage.getItem('CLIENTID'), rtpCapabilities });
+  const data = await socket.request('consumehost', { roomId : sessionStorage.getItem('ROOMID'), cId : cid, rtpCapabilities });
   const {
     producerId,
     id,
