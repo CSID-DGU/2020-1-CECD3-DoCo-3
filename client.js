@@ -331,11 +331,11 @@ async function guestPublish(e) {
   console.log(data);
 
   const transport = device.createSendTransport(data);
-  transport.on('connect', async ({ dtlsParameters }, callback, errback) => {
-    socket.request('connectConsumerTransport', { roomId : sessionStorage.getItem('ROOMID'), cId : sessionStorage.getItem('CLIENTID'), dtlsParameters })
-      .then(callback)
-      .catch(errback);
-  });
+  // transport.on('connect', async ({ dtlsParameters }, callback, errback) => {
+  //   socket.request('connectConsumerTransport', { roomId : sessionStorage.getItem('ROOMID'), cId : sessionStorage.getItem('CLIENTID'), dtlsParameters })
+  //     .then(callback)
+  //     .catch(errback);
+  // });
 
   transport.on('produce', async ({ kind, rtpParameters }, callback, errback) => {
     try {
