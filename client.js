@@ -76,9 +76,6 @@ function create() {
 }
 
 async function connect() {
-  $btnConnect.disabled = true;
-  $txtConnection.innerHTML = 'Connecting...';
-
   const opts = {
     path: '/server',
     transports: ['websocket'],
@@ -89,34 +86,22 @@ async function connect() {
   socket.request = socketPromise(socket);
 
   socket.on('connect', async () => {
-    $txtConnection.innerHTML = 'Connected';
-    $fsPublish.disabled = false;
-    $fsSubscribe.disabled = false;
-
     const data = await socket.request('getRouterRtpCapabilities', { roomId : sessionStorage.getItem('ROOMID') });
     await loadDevice(data);
     location.href = `http://docoex.page/host.html?${Room.roomId}`; //방 이동
   });
 
   socket.on('disconnect', () => {
-    $txtConnection.innerHTML = 'Disconnected';
-    $btnConnect.disabled = false;
-    $fsPublish.disabled = true;
-    $fsSubscribe.disabled = true;
   });
 
   socket.on('connect_error', (error) => {
     console.error('could not connect to %s%s (%s)', serverUrl, opts.path, error.message);
-    $txtConnection.innerHTML = 'Connection failed';
-    $btnConnect.disabled = false;
   });
 
   socket.on('newProducer', () => {
-    $fsSubscribe.disabled = false;
   });
 
   socket.on('newCProducer', () => {
-    $fsSubscribe.disabled = false;
   });
 }
 
