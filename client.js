@@ -351,7 +351,7 @@ async function subscribeh(cid) {
     switch (state) {
       case 'connected':
         console.log( "+AAASFFFFSDFADSF+ " + stream)
-        const s = $('#'+cid)
+        const s = $(cid)
         s.srcObject = await stream;
         await socket.request('resume');
         break;
