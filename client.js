@@ -16,8 +16,6 @@ const $btnShare = $('#btn_share');
 const $txtScreen = $('#screen_status');
 const $btn_refresh = $('#btn_refresh');
 
-console.log($btn_refresh)
-
 if ($btnCreate) $btnCreate.addEventListener('click', create);
 if ($btnWebcam) $btnWebcam.addEventListener('click', connect);
 if ($btnSubscribe) $btnSubscribe.addEventListener('click', connect);
@@ -407,5 +405,6 @@ async function refreshConsumer() {
   var x = document.createElement("VIDEO")
   x.style.width = '190px'
   x.style.height = '100px'
+  console.log(x)
   c.appendChild(x)
 }
