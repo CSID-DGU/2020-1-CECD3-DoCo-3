@@ -352,6 +352,7 @@ async function subscribeh(cid) {
       case 'connected':
         const s = document.getElementById(cid)
         s.srcObject = await stream;
+        console.log('STREAM DATAS : : : :' + await stream)
         await socket.request('resume');
         break;
 
@@ -474,7 +475,6 @@ async function refreshConsumer() {
             var x = document.createElement("VIDEO")
             x.id = Room[r]
             x.style.width = '190px'
-            x.style.backgroundColor = 'beige'
             x.style.height = '100px'
             c.appendChild(x)
 
