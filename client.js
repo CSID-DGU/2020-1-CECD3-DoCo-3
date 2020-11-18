@@ -88,7 +88,7 @@ async function connect() {
   socket.on('connect', async () => {
     const data = await socket.request('getRouterRtpCapabilities', { roomId : sessionStorage.getItem('ROOMID') });
     await loadDevice(data);
-    location.href = `http://docoex.page/host.html?${Room.roomId}`; //방 이동
+    location.href = `http://docoex.page/host.html?${sessionStorage.getItem('ROOMID')}`; //방 이동
   });
 
   socket.on('disconnect', () => {
