@@ -154,8 +154,13 @@ async function runSocketServer() {
 
     socket.on('createProducerTransport', async (data, callback) => {
       try {
-        const { transport, params } = await createWebRtcTransport(data.roomId, data.cId);
-        rooms[data.roomId].producerTransport[data.cId] = transport;
+        if(data.isHost){
+          const { transport, params } = await createWebRtcTransport(data.roomId, data.cId);
+          rooms[data.roomId].producerTransport[data.cId] = transport;
+        } else {
+          const { transport, params } = await createWebRtcTransport(data.roomId, data.roomId);
+          rooms[data.roomId].producerTransport[data.cId] = transport;
+        }
         callback(params);
       } catch (err) {
         console.error(err);

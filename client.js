@@ -262,6 +262,7 @@ async function subscribe() {
   const data = await socket.request('createConsumerTransport', {
     roomId : sessionStorage.getItem('ROOMID'),
     cId : sessionStorage.getItem('CLIENTID'),
+    isHost : sessionStorage.getItem('ISHOST'),
     forceTcp: false,
   });
 
