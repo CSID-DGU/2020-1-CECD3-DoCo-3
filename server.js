@@ -179,6 +179,22 @@ async function runSocketServer() {
       }
     });
 
+    socket.on('getConsumerTransport', async (data, callback) => {
+      try {
+        const transport = rooms[data.roomId].consumerTransport[data.cId];
+        const params = {
+          id: transport.id,
+          iceParameters: transport.iceParameters,
+          iceCandidates: transport.iceCandidates,
+          dtlsParameters: transport.dtlsParameters
+        }
+        callback(params);
+      } catch (err) {
+        console.error(err);
+        callback({ error: err.message });
+      }
+    });
+
     socket.on('connectProducerTransport', async (data, callback) => {
       await rooms[data.roomId].producerTransport.connect({ dtlsParameters: data.dtlsParameters });
       callback();
@@ -200,11 +216,11 @@ async function runSocketServer() {
 
     socket.on('clientproduce', async (data, callback) => {
       const {kind, rtpParameters} = data;
-      producer = await rooms[data.roomId].consumerTransport[data.cId].produce({ kind, rtpParameters });
-      callback({ id: rooms[data.roomId].producer.id });
+      rooms[data.roomId].consumers[data.cId] = await rooms[data.roomId].consumerTransport[data.cId].produce({ kind, rtpParameters });
+      callback({ id: rooms[data.roomId].consumers[data.cId].id });
 
       // inform clients about new producer
-      socket.broadcast.to(socket.id).emit('newProducer');
+      socket.broadcast.to(socket.id).emit('newCProducer');
     });
 
     socket.on('consume', async (data, callback) => {
