@@ -218,7 +218,6 @@ async function runSocketServer() {
     socket.on('clientproduce', async (data, callback) => {
       const {kind, rtpParameters} = data;
       rooms[data.roomId].consumers[data.cId] = await rooms[data.roomId].consumerTransport[data.cId].produce({ kind, rtpParameters });
-      console.log('CLIENTPRODUCE ::::::::::: ' + rooms[data.roomId].consumers[data.cId].id)
       callback({ id: rooms[data.roomId].consumers[data.cId].id });
 
       socket.broadcast.to(socket.id).emit('newCProducer');
