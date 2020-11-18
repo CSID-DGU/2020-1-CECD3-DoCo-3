@@ -66,7 +66,7 @@ li{
 <hr>
 
 <ul class="RoomList">
-   <li> <h3 class="RoomNumber">Room Id</h3> <button class="btn participation">참여하기</button> </li> 
+   <li> <h3 class="RoomNumber">Room Id</h3> <a class="btn participation">참여하기</button> </a> 
    <li> <h3 class="RoomNumber">Room Id</h3> <button class="btn participation">참여하기</button> </li> 
 
 </ul>
@@ -77,6 +77,8 @@ li{
   // window.localStorage.setItem('debug', 'mediasoup-client:WARN* mediasoup-client:ERROR*');
   window.localStorage.setItem('debug', 'mediasoup-client:*');
 
+  const ul = document.querySelector('.RoomList');
+
 function init(){
 
   const xhr = new XMLHttpRequest();
@@ -85,11 +87,13 @@ function init(){
         if (xhr.status === 200 || xhr.status === 201) {
           const Room = JSON.parse(xhr.responseText);
           for(let i = 0 ; i< Room.length ; i++){
-
+            let list = document.createElement('li');
+            list.innerHTML = `<h3 class="RoomNumber">Room Id</h3> <a href='https://docoex.page/client.html?${Room[i]}' class="btn participation">참여하기 </a> `;
+            ul.appendChild(list);
             console.log(Room[i]);
           }
           sessionStorage.setItem('ROOMID', Room[0]);
-          console.log(sessionStorage.getItem('ROOMID'))
+
         } else {
           console.error(xhr.responseText);
        }
