@@ -24,11 +24,13 @@ const $txtScreen = $('#screen_status');
 const $txtSubscription = $('#sub_status');
 let $txtPublish;
 
-$btnCreate.addEventListener('click', create);
-$btnWebcam.addEventListener('click', publish);
-$btnSubscribe.addEventListener('click', subscribe_b);
-$btnList.addEventListener('click', initialize);
-$btnShare.addEventListener('click', publish_c);
+
+
+if ($btnCreate) $btnCreate.addEventListener('click', create);
+if ($btnWebcam) $btnWebcam.addEventListener('click', publish);
+if ($btnSubscribe) $btnSubscribe.addEventListener('click', subscribe_b);
+if ($btnList) $btnList.addEventListener('click', initialize);
+if ($btnShare) $btnShare.addEventListener('click', publish_c);
 
 if (typeof navigator.mediaDevices.getDisplayMedia === 'undefined') {
   $txtScreen.innerHTML = 'Not supported';
