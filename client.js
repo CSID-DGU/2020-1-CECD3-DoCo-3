@@ -20,7 +20,7 @@ if ($btnCreate) $btnCreate.addEventListener('click', create);
 if ($btnWebcam) $btnWebcam.addEventListener('click', connect);
 if ($btnSubscribe) $btnSubscribe.addEventListener('click', connect);
 if ($btnShare) $btnShare.addEventListener('click', guestPublish);
-if ($btn_refresh) $btn_refresh.addEventListener('click', refreshConsumer)
+if ($btn_refresh) $btn_refresh.addEventListener('click', refreshConsumer);
 
 if (typeof navigator.mediaDevices.getDisplayMedia === 'undefined') {
   $txtScreen.innerHTML = 'Not supported';
@@ -397,5 +397,6 @@ async function guestPublish() {
 }
 
 function refreshConsumer() {
+  console.log($('#Clients'))
   $('#Clients').clear()
 }
