@@ -28,13 +28,10 @@ function loadRoom(){
         console.error(xhr.responseText);
       }
     }
-<<<<<<< HEAD
   } else {
     console.error(xhr.responseText);
   }
 }
-=======
->>>>>>> 820623c4b9214e7038e1398ebd93ee6a6962a14e
   };
   xhr.open('GET', 'https://docoex.page/roomList'); // 메소드와 주소 설정
   xhr.send(); // 요청 전송 

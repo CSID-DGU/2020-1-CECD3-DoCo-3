@@ -2,9 +2,11 @@ const mediasoup = require('mediasoup-client');
 const socketClient = require('socket.io-client');
 const socketPromise = require('./lib/socket.io-promise').promise;
 
+const hostname = window.location.hostname;
 
 let device;
 let socket;
+let producer;
 
 const $ = document.querySelector.bind(document);
 const $fsPublish = $('#fs_publish');
@@ -13,6 +15,7 @@ const $btnConnect = $('#btn_connect');
 const $btnWebcam = $('#btn_webcam');
 const $btnScreen = $('#btn_screen');
 const $btnSubscribe = $('#btn_subscribe');
+const $btnList = $('#btn_list');
 const $chkSimulcast = $('#chk_simulcast');
 const $txtConnection = $('#connection_status');
 const $txtWebcam = $('#webcam_status');
@@ -20,28 +23,62 @@ const $txtScreen = $('#screen_status');
 const $txtSubscription = $('#sub_status');
 let $txtPublish;
 
-$btnConnect.addEventListener('click', connect);
+$btnConnect.addEventListener('click', create);
 $btnWebcam.addEventListener('click', publish);
-$btnScreen.addEventListener('click', publish);
-$btnSubscribe.addEventListener('click', subscribe);
+$btnSubscribe.addEventListener('click', subscribe_b);
+$btnList.addEventListener('click', initialize);
 
 if (typeof navigator.mediaDevices.getDisplayMedia === 'undefined') {
   $txtScreen.innerHTML = 'Not supported';
   $btnScreen.disabled = true;
 }
 
+function initialize() {
+  const xhr = new XMLHttpRequest();
+  xhr.onreadystatechange = function() { // 요청에 대한 콜백
+      if (xhr.readyState === xhr.DONE) { // 요청이 완료되면
+        if (xhr.status === 200 || xhr.status === 201) {
+          const Room = JSON.parse(xhr.responseText);
+          console.log(Room)
+        } else {
+          console.error(xhr.responseText);
+       }
+    }
+  };
+  xhr.open('GET', 'https://docoex.page/roomList'); // 메소드와 주소 설정
+  xhr.send();
+}
+
+function create() {
+  const xhr = new XMLHttpRequest();
+  xhr.onreadystatechange = function() { // 요청에 대한 콜백
+      if (xhr.readyState === xhr.DONE) { // 요청이 완료되면
+        if (xhr.status === 200 || xhr.status === 201) {
+          const Room = JSON.parse(xhr.responseText);
+          console.log(Room.roomId)
+
+          sessionStorage.setItem('ROOMID', Room.roomId);
+          connect()
+        } else {
+          console.error(xhr.responseText);
+       }
+    }
+  };
+  xhr.open('GET', 'https://docoex.page/createRoom'); // 메소드와 주소 설정
+  xhr.send(); // 요청 전 
+}
+
 async function connect() {
   $btnConnect.disabled = true;
-  $txtConnection.innerHTML = 'Connecting...'; // delete
+  $txtConnection.innerHTML = 'Connecting...';
 
   const opts = {
-    path: '/rooms',
+    path: '/server',
     transports: ['websocket'],
   };
 
-  const serverUrl = `https://docoex.page`;
+  const serverUrl = `https://${hostname}`;
   socket = socketClient(serverUrl, opts);
-  console.log(socket);
   socket.request = socketPromise(socket);
 
   socket.on('connect', async () => {
@@ -49,7 +86,7 @@ async function connect() {
     $fsPublish.disabled = false;
     $fsSubscribe.disabled = false;
 
-    const data = await socket.request('getRouterRtpCapabilities');
+    const data = await socket.request('getRouterRtpCapabilities', { roomId : sessionStorage.getItem('ROOMID') });
     await loadDevice(data);
   });
 
@@ -69,6 +106,8 @@ async function connect() {
   socket.on('newProducer', () => {
     $fsSubscribe.disabled = false;
   });
+
+  
 }
 
 async function loadDevice(routerRtpCapabilities) {
@@ -87,18 +126,19 @@ async function publish(e) {
   $txtPublish = isWebcam ? $txtWebcam : $txtScreen;
 
   const data = await socket.request('createProducerTransport', {
+    roomId : sessionStorage.getItem('ROOMID'),
     forceTcp: false,
     rtpCapabilities: device.rtpCapabilities,
   });
-  console.log(data);
   if (data.error) {
     console.error(data.error);
     return;
   }
 
   const transport = device.createSendTransport(data);
+  console.log(transport)
   transport.on('connect', async ({ dtlsParameters }, callback, errback) => {
-    socket.request('connectProducerTransport', { dtlsParameters })
+    socket.request('connectProducerTransport', { roomId : sessionStorage.getItem('ROOMID'), dtlsParameters })
       .then(callback)
       .catch(errback);
   });
@@ -106,6 +146,7 @@ async function publish(e) {
   transport.on('produce', async ({ kind, rtpParameters }, callback, errback) => {
     try {
       const { id } = await socket.request('produce', {
+        roomId : sessionStorage.getItem('ROOMID'),
         transportId: transport.id,
         kind,
         rtpParameters,
@@ -147,18 +188,17 @@ async function publish(e) {
     stream = await getUserMedia(transport, isWebcam);
     const track = stream.getVideoTracks()[0];
     const params = { track };
-    if ($chkSimulcast.checked) {
-      params.encodings = [
-        { maxBitrate: 100000 },
-        { maxBitrate: 300000 },
-        { maxBitrate: 900000 },
-      ];
-      params.codecOptions = {
-        videoGoogleStartBitrate : 1000
-      };
-    }
+    params.encodings = [
+      { maxBitrate: 100000 },
+      { maxBitrate: 300000 },
+      { maxBitrate: 900000 },
+    ];
+    params.codecOptions = {
+      videoGoogleStartBitrate : 1000
+    };
     producer = await transport.produce(params);
   } catch (err) {
+    console.log(err)
     $txtPublish.innerHTML = 'failed';
   }
 }
@@ -171,9 +211,7 @@ async function getUserMedia(transport, isWebcam) {
 
   let stream;
   try {
-    stream = isWebcam ?
-      await navigator.mediaDevices.getUserMedia({ video: true }) :
-      await navigator.mediaDevices.getDisplayMedia({ video: true });
+    stream = await navigator.mediaDevices.getUserMedia({ video: true })
   } catch (err) {
     console.error('getUserMedia() failed:', err.message);
     throw err;
@@ -181,10 +219,40 @@ async function getUserMedia(transport, isWebcam) {
   return stream;
 }
 
+function subscribe_b() {
+  if (!sessionStorage.getItem('CLIENTID')) {
+    const xhr = new XMLHttpRequest();
+      xhr.onreadystatechange = function() { // 요청에 대한 콜백
+      if (xhr.readyState === xhr.DONE) { // 요청이 완료되면
+      if (xhr.status === 200 || xhr.status === 201) {
+        const data = JSON.parse(xhr.responseText);
+        console.log(data.clientId)
+        if (data.exists) {
+          sessionStorage.setItem('CLIENTID', data.clientId);
+          console.log('subscribe')
+          subscribe();
+        }
+      } else {
+        console.error(xhr.responseText);
+      }
+    }
+    };
+    xhr.open('GET', 'https://docoex.page/roomExists?roomId='+sessionStorage.getItem('ROOMID')); // 메소드와 주소 설정
+    xhr.send(); // 요청 전송 
+  } else {
+    subscribe();
+  }
+}
+
 async function subscribe() {
+  console.log(sessionStorage.getItem('CLIENTID'))
   const data = await socket.request('createConsumerTransport', {
+    roomId : sessionStorage.getItem('ROOMID'),
+    cId : sessionStorage.getItem('CLIENTID'),
     forceTcp: false,
   });
+
+  console.log(data)
   if (data.error) {
     console.error(data.error);
     return;
@@ -193,6 +261,8 @@ async function subscribe() {
   const transport = device.createRecvTransport(data);
   transport.on('connect', ({ dtlsParameters }, callback, errback) => {
     socket.request('connectConsumerTransport', {
+      roomId : sessionStorage.getItem('ROOMID'),
+      cId : sessionStorage.getItem('CLIENTID'),
       transportId: transport.id,
       dtlsParameters
     })
@@ -229,7 +299,7 @@ async function subscribe() {
 
 async function consume(transport) {
   const { rtpCapabilities } = device;
-  const data = await socket.request('consume', { rtpCapabilities });
+  const data = await socket.request('consume', { roomId : sessionStorage.getItem('ROOMID'), cId : sessionStorage.getItem('CLIENTID'), rtpCapabilities });
   const {
     producerId,
     id,

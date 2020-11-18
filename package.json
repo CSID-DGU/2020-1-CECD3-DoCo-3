@@ -1,10 +1,10 @@
 {
   "name": "docoex",
-  "version": "0.0.1",
-  "description": "DoCo Webex",
+  "version": "1.0.0",
+  "description": "docoex first version",
   "main": "server.js",
   "scripts": {
-    "start": "browserify host.js -o app-bundle.js; node server.js"
+    "start": "browserify client.js -o app-bundle.js; node server.js"
   },
   "author": "",
   "license": "ISC",

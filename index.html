@@ -4,8 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="mobile-web-app-capable" content="yes">
- 
-  <title>DOCOEX</title>
+  <link rel="icon" type="image/png" href="mediasoup.png" />
 </head>
 <style>
   body {
@@ -35,7 +34,6 @@
     font-family: monospace;
   }
 </style>
-
 <body>
   <table>
     <tr>
@@ -54,28 +52,29 @@
     <tr>
       <td>
         <fieldset id="fs_connection">
-          <legend>Connection</legend>
-          <div><button id="btn_connect">Connect</button> <span id="connection_status"></span></div>
+          <legend>CREATE ROOM</legend>
+          <div><button id="btn_connect">CREATE</button> <span id="connection_status"></span></div>
         </fieldset>
       </td>
       <td>
         <fieldset id="fs_publish" disabled>
-          <legend>Publishing</legend>
-          <div><label><input type="checkbox" id="chk_simulcast"> Use Simulcast</label></div>
+          <legend>PUBLISH</legend>
           <div>
-            <button id="btn_webcam">Start Webcam</button>
+            <button id="btn_webcam">GO</button>
             <span id="webcam_status"></span>
-          </div>
-          <div>
-            <button id="btn_screen">Share Screen</button>
-            <span id="screen_status"></span>
           </div>
         </fieldset>
       </td>
       <td>
-        <fieldset id="fs_subscribe" disabled>
-          <legend>Subscription</legend>
-          <div><button id="btn_subscribe">Subscribe</button> <span id="sub_status"></span></div>
+        <fieldset id="fs_subscribe">
+          <legend>CONSUME</legend>
+          <div><button id="btn_subscribe">CONSUME</button> <span id="sub_status"></span></div>
+        </fieldset>
+      </td>
+      <td>
+        <fieldset id="fs_subscribe">
+          <legend>LIST</legend>
+          <div><button id="btn_list">GET</button> <span id="sub_status"></span></div>
         </fieldset>
       </td>
     </tr>
