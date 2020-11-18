@@ -115,10 +115,7 @@ async function loadDevice(routerRtpCapabilities) {
   await device.load({ routerRtpCapabilities });
 }
 
-async function publish(e) {
-  const isWebcam = (e.target.id === 'btn_webcam');
-  $txtPublish = isWebcam ? $txtWebcam : $txtScreen;
-
+async function publish() {
   const data = await socket.request('createProducerTransport', {
     roomId : sessionStorage.getItem('ROOMID'),
     forceTcp: false,
@@ -152,24 +149,12 @@ async function publish(e) {
 
   transport.on('connectionstatechange', (state) => {
     switch (state) {
-      case 'connecting':
-        $txtPublish.innerHTML = 'publishing...';
-        $fsPublish.disabled = true;
-        $fsSubscribe.disabled = true;
-      break;
-
       case 'connected':
         document.querySelector('#local_video').srcObject = stream;
-        $txtPublish.innerHTML = 'published';
-        $fsPublish.disabled = true;
-        $fsSubscribe.disabled = false;
       break;
 
       case 'failed':
         transport.close();
-        $txtPublish.innerHTML = 'failed';
-        $fsPublish.disabled = false;
-        $fsSubscribe.disabled = true;
       break;
 
       default: break;
@@ -192,7 +177,6 @@ async function publish(e) {
     producer = await transport.produce(params);
   } catch (err) {
     console.log(err)
-    $txtPublish.innerHTML = 'failed';
   }
 }
 
