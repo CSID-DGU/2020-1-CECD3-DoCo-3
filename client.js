@@ -325,6 +325,7 @@ async function consume(transport) {
 function init(){
 
 
+  initialize();
 
 
 }
