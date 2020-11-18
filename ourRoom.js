@@ -4,9 +4,10 @@ class Room {
         this.hostRouterObj = router;
         this.otherRouters = {};
         this.producer;
-        this.producerTransport;
+        this.producerTransport = {};
         this.consumerTransport = {};
         this.consumers = {};
+        this.total = 0;
     }
 }
 

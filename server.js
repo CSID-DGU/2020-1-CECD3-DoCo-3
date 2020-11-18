@@ -159,7 +159,7 @@ async function runSocketServer() {
     socket.on('createProducerTransport', async (data, callback) => {
       try {
         const { transport, params } = await createWebRtcTransport(data.roomId);
-        rooms[data.roomId].producerTransport = transport;
+        rooms[data.roomId].producerTransport[cId] = transport;
         callback(params);
       } catch (err) {
         console.error(err);
@@ -196,7 +196,7 @@ async function runSocketServer() {
     });
 
     socket.on('connectProducerTransport', async (data, callback) => {
-      await rooms[data.roomId].producerTransport.connect({ dtlsParameters: data.dtlsParameters });
+      await rooms[data.roomId].producerTransport[data.cId].connect({ dtlsParameters: data.dtlsParameters });
       callback();
     });
 
@@ -207,7 +207,7 @@ async function runSocketServer() {
 
     socket.on('produce', async (data, callback) => {
       const {kind, rtpParameters} = data;
-      rooms[data.roomId].producer = await rooms[data.roomId].producerTransport.produce({ kind, rtpParameters });
+      rooms[data.roomId].producer = await rooms[data.roomId].producerTransport[data.cId].produce({ kind, rtpParameters });
       callback({ id: rooms[data.roomId].producer.id });
 
       // inform clients about new producer
