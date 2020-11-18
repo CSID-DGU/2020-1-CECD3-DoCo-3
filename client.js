@@ -39,7 +39,8 @@ function initialize() {
       if (xhr.readyState === xhr.DONE) { // 요청이 완료되면
         if (xhr.status === 200 || xhr.status === 201) {
           const Room = JSON.parse(xhr.responseText);
-          console.log(Room)
+          sessionStorage.setItem('ROOMID', Room[0]);
+          console.log(sessionStorage.getItem('ROOMID'))
         } else {
           console.error(xhr.responseText);
        }
