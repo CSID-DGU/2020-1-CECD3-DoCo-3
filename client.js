@@ -27,7 +27,7 @@ let $txtPublish;
 
 
 if ($btnCreate) $btnCreate.addEventListener('click', create);
-if ($btnWebcam) $btnWebcam.addEventListener('click', publish);
+if ($btnWebcam) $btnWebcam.addEventListener('click', connect);
 if ($btnSubscribe) $btnSubscribe.addEventListener('click', subscribe_b);
 if ($btnList) $btnList.addEventListener('click', initialize);
 if ($btnShare) $btnShare.addEventListener('click', publish_c);
@@ -64,8 +64,7 @@ function create() {
           console.log(Room.roomId)
 
           sessionStorage.setItem('ROOMID', Room.roomId);
-          connect()
-          
+          location.href = `http://docoex.page/host.html?${sessionStorage.getItem('ROOMID')}`; //방 이동          
         } else {
           console.error(xhr.responseText);
        }
@@ -88,7 +87,7 @@ async function connect() {
   socket.on('connect', async () => {
     const data = await socket.request('getRouterRtpCapabilities', { roomId : sessionStorage.getItem('ROOMID') });
     await loadDevice(data);
-    location.href = `http://docoex.page/host.html?${sessionStorage.getItem('ROOMID')}`; //방 이동
+    publish()
   });
 
   socket.on('disconnect', () => {
