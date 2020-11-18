@@ -328,6 +328,72 @@ async function consume(transport) {
   return stream;
 }
 
+async function subscribeh(cid, x) {
+  const data = await socket.request('createConsumerTransport', {
+    roomId : sessionStorage.getItem('ROOMID'),
+    cId : cid,
+    forceTcp: false,
+  });
+
+  console.log(data)
+  if (data.error) {
+    console.error(data.error);
+    return;
+  }
+
+  const transport = device.createRecvTransport(data);
+  transport.on('connect', ({ dtlsParameters }, callback, errback) => {
+    socket.request('connectConsumerTransport', {
+      roomId : sessionStorage.getItem('ROOMID'),
+      cId : cid,
+      transportId: transport.id,
+      dtlsParameters
+    })
+      .then(callback)
+      .catch(errback);
+  });
+
+  transport.on('connectionstatechange', async (state) => {
+    switch (state) {
+      case 'connected':
+        x.srcObject = await stream;
+        await socket.request('resume');
+        break;
+
+      case 'failed':
+        transport.close();
+        break;
+
+      default: break;
+    }
+  });
+
+  const stream = consumeh(transport);
+}
+
+
+async function consumeh(transport) {
+  const { rtpCapabilities } = device;
+  const data = await socket.request('consumehost', { roomId : sessionStorage.getItem('ROOMID'), cId : sessionStorage.getItem('CLIENTID'), rtpCapabilities });
+  const {
+    producerId,
+    id,
+    kind,
+    rtpParameters,
+  } = data;
+
+  let codecOptions = {};
+  const consumer = await transport.consume({
+    id,
+    producerId,
+    kind,
+    rtpParameters,
+    codecOptions,
+  });
+  const stream = new MediaStream();
+  stream.addTrack(consumer.track);
+  return stream;
+}
 
 async function guestPublish() {
   const data = await socket.request('createProducerTransport', {
@@ -407,14 +473,15 @@ async function refreshConsumer() {
       if (xhr.readyState === xhr.DONE) { // 요청이 완료되면
         if (xhr.status === 200 || xhr.status === 201) {
           const Room = JSON.parse(xhr.responseText);
-          console.log(Room)
+          for (r in Room) {
+            var x = document.createElement("VIDEO")
+            x.style.width = '190px'
+            x.style.backgroundColor = 'beige'
+            x.style.height = '100px'
+            c.appendChild(x)
 
-          var x = document.createElement("VIDEO")
-          x.style.width = '190px'
-          x.style.backgroundColor = 'beige'
-          x.style.height = '100px'
-          c.appendChild(x)
-        
+            subscribeh(r, x)
+          }
         } else {
           console.error(xhr.responseText);
        }
