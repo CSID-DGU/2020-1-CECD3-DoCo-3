@@ -399,6 +399,8 @@ async function guestPublish() {
 }
 
 async function refreshConsumer() {
-  console.log($('#Clients'))
-  $('#Clients').clear()
+  const c = $('#Clients')
+  while(c.firstChild) {
+    c.removeChild(c.firstChild)
+  }
 }
