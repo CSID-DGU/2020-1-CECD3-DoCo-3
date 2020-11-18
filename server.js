@@ -179,6 +179,22 @@ async function runSocketServer() {
       }
     });
 
+    socket.on('getConsumerTransport', async (data, callback) => {
+      try {
+        const transport = rooms[data.roomId].consumerTransport[data.cId];
+        const params = {
+          id: transport.id,
+          iceParameters: transport.iceParameters,
+          iceCandidates: transport.iceCandidates,
+          dtlsParameters: transport.dtlsParameters
+        }
+        callback(params);
+      } catch (err) {
+        console.error(err);
+        callback({ error: err.message });
+      }
+    });
+
     socket.on('connectProducerTransport', async (data, callback) => {
       await rooms[data.roomId].producerTransport.connect({ dtlsParameters: data.dtlsParameters });
       callback();
