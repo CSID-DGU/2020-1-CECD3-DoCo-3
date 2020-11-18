@@ -92,7 +92,7 @@ function init(){
             let list = document.createElement('li');
             list.innerHTML = `<h3 class="RoomNumber">${Room[i]}</h3> <a href='https://docoex.page/client.html?${Room[i]}' class="btn participation">참여하기 </a> `;
             ul.appendChild(list);
-            console.log(Room[i]);
+    
           }
           sessionStorage.setItem('ROOMID', Room[0]);
 
