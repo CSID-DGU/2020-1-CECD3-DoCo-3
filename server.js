@@ -52,6 +52,15 @@ async function runExpressApp() {
     res.json({ exists: roomId in rooms, clientId: mediasoupRouter.id });
   });
 
+  expressApp.get("/roomClients", async (req, res, next) => {
+    const roomId = req.query.roomId;
+    const ptprt = rooms[roomId].producerTransport
+    var roomList = [];
+    for(key in ptprt) { roomList.push(key); }
+
+    res.json(roomList);
+  });
+
   expressApp.get("/roomList", async (req, res) => {
     var roomList = [];
     for(key in rooms){
