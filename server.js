@@ -229,6 +229,8 @@ async function runSocketServer() {
     });
 
     socket.on('consumehost', async (data, callback) => {
+      console.log('HEEECHUL FUCK + _ +' + data.cId)
+      console.log('HEEECHUL FUCK + _ +' + rooms[data.roomId].consumers[data.cId])
       callback(await createConsumer(rooms[data.roomId].consumers[data.cId], data.rtpCapabilities, data.roomId, data.cId));
     });
 
