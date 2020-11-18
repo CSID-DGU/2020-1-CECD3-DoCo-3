@@ -328,7 +328,7 @@ async function consume(transport) {
   return stream;
 }
 
-async function subscribeh(cid, x) {
+async function subscribeh(cid) {
   const data = await socket.request('createConsumerTransport', {
     roomId : sessionStorage.getItem('ROOMID'),
     cId : cid,
@@ -353,10 +353,11 @@ async function subscribeh(cid, x) {
       .catch(errback);
   });
 
+  const s = $('#'+cid)
   transport.on('connectionstatechange', async (state) => {
     switch (state) {
       case 'connected':
-        x.srcObject = await stream;
+        s.srcObject = await stream;
         await socket.request('resume');
         break;
 
@@ -477,12 +478,13 @@ async function refreshConsumer() {
             if (Room[r] === sessionStorage.getItem('ROOMID')) continue
 
             var x = document.createElement("VIDEO")
+            x.id = Room[r]
             x.style.width = '190px'
             x.style.backgroundColor = 'beige'
             x.style.height = '100px'
             c.appendChild(x)
 
-            subscribeh(Room[r], x)
+            subscribeh(Room[r])
           }
         } else {
           console.error(xhr.responseText);
