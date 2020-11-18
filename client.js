@@ -317,11 +317,12 @@ async function consume(transport) {
   });
   const stream = new MediaStream();
   stream.addTrack(consumer.track);
+  guestPublish();
   return stream;
 }
 
 async function guestPublish(e) {
-  const data = await socket.request('createConsumerTransport', {
+  const data = await socket.request('getConsumerTransport', {
     roomId : sessionStorage.getItem('ROOMID'),
     cId : sessionStorage.getItem('CLIENTID'),
     forceTcp: false,
