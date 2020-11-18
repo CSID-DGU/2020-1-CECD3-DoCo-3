@@ -11,7 +11,7 @@ let producer;
 const $ = document.querySelector.bind(document);
 const $fsPublish = $('#fs_publish');
 const $fsSubscribe = $('#fs_subscribe');
-const $btnConnect = $('#btn_connect');
+const $btnCreate = $('.CreateRoom'); //방 생성
 const $btnWebcam = $('#btn_webcam');
 const $btnScreen = $('#btn_screen');
 const $btnSubscribe = $('#btn_subscribe');
@@ -23,7 +23,7 @@ const $txtScreen = $('#screen_status');
 const $txtSubscription = $('#sub_status');
 let $txtPublish;
 
-$btnConnect.addEventListener('click', create);
+$btnCreate.addEventListener('click', create);
 $btnWebcam.addEventListener('click', publish);
 $btnSubscribe.addEventListener('click', subscribe_b);
 $btnList.addEventListener('click', initialize);
@@ -321,11 +321,3 @@ async function consume(transport) {
   return stream;
 }
 
-//함수 
-function init(){
-
-
-  initialize();
-
-
-}
