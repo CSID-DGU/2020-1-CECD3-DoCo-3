@@ -14,7 +14,9 @@ const $btnScreen = $('#btn_screen');
 const $btnSubscribe = $('#btn_subscribe');
 const $btnShare = $('#btn_share');
 const $txtScreen = $('#screen_status');
-const $btn_refresh = $('#btn_refresh')
+const $btn_refresh = $('#btn_refresh');
+
+console.log($btn_refresh)
 
 if ($btnCreate) $btnCreate.addEventListener('click', create);
 if ($btnWebcam) $btnWebcam.addEventListener('click', connect);
@@ -396,7 +398,7 @@ async function guestPublish() {
   }
 }
 
-function refreshConsumer() {
+async function refreshConsumer() {
   console.log($('#Clients'))
   $('#Clients').clear()
 }
