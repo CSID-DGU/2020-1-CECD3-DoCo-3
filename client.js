@@ -65,7 +65,6 @@ function create() {
 
           sessionStorage.setItem('ROOMID', Room.roomId);
           location.href = `http://docoex.page/host.html?${Room.roomId}`; //방 이동
-          connect()
         } else {
           console.error(xhr.responseText);
        }
