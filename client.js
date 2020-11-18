@@ -50,6 +50,7 @@ function initialize() {
 }
 
 function create() {
+  sessionStorage.setItem('HOST', true);
   const xhr = new XMLHttpRequest();
   xhr.onreadystatechange = function() { // 요청에 대한 콜백
       if (xhr.readyState === xhr.DONE) { // 요청이 완료되면
@@ -122,9 +123,6 @@ async function loadDevice(routerRtpCapabilities) {
 }
 
 async function publish(e) {
-  const isWebcam = (e.target.id === 'btn_webcam');
-  $txtPublish = isWebcam ? $txtWebcam : $txtScreen;
-
   const data = await socket.request('createProducerTransport', {
     roomId : sessionStorage.getItem('ROOMID'),
     forceTcp: false,
@@ -138,7 +136,7 @@ async function publish(e) {
   const transport = device.createSendTransport(data);
   console.log(transport)
   transport.on('connect', async ({ dtlsParameters }, callback, errback) => {
-    socket.request('connectProducerTransport', { roomId : sessionStorage.getItem('ROOMID'), dtlsParameters })
+    socket.request('connectConsumerTransport', { roomId : sessionStorage.getItem('ROOMID'), dtlsParameters })
       .then(callback)
       .catch(errback);
   });
@@ -185,7 +183,7 @@ async function publish(e) {
 
   let stream;
   try {
-    stream = await getUserMedia(transport, isWebcam);
+    stream = await getUserMedia();
     const track = stream.getVideoTracks()[0];
     const params = { track };
     params.encodings = [
@@ -201,9 +199,10 @@ async function publish(e) {
     console.log(err)
     $txtPublish.innerHTML = 'failed';
   }
+  
 }
 
-async function getUserMedia(transport, isWebcam) {
+async function getUserMedia() {
   if (!device.canProduce('video')) {
     console.error('cannot produce video');
     return;
@@ -220,6 +219,7 @@ async function getUserMedia(transport, isWebcam) {
 }
 
 function subscribe_b() {
+  sessionStorage.setItem('HOST', false);
   if (!sessionStorage.getItem('CLIENTID')) {
     const xhr = new XMLHttpRequest();
       xhr.onreadystatechange = function() { // 요청에 대한 콜백
@@ -318,4 +318,86 @@ async function consume(transport) {
   const stream = new MediaStream();
   stream.addTrack(consumer.track);
   return stream;
+}
+
+async function guestPublish(e) {
+  const data = await socket.request('createConsumerTransport', {
+    roomId : sessionStorage.getItem('ROOMID'),
+    cId : sessionStorage.getItem('CLIENTID'),
+    forceTcp: false,
+    rtpCapabilities: device.rtpCapabilities,
+  });
+  if (data.error) {
+    console.error(data.error);
+    return;
+  }
+
+  const transport = device.createSendTransport(data);
+  console.log(transport)
+  transport.on('connect', async ({ dtlsParameters }, callback, errback) => {
+    socket.request('connectConsumerTransport', { roomId : sessionStorage.getItem('ROOMID'), dtlsParameters })
+      .then(callback)
+      .catch(errback);
+  });
+
+  transport.on('produce', async ({ kind, rtpParameters }, callback, errback) => {
+    try {
+      const { id } = await socket.request('clientproduce', {
+        roomId : sessionStorage.getItem('ROOMID'),
+        cId : sessionStorage.getItem('CLIENTID'),
+        transportId: transport.id,
+        kind,
+        rtpParameters,
+      });
+      callback({ id });
+    } catch (err) {
+      errback(err);
+    }
+  });
+
+  transport.on('connectionstatechange', (state) => {
+    switch (state) {
+      case 'connecting':
+        $txtPublish.innerHTML = 'publishing...';
+        $fsPublish.disabled = true;
+        $fsSubscribe.disabled = true;
+      break;
+
+      case 'connected':
+        document.querySelector('#local_video').srcObject = stream;
+        $txtPublish.innerHTML = 'published';
+        $fsPublish.disabled = true;
+        $fsSubscribe.disabled = false;
+      break;
+
+      case 'failed':
+        transport.close();
+        $txtPublish.innerHTML = 'failed';
+        $fsPublish.disabled = false;
+        $fsSubscribe.disabled = true;
+      break;
+
+      default: break;
+    }
+  });
+
+  let stream;
+  try {
+    stream = await getUserMedia();
+    const track = stream.getVideoTracks()[0];
+    const params = { track };
+    params.encodings = [
+      { maxBitrate: 100000 },
+      { maxBitrate: 300000 },
+      { maxBitrate: 900000 },
+    ];
+    params.codecOptions = {
+      videoGoogleStartBitrate : 1000
+    };
+    producer = await transport.produce(params);
+  } catch (err) {
+    console.log(err)
+    $txtPublish.innerHTML = 'failed';
+  }
+  
 }
