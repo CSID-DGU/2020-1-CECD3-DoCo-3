@@ -33,7 +33,6 @@ function create() {
       if (xhr.readyState === xhr.DONE) { // 요청이 완료되면
         if (xhr.status === 200 || xhr.status === 201) {
           const Room = JSON.parse(xhr.responseText);
-          console.log(Room.roomId)
 
           sessionStorage.setItem('ROOMID', Room.roomId);
           sessionStorage.setItem('ISHOST', true);
@@ -243,10 +242,8 @@ function subscribe_b() {
       if (xhr.readyState === xhr.DONE) { // 요청이 완료되면
       if (xhr.status === 200 || xhr.status === 201) {
         const data = JSON.parse(xhr.responseText);
-        console.log(data.clientId)
         if (data.exists) {
           sessionStorage.setItem('CLIENTID', data.clientId);
-          console.log('subscribe')
           subscribe();
         }
       } else {
@@ -262,14 +259,12 @@ function subscribe_b() {
 }
 
 async function subscribe() {
-  console.log(sessionStorage.getItem('CLIENTID'))
   const data = await socket.request('createConsumerTransport', {
     roomId : sessionStorage.getItem('ROOMID'),
     cId : sessionStorage.getItem('CLIENTID'),
     forceTcp: false,
   });
 
-  console.log(data)
   if (data.error) {
     console.error(data.error);
     return;
@@ -335,7 +330,6 @@ async function subscribeh(cid) {
     forceTcp: false,
   });
 
-  console.log(data)
   if (data.error) {
     console.error(data.error);
     return;
@@ -356,9 +350,9 @@ async function subscribeh(cid) {
   transport.on('connectionstatechange', async (state) => {
     switch (state) {
       case 'connected':
+        console.log( "+AAASFFFFSDFADSF+ " + stream)
         const s = $('#'+cid)
         s.srcObject = await stream;
-        console.log(stream)
         await socket.request('resume');
         break;
 

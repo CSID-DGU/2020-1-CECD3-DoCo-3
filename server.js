@@ -95,8 +95,6 @@ async function runWebServer() {
     webServer.listen(listenPort, listenIp, () => {
       const listenIps = config.mediasoup.webRtcTransport.listenIps[0];
       const ip = listenIps.announcedIp || listenIps.ip;
-      console.log('server is running');
-      console.log(`open https://${ip}:${listenPort} in your web browser`);
       resolve();
     });
   });
@@ -126,8 +124,6 @@ async function runSocketServer() {
   });
 
   socketServer.on('connection', (socket) => {
-    console.log(socket.id + ', client connected');
-
     socket.on('roomExists', async (data) => {
       socket.emit('validRoom', data in rooms);
     });
@@ -218,7 +214,6 @@ async function runSocketServer() {
     socket.on('clientproduce', async (data, callback) => {
       const {kind, rtpParameters} = data;
       rooms[data.roomId].consumers[data.cId] = await rooms[data.roomId].consumerTransport[data.cId].produce({ kind, rtpParameters });
-      console.log('CLIENTSSS :::: ' + rooms[data.roomId].consumers[data.cId].id)
       callback({ id: rooms[data.roomId].consumers[data.cId].id });
 
       socket.broadcast.to(socket.id).emit('newCProducer');
@@ -229,8 +224,6 @@ async function runSocketServer() {
     });
 
     socket.on('consumehost', async (data, callback) => {
-      console.log('HEEECHUL FUCK + _ +' + data.cId)
-      console.log('HEEECHUL FUCK + _ +' + rooms[data.roomId].consumers[data.cId])
       callback(await createConsumer(rooms[data.roomId].consumers[data.cId], data.rtpCapabilities, data.roomId, data.cId));
     });
 
