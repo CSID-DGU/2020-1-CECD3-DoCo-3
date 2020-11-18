@@ -136,7 +136,7 @@ async function publish(e) {
   const transport = device.createSendTransport(data);
   console.log(transport)
   transport.on('connect', async ({ dtlsParameters }, callback, errback) => {
-    socket.request('connectConsumerTransport', { roomId : sessionStorage.getItem('ROOMID'), dtlsParameters })
+    socket.request('connectProducerTransport', { roomId : sessionStorage.getItem('ROOMID'), dtlsParameters })
       .then(callback)
       .catch(errback);
   });
