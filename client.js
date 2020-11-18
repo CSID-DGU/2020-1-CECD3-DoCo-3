@@ -163,7 +163,7 @@ async function publish() {
 
   let stream;
   try {
-    stream = await getUserMedia(transport, isWebcam);
+    stream = await getUserMedia();
     const track = stream.getVideoTracks()[0];
     const params = { track };
     params.encodings = [
@@ -182,8 +182,6 @@ async function publish() {
 
 
 async function publish_c(e) {
-  const isWebcam = (e.target.id === 'btn_webcam');
-  $txtPublish = isWebcam ? $txtWebcam : $txtScreen;
 
   const data = await socket.request('createConsumerTransport', {
     roomId : sessionStorage.getItem('ROOMID'),
@@ -221,21 +219,13 @@ async function publish_c(e) {
 
   transport.on('connectionstatechange', (state) => {
     switch (state) {
-      case 'connecting':
-        $fsPublish.disabled = true;
-        $fsSubscribe.disabled = true;
-      break;
 
       case 'connected':
         document.querySelector('#local_video').srcObject = stream;
-        $fsPublish.disabled = true;
-        $fsSubscribe.disabled = false;
       break;
 
       case 'failed':
         transport.close();
-        $fsPublish.disabled = false;
-        $fsSubscribe.disabled = true;
       break;
 
       default: break;
@@ -244,7 +234,7 @@ async function publish_c(e) {
 
   let stream;
   try {
-    stream = await getUserMedia(transport, isWebcam);
+    stream = await getUserMedia();
     const track = stream.getVideoTracks()[0];
     const params = { track };
     params.encodings = [
