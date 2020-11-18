@@ -69,6 +69,7 @@ function create() {
   xhr.send(); // 요청 전 
 }
 
+
 async function connect() {
   $btnConnect.disabled = true;
   $txtConnection.innerHTML = 'Connecting...';
