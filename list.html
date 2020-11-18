@@ -78,12 +78,16 @@ li{
   window.localStorage.setItem('debug', 'mediasoup-client:*');
 
 function init(){
+
   const xhr = new XMLHttpRequest();
   xhr.onreadystatechange = function() { // 요청에 대한 콜백
       if (xhr.readyState === xhr.DONE) { // 요청이 완료되면
         if (xhr.status === 200 || xhr.status === 201) {
           const Room = JSON.parse(xhr.responseText);
-          console.log(Room);
+          for(let i = 0 ; i< Room.length ; i++){
+
+            console.log(Room[i]);
+          }
           sessionStorage.setItem('ROOMID', Room[0]);
           console.log(sessionStorage.getItem('ROOMID'))
         } else {
