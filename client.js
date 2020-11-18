@@ -106,8 +106,6 @@ async function connect() {
   socket.on('newProducer', () => {
     $fsSubscribe.disabled = false;
   });
-
-  
 }
 
 async function loadDevice(routerRtpCapabilities) {
