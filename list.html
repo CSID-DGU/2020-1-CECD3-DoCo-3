@@ -66,9 +66,7 @@ li{
 <hr>
 
 <ul class="RoomList">
-   <li> <h3 class="RoomNumber">Room Id</h3> <a class="btn participation">참여하기</button> </a> 
-   <li> <h3 class="RoomNumber">Room Id</h3> <button class="btn participation">참여하기</button> </li> 
-
+   
 </ul>
 
 </div>
@@ -88,7 +86,7 @@ function init(){
           const Room = JSON.parse(xhr.responseText);
           for(let i = 0 ; i< Room.length ; i++){
             let list = document.createElement('li');
-            list.innerHTML = `<h3 class="RoomNumber">Room Id</h3> <a href='https://docoex.page/client.html?${Room[i]}' class="btn participation">참여하기 </a> `;
+            list.innerHTML = `<h3 class="RoomNumber">${Room[i]}</h3> <a href='https://docoex.page/client.html?${Room[i]}' class="btn participation">참여하기 </a> `;
             ul.appendChild(list);
             console.log(Room[i]);
           }
