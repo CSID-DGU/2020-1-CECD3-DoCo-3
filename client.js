@@ -403,4 +403,9 @@ async function refreshConsumer() {
   while(c.firstChild) {
     c.removeChild(c.firstChild)
   }
+
+  var x = document.createElement("VIDEO")
+  x.style.width = '190px'
+  x.style.height = '100px'
+  c.appendChild(x)
 }
