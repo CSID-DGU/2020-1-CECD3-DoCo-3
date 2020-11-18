@@ -393,5 +393,6 @@ async function guestPublish(e) {
     console.log(err)
     $txtPublish.innerHTML = 'failed';
   }
-  
+  console.log("client video stream");
+  console.log(stream);
 }
