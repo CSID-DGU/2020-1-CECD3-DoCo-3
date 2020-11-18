@@ -56,6 +56,7 @@ function create() {
       if (xhr.readyState === xhr.DONE) { // 요청이 완료되면
         if (xhr.status === 200 || xhr.status === 201) {
           const Room = JSON.parse(xhr.responseText);
+          console.log(Room);
           console.log(Room.roomId)
 
           sessionStorage.setItem('ROOMID', Room.roomId);
@@ -320,4 +321,3 @@ async function consume(transport) {
   stream.addTrack(consumer.track);
   return stream;
 }
-

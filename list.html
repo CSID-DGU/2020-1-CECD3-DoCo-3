@@ -7,6 +7,10 @@
 </head>
 <style>
 
+a{
+    text-decoration: none;
+}
+
 .btn {
   border: 2px solid black;
   background-color: white;
@@ -56,7 +60,7 @@ li{
 
 
 </style>
-<body>
+<body onload="init()">
 
 <div class="container">
 <h1 style="text-align: center;">Docoex Home</h1>
@@ -65,9 +69,7 @@ li{
 <hr>
 
 <ul class="RoomList">
-   <li> <h3 class="RoomNumber">Room Id</h3> <button class="btn participation">참여하기</button> </li> 
-   <li> <h3 class="RoomNumber">Room Id</h3> <button class="btn participation">참여하기</button> </li> 
-
+   
 </ul>
 
 </div>
@@ -75,7 +77,32 @@ li{
 <script>
   // window.localStorage.setItem('debug', 'mediasoup-client:WARN* mediasoup-client:ERROR*');
   window.localStorage.setItem('debug', 'mediasoup-client:*');
-</script>
 
+  const ul = document.querySelector('.RoomList');
+
+function init(){
+
+  const xhr = new XMLHttpRequest();
+  xhr.onreadystatechange = function() { // 요청에 대한 콜백
+      if (xhr.readyState === xhr.DONE) { // 요청이 완료되면
+        if (xhr.status === 200 || xhr.status === 201) {
+          const Room = JSON.parse(xhr.responseText);
+          for(let i = 0 ; i< Room.length ; i++){
+            let list = document.createElement('li');
+            list.innerHTML = `<h3 class="RoomNumber">${Room[i]}</h3> <a href='https://docoex.page/client.html?${Room[i]}' class="btn participation">참여하기 </a> `;
+            ul.appendChild(list);
+    
+          }
+          sessionStorage.setItem('ROOMID', Room[0]);
+
+        } else {
+          console.error(xhr.responseText);
+       }
+    }
+  };
+  xhr.open('GET', 'https://docoex.page/roomList'); // 메소드와 주소 설정
+  xhr.send();
+}
+</script>
 <script type="text/javascript" src="app-bundle.js"></script>
 </html>
