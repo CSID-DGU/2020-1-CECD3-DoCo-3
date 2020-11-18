@@ -11,7 +11,7 @@ let producer;
 const $ = document.querySelector.bind(document);
 const $fsPublish = $('#fs_publish');
 const $fsSubscribe = $('#fs_subscribe');
-const $btnConnect = $('#btn_connect');
+const $btnCreate = $('.CreateRoom'); //방 생성 by hoon
 const $btnWebcam = $('#btn_webcam');
 const $btnScreen = $('#btn_screen');
 const $btnSubscribe = $('#btn_subscribe');
@@ -23,7 +23,7 @@ const $txtScreen = $('#screen_status');
 const $txtSubscription = $('#sub_status');
 let $txtPublish;
 
-$btnConnect.addEventListener('click', create);
+$btnCreate.addEventListener('click', create); //방 생성 by hoon
 $btnWebcam.addEventListener('click', publish);
 $btnSubscribe.addEventListener('click', subscribe_b);
 $btnList.addEventListener('click', initialize);
@@ -59,7 +59,8 @@ function create() {
           console.log(Room.roomId)
 
           sessionStorage.setItem('ROOMID', Room.roomId);
-          connect()
+          location.href = `http://docoex.page/host.html?${Room.roomId}`; //방 이동
+          connect();
         } else {
           console.error(xhr.responseText);
        }
@@ -319,3 +320,4 @@ async function consume(transport) {
   stream.addTrack(consumer.track);
   return stream;
 }
+
