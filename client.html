@@ -32,12 +32,11 @@
           </table>
 
     </body>
+    <script type="text/javascript" src="app-bundle.js"></script>
     <script>
         console.log(location.href.split('?')[1])
         sessionStorage.setItem('ROOMID', location.href.split('?')[1])
+        connect()
     </script>
 
-    <script type="text/javascript" src="app-bundle.js">
-          connect()
-    </script>
 </html>
