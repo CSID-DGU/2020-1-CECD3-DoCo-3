@@ -39,7 +39,6 @@ function initialize() {
       if (xhr.readyState === xhr.DONE) { // 요청이 완료되면
         if (xhr.status === 200 || xhr.status === 201) {
           const Room = JSON.parse(xhr.responseText);
-          console.log(Room)
         } else {
           console.error(xhr.responseText);
        }
@@ -56,7 +55,6 @@ function create() {
       if (xhr.readyState === xhr.DONE) { // 요청이 완료되면
         if (xhr.status === 200 || xhr.status === 201) {
           const Room = JSON.parse(xhr.responseText);
-          console.log(Room.roomId)
 
           sessionStorage.setItem('ROOMID', Room.roomId);
           connect()
@@ -134,7 +132,6 @@ async function publish(e) {
   }
 
   const transport = device.createSendTransport(data);
-  console.log(transport)
   transport.on('connect', async ({ dtlsParameters }, callback, errback) => {
     socket.request('connectProducerTransport', { roomId : sessionStorage.getItem('ROOMID'), dtlsParameters })
       .then(callback)
@@ -226,7 +223,6 @@ function subscribe_b() {
       if (xhr.readyState === xhr.DONE) { // 요청이 완료되면
       if (xhr.status === 200 || xhr.status === 201) {
         const data = JSON.parse(xhr.responseText);
-        console.log(data.clientId)
         if (data.exists) {
           sessionStorage.setItem('CLIENTID', data.clientId);
           console.log('subscribe')
@@ -245,14 +241,12 @@ function subscribe_b() {
 }
 
 async function subscribe() {
-  console.log(sessionStorage.getItem('CLIENTID'))
   const data = await socket.request('createConsumerTransport', {
     roomId : sessionStorage.getItem('ROOMID'),
     cId : sessionStorage.getItem('CLIENTID'),
     forceTcp: false,
   });
 
-  console.log(data)
   if (data.error) {
     console.error(data.error);
     return;
@@ -332,10 +326,8 @@ async function guestPublish(e) {
     console.error(data.error);
     return;
   }
-  console.log("asdsadsadsad"+data);
 
   const transport = device.createSendTransport(data);
-  console.log(transport)
   transport.on('connect', async ({ dtlsParameters }, callback, errback) => {
     socket.request('connectConsumerTransport', { roomId : sessionStorage.getItem('ROOMID'), dtlsParameters })
       .then(callback)
