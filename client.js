@@ -407,7 +407,7 @@ async function refreshConsumer() {
       if (xhr.readyState === xhr.DONE) { // 요청이 완료되면
         if (xhr.status === 200 || xhr.status === 201) {
           const Room = JSON.parse(xhr.responseText);
-          console.log(Room.roomId)
+          console.log(Room)
 
           var x = document.createElement("VIDEO")
           x.style.width = '190px'
