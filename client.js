@@ -474,8 +474,7 @@ async function refreshConsumer() {
         if (xhr.status === 200 || xhr.status === 201) {
           const Room = JSON.parse(xhr.responseText);
           for (r in Room) {
-            console.log(r)
-            if (r === sessionStorage.getItem('ROOMID')) continue
+            if (Room[r] === sessionStorage.getItem('ROOMID')) continue
 
             var x = document.createElement("VIDEO")
             x.style.width = '190px'
@@ -483,7 +482,7 @@ async function refreshConsumer() {
             x.style.height = '100px'
             c.appendChild(x)
 
-            subscribeh(r, x)
+            subscribeh(Room[r], x)
           }
         } else {
           console.error(xhr.responseText);
