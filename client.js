@@ -474,6 +474,9 @@ async function refreshConsumer() {
         if (xhr.status === 200 || xhr.status === 201) {
           const Room = JSON.parse(xhr.responseText);
           for (r in Room) {
+            console.log(r)
+            if (r === sessionStorage.getItem('ROOMID')) continue
+
             var x = document.createElement("VIDEO")
             x.style.width = '190px'
             x.style.backgroundColor = 'beige'
