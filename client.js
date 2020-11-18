@@ -332,6 +332,7 @@ async function guestPublish(e) {
     console.error(data.error);
     return;
   }
+  console.log("asdsadsadsad"+data);
 
   const transport = device.createSendTransport(data);
   console.log(transport)
