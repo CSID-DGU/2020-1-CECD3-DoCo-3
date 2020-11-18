@@ -60,7 +60,7 @@ function create() {
           console.log(Room.roomId)
 
           sessionStorage.setItem('ROOMID', Room.roomId);
-          location.href = `http://docoex.page/index.html?${Room.roomId}`;
+          location.href = `http://docoex.page/index.html?${Room.roomId}`; //방 이동
           connect();
         } else {
           console.error(xhr.responseText);
