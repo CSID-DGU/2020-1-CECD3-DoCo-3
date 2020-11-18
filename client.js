@@ -64,7 +64,8 @@ function create() {
           console.log(Room.roomId)
 
           sessionStorage.setItem('ROOMID', Room.roomId);
-          location.href = `http://docoex.page/host.html?${Room.roomId}`; //방 이동
+          connect()
+          
         } else {
           console.error(xhr.responseText);
        }
@@ -94,6 +95,7 @@ async function connect() {
 
     const data = await socket.request('getRouterRtpCapabilities', { roomId : sessionStorage.getItem('ROOMID') });
     await loadDevice(data);
+    location.href = `http://docoex.page/host.html?${Room.roomId}`; //방 이동
   });
 
   socket.on('disconnect', () => {
