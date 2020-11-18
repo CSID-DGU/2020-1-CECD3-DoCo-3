@@ -204,7 +204,7 @@ async function publish(e) {
   }
 }
 
-async function getUserMedia(transport, isWebcam) {
+async function getUserMedia() {
   if (!device.canProduce('video')) {
     console.error('cannot produce video');
     return;
@@ -212,7 +212,7 @@ async function getUserMedia(transport, isWebcam) {
 
   let stream;
   try {
-    stream = await navigator.mediaDevices.getUserMedia({ video: true })
+    stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true })
   } catch (err) {
     console.error('getUserMedia() failed:', err.message);
     throw err;
