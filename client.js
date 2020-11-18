@@ -141,7 +141,6 @@ async function publish(e) {
   }
 
   const transport = device.createSendTransport(data);
-  console.log(transport)
   transport.on('connect', async ({ dtlsParameters }, callback, errback) => {
     socket.request('connectProducerTransport', { roomId : sessionStorage.getItem('ROOMID'), dtlsParameters })
       .then(callback)

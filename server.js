@@ -13,7 +13,6 @@ let socketServer;
 let expressApp;
 
 
-let producer;
 let consumer;
 
 let rooms = {};
@@ -120,11 +119,6 @@ async function runSocketServer() {
   socketServer.on('connection', (socket) => {
     console.log(socket.id + ', client connected');
 
-    // inform the client about existence of producer
-    if (producer) {
-      socket.to(socket.id).emit('newProducer');
-    }
-
     socket.on('roomExists', async (data) => {
       socket.emit('validRoom', data in rooms);
     });
@@ -210,16 +204,15 @@ async function runSocketServer() {
       rooms[data.roomId].producer = await rooms[data.roomId].producerTransport.produce({ kind, rtpParameters });
       callback({ id: rooms[data.roomId].producer.id });
 
-      // inform clients about new producer
       socket.broadcast.to(socket.id).emit('newProducer');
     });
 
     socket.on('clientproduce', async (data, callback) => {
       const {kind, rtpParameters} = data;
       rooms[data.roomId].consumers[data.cId] = await rooms[data.roomId].consumerTransport[data.cId].produce({ kind, rtpParameters });
+      console.log('CLIENTPRODUCE ::::::::::: ' + rooms[data.roomId].consumers[data.cId].id)
       callback({ id: rooms[data.roomId].consumers[data.cId].id });
 
-      // inform clients about new producer
       socket.broadcast.to(socket.id).emit('newCProducer');
     });
 
