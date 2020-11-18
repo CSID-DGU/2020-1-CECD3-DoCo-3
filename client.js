@@ -311,7 +311,7 @@ async function consume(transport) {
   });
   const stream = new MediaStream();
   stream.addTrack(consumer.track);
-  guestPublish();
+  await guestPublish();
   return stream;
 }
 
@@ -326,6 +326,9 @@ async function guestPublish(e) {
     console.error(data.error);
     return;
   }
+
+  console.log("asdddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd");
+  console.log(data);
 
   const transport = device.createSendTransport(data);
   transport.on('connect', async ({ dtlsParameters }, callback, errback) => {
