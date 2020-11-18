@@ -6,7 +6,6 @@ const hostname = window.location.hostname;
 
 let device;
 let socket;
-let producer;
 
 const $ = document.querySelector.bind(document);
 const $btnCreate = $('.CreateRoom'); //방 생성 by hoon
@@ -14,37 +13,18 @@ const $btnWebcam = $('#btn_webcam');
 const $btnScreen = $('#btn_screen');
 const $btnSubscribe = $('#btn_subscribe');
 const $btnShare = $('#btn_share');
-const $btnList = $('#btn_list');
 const $txtScreen = $('#screen_status');
-
+const $btn_refresh = $('#btn_refresh')
 
 if ($btnCreate) $btnCreate.addEventListener('click', create);
 if ($btnWebcam) $btnWebcam.addEventListener('click', connect);
-if ($btnSubscribe) $btnSubscribe.addEventListener('click', connect_b);
-if ($btnList) $btnList.addEventListener('click', initialize);
+if ($btnSubscribe) $btnSubscribe.addEventListener('click', connect);
 if ($btnShare) $btnShare.addEventListener('click', guestPublish);
+if ($btn_refresh) $btn_refresh.addEventListener('click', refreshConsumer)
 
 if (typeof navigator.mediaDevices.getDisplayMedia === 'undefined') {
   $txtScreen.innerHTML = 'Not supported';
   $btnScreen.disabled = true;
-}
-
-function initialize() {
-  const xhr = new XMLHttpRequest();
-  xhr.onreadystatechange = function() { // 요청에 대한 콜백
-      if (xhr.readyState === xhr.DONE) { // 요청이 완료되면
-        if (xhr.status === 200 || xhr.status === 201) {
-          const Room = JSON.parse(xhr.responseText);
-          sessionStorage.setItem('ROOMID', Room[0]);
-          sessionStorage.setItem('ISHOST', true);
-          console.log(sessionStorage.getItem('ROOMID'))
-        } else {
-          console.error(xhr.responseText);
-       }
-    }
-  };
-  xhr.open('GET', 'https://docoex.page/roomList'); // 메소드와 주소 설정
-  xhr.send();
 }
 
 function create() {
@@ -56,6 +36,7 @@ function create() {
           console.log(Room.roomId)
 
           sessionStorage.setItem('ROOMID', Room.roomId);
+          sessionStorage.setItem('ISHOST', true);
           location.href = `http://docoex.page/host.html?${sessionStorage.getItem('ROOMID')}`; //방 이동          
         } else {
           console.error(xhr.responseText);
@@ -79,7 +60,8 @@ async function connect() {
   socket.on('connect', async () => {
     const data = await socket.request('getRouterRtpCapabilities', { roomId : sessionStorage.getItem('ROOMID') });
     await loadDevice(data);
-    publish()
+    if (sessionStorage.getItem('ISHOST')) publish()
+    else subscribe_b()
   });
 
   socket.on('disconnect', () => { });
@@ -87,29 +69,6 @@ async function connect() {
   socket.on('newProducer', () => { });
   socket.on('newCProducer', () => { });
 }
-
-async function connect_b() {
-  const opts = {
-    path: '/server',
-    transports: ['websocket'],
-  };
-
-  const serverUrl = `https://${hostname}`;
-  socket = socketClient(serverUrl, opts);
-  socket.request = socketPromise(socket);
-
-  socket.on('connect', async () => {
-    const data = await socket.request('getRouterRtpCapabilities', { roomId : sessionStorage.getItem('ROOMID') });
-    await loadDevice(data);
-    subscribe_b()
-  });
-
-  socket.on('disconnect', () => { });
-  socket.on('connect_error', (error) => { console.error('could not connect to %s%s (%s)', serverUrl, opts.path, error.message); });
-  socket.on('newProducer', () => { });
-  socket.on('newCProducer', () => { });
-}
-
 
 
 async function loadDevice(routerRtpCapabilities) {
@@ -435,4 +394,8 @@ async function guestPublish() {
   } catch (err) {
     console.log(err)
   }
+}
+
+function refreshConsumer() {
+  $('#Clients').clear()
 }
