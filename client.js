@@ -51,6 +51,7 @@ function initialize() {
 }
 
 function create() {
+
   const xhr = new XMLHttpRequest();
   xhr.onreadystatechange = function() { // 요청에 대한 콜백
       if (xhr.readyState === xhr.DONE) { // 요청이 완료되면
@@ -59,7 +60,7 @@ function create() {
           console.log(Room.roomId)
 
           sessionStorage.setItem('ROOMID', Room.roomId);
-          connect()
+          connect();
         } else {
           console.error(xhr.responseText);
        }
