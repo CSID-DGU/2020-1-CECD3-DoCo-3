@@ -358,6 +358,7 @@ async function subscribeh(cid) {
     switch (state) {
       case 'connected':
         s.srcObject = await stream;
+        console.log(stream)
         await socket.request('resume');
         break;
 
