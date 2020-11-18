@@ -408,7 +408,7 @@ async function refreshConsumer() {
         if (xhr.status === 200 || xhr.status === 201) {
           const Room = JSON.parse(xhr.responseText);
           console.log(Room.roomId)
-          
+
           var x = document.createElement("VIDEO")
           x.style.width = '190px'
           x.style.backgroundColor = 'beige'
@@ -420,7 +420,7 @@ async function refreshConsumer() {
        }
     }
   };
-  xhr.open('GET', 'https://docoex.page/roomClients'); // 메소드와 주소 설정
+  xhr.open('GET', 'https://docoex.page/roomClients?roomId='+sessionStorage.getItem('ROOMID')); // 메소드와 주소 설정
   xhr.send(); // 요청 전 
 
 }
