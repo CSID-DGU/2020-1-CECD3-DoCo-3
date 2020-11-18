@@ -9,26 +9,20 @@ let socket;
 let producer;
 
 const $ = document.querySelector.bind(document);
-const $fsPublish = $('#fs_publish');
 const $fsSubscribe = $('#fs_subscribe');
-const $btnConnect = $('#btn_connect');
 const $btnCreate = $('.CreateRoom'); //방 생성 by hoon
 const $btnWebcam = $('#btn_webcam');
 const $btnScreen = $('#btn_screen');
 const $btnSubscribe = $('#btn_subscribe');
 const $btnShare = $('#btn_share');
 const $btnList = $('#btn_list');
-const $txtConnection = $('#connection_status');
-const $txtWebcam = $('#webcam_status');
 const $txtScreen = $('#screen_status');
 const $txtSubscription = $('#sub_status');
-let $txtPublish;
-
 
 
 if ($btnCreate) $btnCreate.addEventListener('click', create);
 if ($btnWebcam) $btnWebcam.addEventListener('click', connect);
-if ($btnSubscribe) $btnSubscribe.addEventListener('click', subscribe_b);
+if ($btnSubscribe) $btnSubscribe.addEventListener('click', connect_b);
 if ($btnList) $btnList.addEventListener('click', initialize);
 if ($btnShare) $btnShare.addEventListener('click', publish_c);
 
@@ -90,19 +84,35 @@ async function connect() {
     publish()
   });
 
-  socket.on('disconnect', () => {
-  });
-
-  socket.on('connect_error', (error) => {
-    console.error('could not connect to %s%s (%s)', serverUrl, opts.path, error.message);
-  });
-
-  socket.on('newProducer', () => {
-  });
-
-  socket.on('newCProducer', () => {
-  });
+  socket.on('disconnect', () => { });
+  socket.on('connect_error', (error) => { console.error('could not connect to %s%s (%s)', serverUrl, opts.path, error.message); });
+  socket.on('newProducer', () => { });
+  socket.on('newCProducer', () => { });
 }
+
+async function connect_b() {
+  const opts = {
+    path: '/server',
+    transports: ['websocket'],
+  };
+
+  const serverUrl = `https://${hostname}`;
+  socket = socketClient(serverUrl, opts);
+  socket.request = socketPromise(socket);
+
+  socket.on('connect', async () => {
+    const data = await socket.request('getRouterRtpCapabilities', { roomId : sessionStorage.getItem('ROOMID') });
+    await loadDevice(data);
+    subscribe_b()
+  });
+
+  socket.on('disconnect', () => { });
+  socket.on('connect_error', (error) => { console.error('could not connect to %s%s (%s)', serverUrl, opts.path, error.message); });
+  socket.on('newProducer', () => { });
+  socket.on('newCProducer', () => { });
+}
+
+
 
 async function loadDevice(routerRtpCapabilities) {
   try {
