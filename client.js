@@ -213,14 +213,12 @@ async function publish_c(e) {
   const isWebcam = (e.target.id === 'btn_webcam');
   $txtPublish = isWebcam ? $txtWebcam : $txtScreen;
 
-  const data = await socket.request('getConsumerTransport', {
+  const data = await socket.request('createConsumerTransport', {
     roomId : sessionStorage.getItem('ROOMID'),
-    cId : sessionStorage.getItem('CLIENTID'),
     forceTcp: false,
     rtpCapabilities: device.rtpCapabilities,
   });
 
-  console
   if (data.error) {
     console.error(data.error);
     return;
