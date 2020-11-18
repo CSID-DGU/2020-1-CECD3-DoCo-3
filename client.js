@@ -330,22 +330,13 @@ async function subscribe() {
 
   transport.on('connectionstatechange', async (state) => {
     switch (state) {
-      case 'connecting':
-        $txtSubscription.innerHTML = 'subscribing...';
-        $fsSubscribe.disabled = true;
-        break;
-
       case 'connected':
         document.querySelector('#remote_video').srcObject = await stream;
         await socket.request('resume');
-        $txtSubscription.innerHTML = 'subscribed';
-        $fsSubscribe.disabled = true;
         break;
 
       case 'failed':
         transport.close();
-        $txtSubscription.innerHTML = 'failed';
-        $fsSubscribe.disabled = false;
         break;
 
       default: break;
