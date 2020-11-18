@@ -404,6 +404,7 @@ async function refreshConsumer() {
 
   var x = document.createElement("VIDEO")
   x.style.width = '190px'
+  x.style.backgroundColor = 'beige'
   x.style.height = '100px'
   console.log(x)
   c.appendChild(x)
