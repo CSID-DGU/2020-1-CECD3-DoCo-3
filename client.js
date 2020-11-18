@@ -320,3 +320,11 @@ async function consume(transport) {
   stream.addTrack(consumer.track);
   return stream;
 }
+
+//함수 
+function init(){
+
+
+
+
+}
