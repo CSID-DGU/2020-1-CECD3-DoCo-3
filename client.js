@@ -329,27 +329,16 @@ async function guestPublish(e) {
     return;
   }
 
-  const transport = device.createSendTransport(data);
+  // const transport = device.createSendTransport(data);
   // transport.on('connect', async ({ dtlsParameters }, callback, errback) => {
   //   socket.request('connectConsumerTransport', { roomId : sessionStorage.getItem('ROOMID'), cId : sessionStorage.getItem('CLIENTID'), dtlsParameters })
   //     .then(callback)
   //     .catch(errback);
   // });
 
-  const data = await socket.request('createProducerTransport', {
-    roomId : sessionStorage.getItem('ROOMID'),
-    cId : sessionStorage.getItem('CLIENTID'),
-    forceTcp: false,
-    rtpCapabilities: device.rtpCapabilities,
-  });
-  if (data.error) {
-    console.error(data.error);
-    return;
-  }
-
   const transport = device.createSendTransport(data);
   transport.on('connect', async ({ dtlsParameters }, callback, errback) => {
-    socket.request('connectProducerTransport', { roomId : sessionStorage.getItem('ROOMID'), dtlsParameters })
+    socket.request('connectProducerTransport', { roomId : sessionStorage.getItem('ROOMID'), cId : sessionStorage.getItem('ROOMID'), dtlsParameters })
       .then(callback)
       .catch(errback);
   });
