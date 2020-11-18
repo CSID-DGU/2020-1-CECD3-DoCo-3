@@ -153,7 +153,7 @@ async function runSocketServer() {
     socket.on('createProducerTransport', async (data, callback) => {
       try {
         const { transport, params } = await createWebRtcTransport(data.roomId);
-        rooms[data.roomId].producerTransport = transport;
+        rooms[data.roomId].producerTransport[data.cId] = transport;
         callback(params);
       } catch (err) {
         console.error(err);
@@ -172,24 +172,24 @@ async function runSocketServer() {
       }
     });
 
-    socket.on('getConsumerTransport', async (data, callback) => {
-      try {
-        const transport = rooms[data.roomId].consumerTransport[data.cId];
-        const params = {
-          id: transport.id,
-          iceParameters: transport.iceParameters,
-          iceCandidates: transport.iceCandidates,
-          dtlsParameters: transport.dtlsParameters
-        }
-        callback(params);
-      } catch (err) {
-        console.error(err);
-        callback({ error: err.message });
-      }
-    });
+    // socket.on('getConsumerTransport', async (data, callback) => {
+    //   try {
+    //     const transport = rooms[data.roomId].consumerTransport[data.cId];
+    //     const params = {
+    //       id: transport.id,
+    //       iceParameters: transport.iceParameters,
+    //       iceCandidates: transport.iceCandidates,
+    //       dtlsParameters: transport.dtlsParameters
+    //     }
+    //     callback(params);
+    //   } catch (err) {
+    //     console.error(err);
+    //     callback({ error: err.message });
+    //   }
+    // });
 
     socket.on('connectProducerTransport', async (data, callback) => {
-      await rooms[data.roomId].producerTransport.connect({ dtlsParameters: data.dtlsParameters });
+      await rooms[data.roomId].producerTransport[data.cId].connect({ dtlsParameters: data.dtlsParameters });
       callback();
     });
 
@@ -200,7 +200,7 @@ async function runSocketServer() {
 
     socket.on('produce', async (data, callback) => {
       const {kind, rtpParameters} = data;
-      rooms[data.roomId].producer = await rooms[data.roomId].producerTransport.produce({ kind, rtpParameters });
+      rooms[data.roomId].producer = await rooms[data.roomId].producerTransport[data.cId].produce({ kind, rtpParameters });
       callback({ id: rooms[data.roomId].producer.id });
 
       socket.broadcast.to(socket.id).emit('newProducer');

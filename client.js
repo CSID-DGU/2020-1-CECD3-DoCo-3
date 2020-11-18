@@ -9,7 +9,6 @@ let socket;
 let producer;
 
 const $ = document.querySelector.bind(document);
-const $fsSubscribe = $('#fs_subscribe');
 const $btnCreate = $('.CreateRoom'); //방 생성 by hoon
 const $btnWebcam = $('#btn_webcam');
 const $btnScreen = $('#btn_screen');
@@ -17,14 +16,13 @@ const $btnSubscribe = $('#btn_subscribe');
 const $btnShare = $('#btn_share');
 const $btnList = $('#btn_list');
 const $txtScreen = $('#screen_status');
-const $txtSubscription = $('#sub_status');
 
 
 if ($btnCreate) $btnCreate.addEventListener('click', create);
 if ($btnWebcam) $btnWebcam.addEventListener('click', connect);
 if ($btnSubscribe) $btnSubscribe.addEventListener('click', connect_b);
 if ($btnList) $btnList.addEventListener('click', initialize);
-if ($btnShare) $btnShare.addEventListener('click', publish_c);
+if ($btnShare) $btnShare.addEventListener('click', guestPublish);
 
 if (typeof navigator.mediaDevices.getDisplayMedia === 'undefined') {
   $txtScreen.innerHTML = 'Not supported';
@@ -128,6 +126,7 @@ async function loadDevice(routerRtpCapabilities) {
 async function publish() {
   const data = await socket.request('createProducerTransport', {
     roomId : sessionStorage.getItem('ROOMID'),
+    cId : sessionStorage.getItem('ROOMID'),
     forceTcp: false,
     rtpCapabilities: device.rtpCapabilities,
   });
@@ -138,7 +137,7 @@ async function publish() {
 
   const transport = device.createSendTransport(data);
   transport.on('connect', async ({ dtlsParameters }, callback, errback) => {
-    socket.request('connectProducerTransport', { roomId : sessionStorage.getItem('ROOMID'), dtlsParameters })
+    socket.request('connectProducerTransport', { roomId : sessionStorage.getItem('ROOMID'), cId : sessionStorage.getItem('ROOMID'), dtlsParameters })
       .then(callback)
       .catch(errback);
   });
@@ -147,6 +146,7 @@ async function publish() {
     try {
       const { id } = await socket.request('produce', {
         roomId : sessionStorage.getItem('ROOMID'),
+        cId : sessionStorage.getItem('ROOMID'),
         transportId: transport.id,
         kind,
         rtpParameters,
@@ -191,7 +191,7 @@ async function publish() {
 }
 
 
-async function publish_c(e) {
+async function publish_c() {
 
   const data = await socket.request('createConsumerTransport', {
     roomId : sessionStorage.getItem('ROOMID'),
@@ -367,4 +367,72 @@ async function consume(transport) {
   const stream = new MediaStream();
   stream.addTrack(consumer.track);
   return stream;
+}
+
+
+async function guestPublish() {
+  const data = await socket.request('createProducerTransport', {
+    roomId : sessionStorage.getItem('ROOMID'),
+    cId : sessionStorage.getItem('CLIENTID'),
+    forceTcp: false,
+    rtpCapabilities: device.rtpCapabilities,
+  });
+  if (data.error) {
+    console.error(data.error);
+    return;
+  }
+
+  const transport = device.createSendTransport(data);
+  transport.on('connect', async ({ dtlsParameters }, callback, errback) => {
+    socket.request('connectProducerTransport', { roomId : sessionStorage.getItem('ROOMID'), cId : sessionStorage.getItem('CLIENTID'), dtlsParameters })
+      .then(callback)
+      .catch(errback);
+  });
+
+  transport.on('produce', async ({ kind, rtpParameters }, callback, errback) => {
+    try {
+      const { id } = await socket.request('clientproduce', {
+        roomId : sessionStorage.getItem('ROOMID'),
+        cId : sessionStorage.getItem('CLIENTID'),
+        transportId: transport.id,
+        kind,
+        rtpParameters,
+      });
+      callback({ id });
+    } catch (err) {
+      errback(err);
+    }
+  });
+
+  transport.on('connectionstatechange', (state) => {
+    switch (state) {
+      case 'connected':
+        document.querySelector('#local_video').srcObject = stream;
+      break;
+
+      case 'failed':
+        transport.close();
+      break;
+
+      default: break;
+    }
+  });
+
+  let stream;
+  try {
+    stream = await getUserMedia();
+    const track = stream.getVideoTracks()[0];
+    const params = { track };
+    params.encodings = [
+      { maxBitrate: 100000 },
+      { maxBitrate: 300000 },
+      { maxBitrate: 900000 },
+    ];
+    params.codecOptions = {
+      videoGoogleStartBitrate : 1000
+    };
+    producer = await transport.produce(params);
+  } catch (err) {
+    console.log(err)
+  }
 }
