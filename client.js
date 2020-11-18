@@ -332,7 +332,7 @@ async function guestPublish(e) {
 
   const transport = device.createSendTransport(data);
   transport.on('connect', async ({ dtlsParameters }, callback, errback) => {
-    socket.request('connectConsumerTransport', { roomId : sessionStorage.getItem('ROOMID'), dtlsParameters })
+    socket.request('connectConsumerTransport', { roomId : sessionStorage.getItem('ROOMID'), cId : sessionStorage.getItem('CLIENTID'), dtlsParameters })
       .then(callback)
       .catch(errback);
   });
