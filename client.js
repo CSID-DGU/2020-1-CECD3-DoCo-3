@@ -225,13 +225,14 @@ async function publish_c(e) {
     return;
   }
 
+  const transport = device.createSendTransport(data);
   transport.on('connect', async ({ dtlsParameters }, callback, errback) => {
-    socket.request('connectProducerTransport', { roomId : sessionStorage.getItem('ROOMID'), dtlsParameters })
+    socket.request('connectConsumerTransport', { roomId : sessionStorage.getItem('ROOMID'), 
+                                                 cId : sessionStorage.getItem('CLIENTID'), dtlsParameters })
       .then(callback)
       .catch(errback);
   });
 
-  const transport = device.createSendTransport(data);
   transport.on('produce', async ({ kind, rtpParameters }, callback, errback) => {
     try {
       const { id } = await socket.request('clientproduce', {
@@ -250,21 +251,18 @@ async function publish_c(e) {
   transport.on('connectionstatechange', (state) => {
     switch (state) {
       case 'connecting':
-        $txtPublish.innerHTML = 'publishing...';
         $fsPublish.disabled = true;
         $fsSubscribe.disabled = true;
       break;
 
       case 'connected':
         document.querySelector('#local_video').srcObject = stream;
-        $txtPublish.innerHTML = 'published';
         $fsPublish.disabled = true;
         $fsSubscribe.disabled = false;
       break;
 
       case 'failed':
         transport.close();
-        $txtPublish.innerHTML = 'failed';
         $fsPublish.disabled = false;
         $fsSubscribe.disabled = true;
       break;
