@@ -52,6 +52,15 @@ async function runExpressApp() {
     res.json({ exists: roomId in rooms, clientId: mediasoupRouter.id });
   });
 
+  expressApp.get("/roomClients", async (req, res, next) => {
+    const roomId = req.query.roomId;
+    const ptprt = rooms[roomId].producerTransport
+    var roomList = [];
+    for(key in ptprt) { roomList.push(key); }
+
+    res.json(roomList);
+  });
+
   expressApp.get("/roomList", async (req, res) => {
     var roomList = [];
     for(key in rooms){
@@ -228,9 +237,12 @@ async function runSocketServer() {
       const {kind, rtpParameters} = data;
       rooms[data.roomId].consumers[data.cId] = await rooms[data.roomId].consumerTransport[data.cId].produce({ kind, rtpParameters });
 <<<<<<< HEAD
+<<<<<<< HEAD
       callback({ id: rooms[data.roomId].producer.id });
 =======
       console.log('CLIENTPRODUCE ::::::::::: ' + rooms[data.roomId].consumers[data.cId].id)
+=======
+>>>>>>> b06e21ca8bbc39e5e21a7c372dde47423a34a6d2
       callback({ id: rooms[data.roomId].consumers[data.cId].id });
 >>>>>>> afd3d9312ff516225a8c6a413366882702989bf4
 
@@ -239,6 +251,10 @@ async function runSocketServer() {
 
     socket.on('consume', async (data, callback) => {
       callback(await createConsumer(rooms[data.roomId].producer, data.rtpCapabilities, data.roomId, data.cId));
+    });
+
+    socket.on('consumehost', async (data, callback) => {
+      callback(await createConsumer(rooms[data.roomId].consumers[data.cId], data.rtpCapabilities, data.roomId, data.cId));
     });
 
     socket.on('resume', async (data, callback) => {
