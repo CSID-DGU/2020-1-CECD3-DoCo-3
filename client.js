@@ -213,8 +213,9 @@ async function publish_c(e) {
   const isWebcam = (e.target.id === 'btn_webcam');
   $txtPublish = isWebcam ? $txtWebcam : $txtScreen;
 
-  const data = await socket.request('createConsumerTransport', {
+  const data = await socket.request('getConsumerTransport', {
     roomId : sessionStorage.getItem('ROOMID'),
+    cId : sessionStorage.getItem('CLIENTID'),
     forceTcp: false,
     rtpCapabilities: device.rtpCapabilities,
   });
@@ -225,13 +226,6 @@ async function publish_c(e) {
   }
 
   const transport = device.createSendTransport(data);
-  console.log(transport)
-  transport.on('connect', async ({ dtlsParameters }, callback, errback) => {
-    socket.request('connectConsumerTransport', { roomId : sessionStorage.getItem('ROOMID'), cId : sessionStorage.getItem('CLIENTID'), dtlsParameters })
-      .then(callback)
-      .catch(errback);
-  });
-
   transport.on('produce', async ({ kind, rtpParameters }, callback, errback) => {
     try {
       const { id } = await socket.request('clientproduce', {
