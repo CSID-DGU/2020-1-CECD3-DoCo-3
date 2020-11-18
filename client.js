@@ -353,10 +353,10 @@ async function subscribeh(cid) {
       .catch(errback);
   });
 
-  const s = $('#'+cid)
   transport.on('connectionstatechange', async (state) => {
     switch (state) {
       case 'connected':
+        const s = $('#'+cid)
         s.srcObject = await stream;
         console.log(stream)
         await socket.request('resume');
