@@ -59,11 +59,8 @@ async function connect() {
   socket.on('connect', async () => {
     const data = await socket.request('getRouterRtpCapabilities', { roomId : sessionStorage.getItem('ROOMID') });
     await loadDevice(data);
-    if (sessionStorage.getItem('ISHOST')) {
-      publish()
-    } else {
-      subscribe_b()
-    }
+    if (sessionStorage.getItem('ISHOST')) publish()
+    else subscribe_b()
   });
 
   socket.on('disconnect', () => { });
@@ -247,7 +244,6 @@ function subscribe_b() {
         const data = JSON.parse(xhr.responseText);
         if (data.exists) {
           sessionStorage.setItem('CLIENTID', data.clientId);
-          console.log(sessionStorage.getItem('CLIENTID'))
           subscribe();
         }
       } else {
