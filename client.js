@@ -6,6 +6,7 @@ const hostname = window.location.hostname;
 
 let device;
 let socket;
+let streams = {};
 
 const $ = document.querySelector.bind(document);
 const $btnCreate = $('.CreateRoom'); //방 생성 by hoon
@@ -350,10 +351,9 @@ async function subscribeh(cid, cnt) {
   transport.on('connectionstatechange', async (state) => {
     switch (state) {
       case 'connected':
-        
-        const s = document.querySelector('#remote_video_' + cnt)
-        s.srcObject = await stream;
-        console.log('STREAM DATAS : : : :' + await stream)
+        const s = document.getElementById('remote_video_' + cnt)
+        s.srcObject = await streams[cid];
+        console.log('STREAM DATAS : : : :' + await streams[cid])
         await socket.request('resume');
         break;
 
@@ -365,7 +365,7 @@ async function subscribeh(cid, cnt) {
     }
   });
 
-  const stream = consumeh(cid, transport);
+  streams[cid] = consumeh(cid, transport);
 }
 
 
