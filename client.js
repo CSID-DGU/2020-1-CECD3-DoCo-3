@@ -61,10 +61,8 @@ async function connect() {
     await loadDevice(data);
     if (sessionStorage.getItem('ISHOST')) {
       publish()
-      console.log('host')
     } else {
       subscribe_b()
-      console.log('host')
     }
   });
 
@@ -249,6 +247,7 @@ function subscribe_b() {
         const data = JSON.parse(xhr.responseText);
         if (data.exists) {
           sessionStorage.setItem('CLIENTID', data.clientId);
+          console.log(sessionStorage.getItem('CLIENTID'))
           subscribe();
         }
       } else {
