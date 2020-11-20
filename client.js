@@ -59,8 +59,13 @@ async function connect() {
   socket.on('connect', async () => {
     const data = await socket.request('getRouterRtpCapabilities', { roomId : sessionStorage.getItem('ROOMID') });
     await loadDevice(data);
-    if (sessionStorage.getItem('ISHOST')) publish()
-    else subscribe_b()
+    if (sessionStorage.getItem('ISHOST')) {
+      publish()
+      console.log('host')
+    } else {
+      subscribe_b()
+      console.log('host')
+    }
   });
 
   socket.on('disconnect', () => { });
