@@ -459,11 +459,6 @@ async function guestPublish() {
 }
 
 async function refreshConsumer() {
-  const c = $('#Clients')
-  while(c.firstChild) {
-    c.removeChild(c.firstChild)
-  }
-
   const xhr = new XMLHttpRequest();
   xhr.onreadystatechange = function() { // 요청에 대한 콜백
       if (xhr.readyState === xhr.DONE) { // 요청이 완료되면
