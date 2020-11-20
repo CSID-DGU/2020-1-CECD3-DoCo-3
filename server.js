@@ -238,11 +238,15 @@ async function runSocketServer() {
       rooms[data.roomId].consumers[data.cId] = await rooms[data.roomId].consumerTransport[data.cId].produce({ kind, rtpParameters });
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
       callback({ id: rooms[data.roomId].producer.id });
 =======
       console.log('CLIENTPRODUCE ::::::::::: ' + rooms[data.roomId].consumers[data.cId].id)
 =======
 >>>>>>> b06e21ca8bbc39e5e21a7c372dde47423a34a6d2
+=======
+      console.log('CLIENTSSS :::: ' + rooms[data.roomId].consumers[data.cId].id)
+>>>>>>> 7c82b773d2f5a9d7460969ef4b5339540ac98668
       callback({ id: rooms[data.roomId].consumers[data.cId].id });
 >>>>>>> afd3d9312ff516225a8c6a413366882702989bf4
 
@@ -254,6 +258,8 @@ async function runSocketServer() {
     });
 
     socket.on('consumehost', async (data, callback) => {
+      console.log('HEEECHUL FUCK + _ +' + data.cId)
+      console.log('HEEECHUL FUCK + _ +' + rooms[data.roomId].consumers[data.cId])
       callback(await createConsumer(rooms[data.roomId].consumers[data.cId], data.rtpCapabilities, data.roomId, data.cId));
     });
 
