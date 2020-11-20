@@ -36,7 +36,18 @@
     <script>
         console.log(location.href.split('?')[1])
         sessionStorage.setItem('ROOMID', location.href.split('?')[1])
-        connect()
+        
+        function init(){
+        const xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function() { // 요청에 대한 콜백
+                if (xhr.readyState === xhr.DONE) { // 요청이 완료되면
+                    console.log('comp');
+                }
+            };
+            xhr.open('GET', 'https://docoex.page/roomExists?roomId='+sessionStorage.getItem("ROOMID")); // 메소드와 주소 설정
+            xhr.send();
+        }
+
     </script>
 
 </html>
