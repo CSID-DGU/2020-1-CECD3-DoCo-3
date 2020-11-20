@@ -323,7 +323,7 @@ async function consume(transport) {
   return stream;
 }
 
-async function subscribeh(cid) {
+async function subscribeh(cid, cnt) {
   const data = await socket.request('createConsumerTransport', {
     roomId : sessionStorage.getItem('ROOMID'),
     cId : cid,
@@ -350,7 +350,8 @@ async function subscribeh(cid) {
   transport.on('connectionstatechange', async (state) => {
     switch (state) {
       case 'connected':
-        const s = document.getElementById(cid)
+        
+        const s = document.querySelector('#remote_video_' + cnt)
         s.srcObject = await stream;
         console.log('STREAM DATAS : : : :' + await stream)
         await socket.request('resume');
@@ -459,11 +460,6 @@ async function guestPublish() {
 }
 
 async function refreshConsumer() {
-  const c = $('#Clients')
-  while(c.firstChild) {
-    c.removeChild(c.firstChild)
-  }
-
   const xhr = new XMLHttpRequest();
   xhr.onreadystatechange = function() { // 요청에 대한 콜백
       if (xhr.readyState === xhr.DONE) { // 요청이 완료되면
@@ -472,13 +468,7 @@ async function refreshConsumer() {
           for (r in Room) {
             if (Room[r] === sessionStorage.getItem('ROOMID')) continue
 
-            var x = document.createElement("VIDEO")
-            x.id = Room[r]
-            x.style.width = '190px'
-            x.style.height = '100px'
-            c.appendChild(x)
-
-            subscribeh(Room[r])
+            subscribeh(Room[r], (r - 1))
           }
         } else {
           console.error(xhr.responseText);

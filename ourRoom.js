@@ -1,7 +1,8 @@
 class Room {
-    constructor(roomId) {
+    constructor(roomId, router) {
         this.roomId = roomId;
-        this.hostRouterObj = {};
+        this.hostRouterObj = router;
+        this.otherRouters = {};
         this.producer;
         this.producerTransport = {};
         this.consumerTransport = {};

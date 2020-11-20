@@ -39,9 +39,7 @@ async function runExpressApp() {
     const mediaCodecs = config.mediasoup.router.mediaCodecs;
     const mediasoupRouter = await worker.createRouter({ mediaCodecs });
 
-    rooms[mediasoupRouter.id] = new Room(mediasoupRouter.id);
-    rooms[mediasoupRouter.id].hostRouterObj[mediasoupRouter.id] = mediasoupRouter;
-    console.log(rooms[mediasoupRouter.id].hostRouterObj[mediasoupRouter.id])
+    rooms[mediasoupRouter.id] = new Room(mediasoupRouter.id, mediasoupRouter);
     res.json({roomId: mediasoupRouter.id});
   });
   
@@ -50,7 +48,7 @@ async function runExpressApp() {
     const mediaCodecs = config.mediasoup.router.mediaCodecs;
     const mediasoupRouter = await worker.createRouter({ mediaCodecs });
 
-    rooms[mediasoupRouter.id].hostRouterObj[mediasoupRouter.id] = mediasoupRouter;
+    rooms[roomId].otherRouters[mediasoupRouter.id] = mediasoupRouter;
     res.json({ exists: roomId in rooms, clientId: mediasoupRouter.id });
   });
 
@@ -145,11 +143,11 @@ async function runSocketServer() {
     });
 
     socket.on('getRouterRtpCapabilities', (data, callback) => {
-      callback(rooms[data.roomId].hostRouterObj[data.roomId].rtpCapabilities);
+      callback(rooms[data.roomId].hostRouterObj.rtpCapabilities);
     });
 
     socket.on('getConsumerRouterRtpCapabilities', (data, callback) => {
-      callback(rooms[data.roomId].hostRouterObj[data.cId].rtpCapabilities);
+      callback(rooms[data.roomId].otherRouters[data.cId].rtpCapabilities);
     });
 
     socket.on('createProducerTransport', async (data, callback) => {
@@ -165,7 +163,7 @@ async function runSocketServer() {
 
     socket.on('createConsumerTransport', async (data, callback) => {
       try {
-        const { transport, params } = await createWebRtcTransport(data.roomId, data.cId);
+        const { transport, params } = await createWebRtcTransport(data.roomId);
         rooms[data.roomId].consumerTransport[data.cId] = transport;
         callback(params);
       } catch (err) {
@@ -217,7 +215,7 @@ async function runSocketServer() {
     });
 
     socket.on('consume', async (data, callback) => {
-      callback(await createConsumer(rooms[data.roomId].producer, data.rtpCapabilities, data.roomId, data.cId, true));
+      callback(await createConsumer(rooms[data.roomId].producer, data.rtpCapabilities, data.roomId, data.cId));
     });
 
     socket.on('consumehost', async (data, callback) => {
@@ -237,14 +235,20 @@ async function createWebRtcTransport(roomId, cId) {
     initialAvailableOutgoingBitrate
   } = config.mediasoup.webRtcTransport;
 
-  console.log(rooms[roomId].hostRouterObj[cId])
-  const transport = await rooms[roomId].hostRouterObj[cId].createWebRtcTransport({
+  const transport = roomId === cId ? await rooms[roomId].hostRouterObj.createWebRtcTransport({
+    listenIps: config.mediasoup.webRtcTransport.listenIps,
+    enableUdp: true,
+    enableTcp: true,
+    preferUdp: true,
+    initialAvailableOutgoingBitrate,
+  }) : await rooms[roomId].otherRouters[cId].createWebRtcTransport({
     listenIps: config.mediasoup.webRtcTransport.listenIps,
     enableUdp: true,
     enableTcp: true,
     preferUdp: true,
     initialAvailableOutgoingBitrate,
   });
+
   if (maxIncomingBitrate) {
     try {
       await transport.setMaxIncomingBitrate(maxIncomingBitrate);
@@ -262,27 +266,52 @@ async function createWebRtcTransport(roomId, cId) {
   };
 }
 
-async function createConsumer(producer, rtpCapabilities, roomId, cId, isHost) {
-  if (isHost) {
-    if (!rooms[roomId].hostRouterObj.canConsume(
-      {
-        producerId: producer.id,
-        rtpCapabilities,
-      })
-    ) {
-      console.error('can not consume');
-      return;
-    }
-  } else {
-    if (!rooms[roomId].hostRouterObj[cId].canConsume(
-      {
-        producerId: producer.id,
-        rtpCapabilities,
-      })
-    ) {
-      console.error('can not consume');
-      return;
-    }
+async function createConsumer(producer, rtpCapabilities, roomId, cId) {
+  if (!rooms[roomId].hostRouterObj.canConsume(
+    {
+      producerId: producer.id,
+      rtpCapabilities,
+    })
+  ) {
+    console.error('can not consume');
+    return;
+  }
+  try {
+    consumer = await rooms[roomId].consumerTransport[cId].consume({
+      producerId: producer.id,
+      rtpCapabilities,
+      paused: producer.kind === 'video',
+    });
+  } catch (error) {
+    console.error('consume failed', error);
+    return;
+  }
+
+  if (consumer.type === 'simulcast') {
+    await consumer.setPreferredLayers({ spatialLayer: 2, temporalLayer: 2 });
+  }
+
+  return {
+    producerId: producer.id,
+    id: consumer.id,
+    kind: consumer.kind,
+    rtpParameters: consumer.rtpParameters,
+    type: consumer.type,
+    producerPaused: consumer.producerPaused
+  };
+}
+
+
+
+async function createhostConsumer(producer, rtpCapabilities, roomId, cId) {
+  if (!rooms[roomId].otherRouters[cId].canConsume(
+    {
+      producerId: producer.id,
+      rtpCapabilities,
+    })
+  ) {
+    console.error('can not consume');
+    return;
   }
   try {
     consumer = await rooms[roomId].consumerTransport[cId].consume({
