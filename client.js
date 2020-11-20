@@ -248,7 +248,6 @@ function subscribe_b() {
         const data = JSON.parse(xhr.responseText);
         if (data.exists) {
           sessionStorage.setItem('CLIENTID', data.clientId);
-          console.log('subscribe')
           subscribe();
         }
       } else {
@@ -329,14 +328,13 @@ async function consume(transport) {
   return stream;
 }
 
-async function subscribeh(cid, x) {
+async function subscribeh(cid, cnt) {
   const data = await socket.request('createConsumerTransport', {
     roomId : sessionStorage.getItem('ROOMID'),
     cId : cid,
     forceTcp: false,
   });
 
-  console.log(data)
   if (data.error) {
     console.error(data.error);
     return;
@@ -357,7 +355,9 @@ async function subscribeh(cid, x) {
   transport.on('connectionstatechange', async (state) => {
     switch (state) {
       case 'connected':
-        x.srcObject = await stream;
+        const s = document.getElementById('remote_video_' + cnt)
+        s.srcObject = await stream;
+        console.log('STREAM DATAS : : : :' + await stream)
         await socket.request('resume');
         break;
 
@@ -468,11 +468,6 @@ async function guestPublish() {
 }
 
 async function refreshConsumer() {
-  const c = $('#Clients')
-  while(c.firstChild) {
-    c.removeChild(c.firstChild)
-  }
-
   const xhr = new XMLHttpRequest();
   xhr.onreadystatechange = function() { // 요청에 대한 콜백
       if (xhr.readyState === xhr.DONE) { // 요청이 완료되면
@@ -481,13 +476,7 @@ async function refreshConsumer() {
           for (r in Room) {
             if (Room[r] === sessionStorage.getItem('ROOMID')) continue
 
-            var x = document.createElement("VIDEO")
-            x.style.width = '190px'
-            x.style.backgroundColor = 'beige'
-            x.style.height = '100px'
-            c.appendChild(x)
-
-            subscribeh(Room[r], x)
+            subscribeh(Room[r], (r - 1))
           }
         } else {
           console.error(xhr.responseText);

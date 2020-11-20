@@ -95,8 +95,6 @@ async function runWebServer() {
     webServer.listen(listenPort, listenIp, () => {
       const listenIps = config.mediasoup.webRtcTransport.listenIps[0];
       const ip = listenIps.announcedIp || listenIps.ip;
-      console.log('server is running');
-      console.log(`open https://${ip}:${listenPort} in your web browser`);
       resolve();
     });
   });
@@ -126,8 +124,6 @@ async function runSocketServer() {
   });
 
   socketServer.on('connection', (socket) => {
-    console.log(socket.id + ', client connected');
-
     socket.on('roomExists', async (data) => {
       socket.emit('validRoom', data in rooms);
     });
@@ -150,14 +146,9 @@ async function runSocketServer() {
       callback(rooms[data.roomId].hostRouterObj.rtpCapabilities);
     });
 
-    // !< FOR GUEST
-    // socket.on('getGuestRouterRtpCapabilities', (data, callback) => {
-    //   var roomList = [];
-    //   for(router in rooms[roomId].otherRouters){
-    //       roomList.push(router.rtpCapabilities);
-    //   }
-    //   callback(roomList);
-    // });
+    socket.on('getConsumerRouterRtpCapabilities', (data, callback) => {
+      callback(rooms[data.roomId].otherRouters[data.cId].rtpCapabilities);
+    });
 
     socket.on('createProducerTransport', async (data, callback) => {
       try {
@@ -182,6 +173,9 @@ async function runSocketServer() {
     });
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> e858519707d383d159473623e726e2b33224733b
     socket.on('getConsumerTransport', async (data, callback) => {
       try {
         const transport = rooms[data.roomId].consumerTransport[data.cId];
@@ -197,6 +191,7 @@ async function runSocketServer() {
         callback({ error: err.message });
       }
     });
+<<<<<<< HEAD
 =======
     // socket.on('getConsumerTransport', async (data, callback) => {
     //   try {
@@ -214,6 +209,8 @@ async function runSocketServer() {
     //   }
     // });
 >>>>>>> afd3d9312ff516225a8c6a413366882702989bf4
+=======
+>>>>>>> e858519707d383d159473623e726e2b33224733b
 
     socket.on('connectProducerTransport', async (data, callback) => {
       await rooms[data.roomId].producerTransport[data.cId].connect({ dtlsParameters: data.dtlsParameters });
@@ -239,6 +236,7 @@ async function runSocketServer() {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
       callback({ id: rooms[data.roomId].producer.id });
 =======
       console.log('CLIENTPRODUCE ::::::::::: ' + rooms[data.roomId].consumers[data.cId].id)
@@ -247,6 +245,8 @@ async function runSocketServer() {
 =======
       console.log('CLIENTSSS :::: ' + rooms[data.roomId].consumers[data.cId].id)
 >>>>>>> 7c82b773d2f5a9d7460969ef4b5339540ac98668
+=======
+>>>>>>> e858519707d383d159473623e726e2b33224733b
       callback({ id: rooms[data.roomId].consumers[data.cId].id });
 >>>>>>> afd3d9312ff516225a8c6a413366882702989bf4
 
@@ -258,8 +258,6 @@ async function runSocketServer() {
     });
 
     socket.on('consumehost', async (data, callback) => {
-      console.log('HEEECHUL FUCK + _ +' + data.cId)
-      console.log('HEEECHUL FUCK + _ +' + rooms[data.roomId].consumers[data.cId])
       callback(await createConsumer(rooms[data.roomId].consumers[data.cId], data.rtpCapabilities, data.roomId, data.cId));
     });
 
