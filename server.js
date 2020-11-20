@@ -49,7 +49,6 @@ async function runExpressApp() {
     const mediasoupRouter = await worker.createRouter({ mediaCodecs });
 
     rooms[roomId].otherRouters[mediasoupRouter.id] = mediasoupRouter;
-    console.log(rooms[roomId].otherRouters[mediasoupRouter.id])
     res.json({ exists: roomId in rooms, clientId: mediasoupRouter.id });
   });
 
@@ -220,7 +219,7 @@ async function runSocketServer() {
     });
 
     socket.on('consumehost', async (data, callback) => {
-      callback(await createConsumer(rooms[data.roomId].consumers[data.cId], data.rtpCapabilities, data.roomId, data.cId));
+      callback(await createhostConsumer(rooms[data.roomId].consumers[data.cId], data.rtpCapabilities, data.roomId, data.cId));
     });
 
     socket.on('resume', async (data, callback) => {
@@ -236,7 +235,10 @@ async function createWebRtcTransport(roomId, cId) {
     initialAvailableOutgoingBitrate
   } = config.mediasoup.webRtcTransport;
 
-  const transport = roomId === cId ? await rooms[roomId].hostRouterObj.createWebRtcTransport({
+  console.log(roomId === cId)
+  console.log(roomId + '   __   ' + cId)
+
+  const transport = (roomId === cId) ? await rooms[roomId].hostRouterObj.createWebRtcTransport({
     listenIps: config.mediasoup.webRtcTransport.listenIps,
     enableUdp: true,
     enableTcp: true,
