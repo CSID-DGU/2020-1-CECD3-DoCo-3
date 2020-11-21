@@ -266,6 +266,7 @@ function subscribe_b() {
 }
 
 async function subscribe() {
+  console.log("cidddddddddddddddd : : :  " + sessionStorage.getItem('CLIENTID'));
   const data = await socket.request('createConsumerTransport', {
     roomId : sessionStorage.getItem('ROOMID'),
     cId : sessionStorage.getItem('CLIENTID'),
