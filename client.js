@@ -351,10 +351,11 @@ async function subscribeh(cid, cnt) {
   transport.on('connectionstatechange', async (state) => {
     switch (state) {
       case 'connected':
-        const s = document.getElementById('remote_video_' + cnt)
+        //const s = document.getElementById('remote_video_' + cnt)
         
-        s.srcObject = await streams[cid];
-        document.querySelector('#local_video').srcObject = stream;
+        //s.srcObject = await streams[cid];
+        document.querySelector('#guest_video_0').srcObject = streams[cid];
+
         console.log('STREAM DATAS : : : :' + await streams[cid])
         await socket.request('resume');
         break;
@@ -472,7 +473,6 @@ async function refreshConsumer() {
             if (Room[r] === sessionStorage.getItem('ROOMID')) continue
 
             subscribeh(Room[r], (r - 1))
-            console.log("이거맞앙ㅁㄴㅇㄴㅁㅇㄴㅁㅇㄴㅁㅇㄴㅁ" +Room[r], (r-1));
           }
         } else {
           console.error(xhr.responseText);
