@@ -121,8 +121,8 @@ async function publish() {
     switch (state) {
       case 'connected':
         document.querySelector('#local_video').srcObject = stream;
-        console.log('STREAM DATAS : : : :' + await stream);
-        console.log(await stream);
+        console.log('STREAM DATAS : : : :' + stream)
+        console.log( stream);
       break;
 
       case 'failed':
@@ -193,8 +193,8 @@ async function publish_c() {
     switch (state) {
       case 'connected':
         document.querySelector('#local_video').srcObject = stream;
-        console.log('STREAM DATAS : : : :' + await stream);
-        console.log(await stream);
+        console.log('STREAM DATAS : : : :' + stream)
+        console.log( stream);
       break;
 
       case 'failed':
@@ -292,7 +292,7 @@ async function subscribe() {
       case 'connected':
         document.querySelector('#remote_video').srcObject = await stream;
         console.log('STREAM DATAS : : : :' + await stream)
-        console.log(await stream)
+        console.log(await stream);
         await socket.request('resume');
         break;
 
@@ -361,7 +361,7 @@ async function subscribeh(cid, cnt) {
         
         document.querySelector('#remote_video_0').srcObject = await streams[cid];
         console.log('STREAM DATAS : : : :' + await streams[cid])
-        console.log(await streams[cid])
+        console.log(await streams[cid]);
         await socket.request('resume');
         break;
 
@@ -438,8 +438,8 @@ async function guestPublish() {
     switch (state) {
       case 'connected':
         document.querySelector('#local_video').srcObject = stream;
-        console.log('STREAM DATAS : : : :' + await stream)
-        console.log(await stream)
+        console.log('STREAM DATAS : : : :' +stream)
+        console.log(stream);
       break;
 
       case 'failed':
