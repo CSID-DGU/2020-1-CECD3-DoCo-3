@@ -347,7 +347,7 @@ async function subscribeh(cid, cnt) {
       .then(callback)
       .catch(errback);
   });
-
+  streams[cid] = consumeh(cid, transport);
   transport.on('connectionstatechange', async (state) => {
     switch (state) {
       case 'connected':
@@ -368,7 +368,7 @@ async function subscribeh(cid, cnt) {
     }
   });
 
-  streams[cid] = consumeh(cid, transport);
+  
 }
 
 
@@ -434,6 +434,7 @@ async function guestPublish() {
     switch (state) {
       case 'connected':
         document.querySelector('#local_video').srcObject = stream;
+        console.log(stream);
       break;
 
       case 'failed':
