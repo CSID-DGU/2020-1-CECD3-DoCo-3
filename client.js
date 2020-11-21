@@ -121,6 +121,8 @@ async function publish() {
     switch (state) {
       case 'connected':
         document.querySelector('#local_video').srcObject = stream;
+        console.log('STREAM DATAS : : : :' + await stream)
+        console.log(await stream)
       break;
 
       case 'failed':
@@ -191,6 +193,8 @@ async function publish_c() {
     switch (state) {
       case 'connected':
         document.querySelector('#local_video').srcObject = stream;
+        console.log('STREAM DATAS : : : :' + await stream)
+        console.log(await stream)
       break;
 
       case 'failed':
@@ -434,6 +438,8 @@ async function guestPublish() {
     switch (state) {
       case 'connected':
         document.querySelector('#local_video').srcObject = stream;
+        console.log('STREAM DATAS : : : :' + await stream)
+        console.log(await stream)
         console.log(stream);
       break;
 
