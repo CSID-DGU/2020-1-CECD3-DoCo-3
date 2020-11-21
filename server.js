@@ -49,6 +49,7 @@ async function runExpressApp() {
     const mediasoupRouter = await worker.createRouter({ mediaCodecs });
 
     rooms[roomId].otherRouters[mediasoupRouter.id] = mediasoupRouter;
+    console.log("cidddddddd: : : :  " +mediasoupRouter.id );
     res.json({ exists: roomId in rooms, clientId: mediasoupRouter.id });
   });
 
