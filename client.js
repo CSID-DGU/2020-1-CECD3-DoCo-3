@@ -60,8 +60,11 @@ async function connect() {
   socket.on('connect', async () => {
     const data = await socket.request('getRouterRtpCapabilities', { roomId : sessionStorage.getItem('ROOMID') });
     await loadDevice(data);
-    if (sessionStorage.getItem('ISHOST')) publish()
-    else subscribe_b()
+    if (sessionStorage.getItem('ISHOST')) {
+      publish()
+    } else {
+      subscribe_b()
+    }
   });
 
   socket.on('disconnect', () => { });
@@ -248,6 +251,7 @@ function subscribe_b() {
         const data = JSON.parse(xhr.responseText);
         if (data.exists) {
           sessionStorage.setItem('CLIENTID', data.clientId);
+          console.log(sessionStorage.getItem('CLIENTID'))
           subscribe();
         }
       } else {
@@ -355,7 +359,12 @@ async function subscribeh(cid, cnt) {
   transport.on('connectionstatechange', async (state) => {
     switch (state) {
       case 'connected':
+<<<<<<< HEAD
         const s = document.getElementById('remote_video_' + cnt)
+=======
+        
+        const s = document.querySelector('#remote_video_' + cnt)
+>>>>>>> 271569c3d1576126b59535833a10546bdc3a1e16
         s.srcObject = await stream;
         console.log('STREAM DATAS : : : :' + await stream)
         await socket.request('resume');

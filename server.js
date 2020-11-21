@@ -258,7 +258,7 @@ async function runSocketServer() {
     });
 
     socket.on('consumehost', async (data, callback) => {
-      callback(await createConsumer(rooms[data.roomId].consumers[data.cId], data.rtpCapabilities, data.roomId, data.cId));
+      callback(await createhostConsumer(rooms[data.roomId].consumers[data.cId], data.rtpCapabilities, data.roomId, data.cId));
     });
 
     socket.on('resume', async (data, callback) => {
@@ -274,13 +274,27 @@ async function createWebRtcTransport(roomId) {
     initialAvailableOutgoingBitrate
   } = config.mediasoup.webRtcTransport;
 
+<<<<<<< HEAD
   const transport = await rooms[roomId].hostRouterObj.createWebRtcTransport({
+=======
+  console.log(roomId === cId)
+  console.log(roomId + '   __   ' + cId)
+
+  const transport = (roomId === cId) ? await rooms[roomId].hostRouterObj.createWebRtcTransport({
+    listenIps: config.mediasoup.webRtcTransport.listenIps,
+    enableUdp: true,
+    enableTcp: true,
+    preferUdp: true,
+    initialAvailableOutgoingBitrate,
+  }) : await rooms[roomId].otherRouters[cId].createWebRtcTransport({
+>>>>>>> 271569c3d1576126b59535833a10546bdc3a1e16
     listenIps: config.mediasoup.webRtcTransport.listenIps,
     enableUdp: true,
     enableTcp: true,
     preferUdp: true,
     initialAvailableOutgoingBitrate,
   });
+
   if (maxIncomingBitrate) {
     try {
       await transport.setMaxIncomingBitrate(maxIncomingBitrate);
@@ -300,6 +314,43 @@ async function createWebRtcTransport(roomId) {
 
 async function createConsumer(producer, rtpCapabilities, roomId, cId) {
   if (!rooms[roomId].hostRouterObj.canConsume(
+    {
+      producerId: producer.id,
+      rtpCapabilities,
+    })
+  ) {
+    console.error('can not consume');
+    return;
+  }
+  try {
+    consumer = await rooms[roomId].consumerTransport[cId].consume({
+      producerId: producer.id,
+      rtpCapabilities,
+      paused: producer.kind === 'video',
+    });
+  } catch (error) {
+    console.error('consume failed', error);
+    return;
+  }
+
+  if (consumer.type === 'simulcast') {
+    await consumer.setPreferredLayers({ spatialLayer: 2, temporalLayer: 2 });
+  }
+
+  return {
+    producerId: producer.id,
+    id: consumer.id,
+    kind: consumer.kind,
+    rtpParameters: consumer.rtpParameters,
+    type: consumer.type,
+    producerPaused: consumer.producerPaused
+  };
+}
+
+
+
+async function createhostConsumer(producer, rtpCapabilities, roomId, cId) {
+  if (!rooms[roomId].otherRouters[cId].canConsume(
     {
       producerId: producer.id,
       rtpCapabilities,
