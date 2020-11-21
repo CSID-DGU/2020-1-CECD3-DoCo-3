@@ -6,6 +6,7 @@ const hostname = window.location.hostname;
 
 let device;
 let socket;
+let streams = {};
 
 const $ = document.querySelector.bind(document);
 const $btnCreate = $('.CreateRoom'); //방 생성 by hoon
@@ -60,11 +61,8 @@ async function connect() {
   socket.on('connect', async () => {
     const data = await socket.request('getRouterRtpCapabilities', { roomId : sessionStorage.getItem('ROOMID') });
     await loadDevice(data);
-    if (sessionStorage.getItem('ISHOST')) {
-      publish()
-    } else {
-      subscribe_b()
-    }
+    if (sessionStorage.getItem('ISHOST')) publish()
+    else subscribe_b()
   });
 
   socket.on('disconnect', () => { });
@@ -251,7 +249,6 @@ function subscribe_b() {
         const data = JSON.parse(xhr.responseText);
         if (data.exists) {
           sessionStorage.setItem('CLIENTID', data.clientId);
-          console.log(sessionStorage.getItem('CLIENTID'))
           subscribe();
         }
       } else {
@@ -360,6 +357,7 @@ async function subscribeh(cid, cnt) {
     switch (state) {
       case 'connected':
 <<<<<<< HEAD
+<<<<<<< HEAD
         const s = document.getElementById('remote_video_' + cnt)
 =======
         
@@ -367,6 +365,11 @@ async function subscribeh(cid, cnt) {
 >>>>>>> 271569c3d1576126b59535833a10546bdc3a1e16
         s.srcObject = await stream;
         console.log('STREAM DATAS : : : :' + await stream)
+=======
+        const s = document.getElementById('remote_video_' + cnt)
+        s.srcObject = await streams[cid];
+        console.log('STREAM DATAS : : : :' + await streams[cid])
+>>>>>>> 0c2a3799f1a54326c530bc856b5a82ce32e59442
         await socket.request('resume');
         break;
 
@@ -378,7 +381,7 @@ async function subscribeh(cid, cnt) {
     }
   });
 
-  const stream = consumeh(cid, transport);
+  streams[cid] = consumeh(cid, transport);
 }
 
 
