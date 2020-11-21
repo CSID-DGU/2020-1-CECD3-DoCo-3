@@ -251,6 +251,7 @@ function subscribe_b() {
         const data = JSON.parse(xhr.responseText);
         if (data.exists) {
           sessionStorage.setItem('CLIENTID', data.clientId);
+          console.log("cidDddddddddddddddd  |  " + data.clientId);
           subscribe();
         }
       } else {
