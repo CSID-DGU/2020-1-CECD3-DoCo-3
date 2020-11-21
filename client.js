@@ -191,6 +191,7 @@ async function publish_c() {
     switch (state) {
       case 'connected':
         //document.querySelector('#local_video').srcObject = stream;
+        document.querySelector('#guest_video_0').srcObject = stream;
       break;
 
       case 'failed':
