@@ -29,7 +29,6 @@ if (typeof navigator.mediaDevices.getDisplayMedia === 'undefined') {
 }
 
 function create() {
-  sessionStorage.setItem('HOST', true);
   const xhr = new XMLHttpRequest();
   xhr.onreadystatechange = function() { // 요청에 대한 콜백
       if (xhr.readyState === xhr.DONE) { // 요청이 완료되면
@@ -82,7 +81,6 @@ async function loadDevice(routerRtpCapabilities) {
   }
   await device.load({ routerRtpCapabilities });
 }
-
 
 async function publish() {
   const data = await socket.request('createProducerTransport', {
@@ -220,7 +218,6 @@ async function publish_c() {
   } catch (err) {
     console.log(err)
   }
-  
 }
 
 async function getUserMedia() {
@@ -240,7 +237,6 @@ async function getUserMedia() {
 }
 
 function subscribe_b() {
-  sessionStorage.setItem('HOST', false);
   if (!sessionStorage.getItem('CLIENTID')) {
     const xhr = new XMLHttpRequest();
       xhr.onreadystatechange = function() { // 요청에 대한 콜백
@@ -325,7 +321,6 @@ async function consume(transport) {
   });
   const stream = new MediaStream();
   stream.addTrack(consumer.track);
-  await guestPublish();
   return stream;
 }
 
@@ -356,9 +351,9 @@ async function subscribeh(cid, cnt) {
   transport.on('connectionstatechange', async (state) => {
     switch (state) {
       case 'connected':
-        const s = document.querySelector('#remote_video_' + cnt)
-        s.srcObject = await stream;
-        console.log('STREAM DATAS : : : :' + await stream)
+        const s = document.getElementById('remote_video_' + cnt)
+        s.srcObject = await streams[cid];
+        console.log('STREAM DATAS : : : :' + await streams[cid])
         await socket.request('resume');
         break;
 
@@ -397,9 +392,7 @@ async function consumeh(cid, transport) {
   return stream;
 }
 
-
 async function guestPublish() {
-
   const data = await socket.request('createProducerTransport', {
     roomId : sessionStorage.getItem('ROOMID'),
     cId : sessionStorage.getItem('CLIENTID'),
@@ -435,7 +428,6 @@ async function guestPublish() {
 
   transport.on('connectionstatechange', (state) => {
     switch (state) {
-
       case 'connected':
         document.querySelector('#local_video').srcObject = stream;
       break;
@@ -464,7 +456,6 @@ async function guestPublish() {
     producer = await transport.produce(params);
   } catch (err) {
     console.log(err)
-
   }
 }
 
