@@ -287,6 +287,8 @@ async function subscribe() {
     switch (state) {
       case 'connected':
         document.querySelector('#remote_video').srcObject = await stream;
+        console.log('STREAM DATAS : : : :' + await stream)
+        console.log(await stream)
         await socket.request('resume');
         break;
 
