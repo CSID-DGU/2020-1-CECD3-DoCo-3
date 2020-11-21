@@ -188,7 +188,6 @@ async function publish_c() {
 
   transport.on('connectionstatechange', (state) => {
     switch (state) {
-
       case 'connected':
         document.querySelector('#local_video').srcObject = stream;
       break;
@@ -429,7 +428,8 @@ async function guestPublish() {
   transport.on('connectionstatechange', (state) => {
     switch (state) {
       case 'connected':
-        document.querySelector('#local_video').srcObject = stream;
+        //document.querySelector('#local_video').srcObject = stream;
+        console.log("guest video " + stream);
       break;
 
       case 'failed':
