@@ -251,6 +251,7 @@ function subscribe_b() {
         const data = JSON.parse(xhr.responseText);
         if (data.exists) {
           sessionStorage.setItem('CLIENTID', data.clientId);
+          console.log("asdsadasdsad  : :" + data,clientId);
           subscribe();
         }
       } else {
@@ -336,7 +337,7 @@ async function consume(transport) {
 async function subscribeh(cid, cnt) {
   const data = await socket.request('createConsumerTransport', {
     roomId : sessionStorage.getItem('ROOMID'),
-    cId : sessionStorage.getItem('CLIENTID'),
+    cId : cid,
     forceTcp: false,
   });
 
@@ -481,9 +482,9 @@ async function refreshConsumer() {
           const Room = JSON.parse(xhr.responseText);
           for (r in Room) {
             if (Room[r] === sessionStorage.getItem('ROOMID')) continue
-
+          
             subscribeh(Room[r], (r - 1))
-            console.log("rrrrrrrrrroooooooooommmmmmm  : : : " + Room[r]);
+            
           }
         } else {
           console.error(xhr.responseText);
