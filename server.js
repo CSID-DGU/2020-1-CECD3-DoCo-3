@@ -13,7 +13,6 @@ let socketServer;
 let expressApp;
 
 
-let producer;
 let consumer;
 
 let rooms = {};
@@ -53,6 +52,15 @@ async function runExpressApp() {
     res.json({ exists: roomId in rooms, clientId: mediasoupRouter.id });
   });
 
+  expressApp.get("/roomClients", async (req, res, next) => {
+    const roomId = req.query.roomId;
+    const ptprt = rooms[roomId].producerTransport
+    var roomList = [];
+    for(key in ptprt) { roomList.push(key); }
+
+    res.json(roomList);
+  });
+
   expressApp.get("/roomList", async (req, res) => {
     var roomList = [];
     for(key in rooms){
@@ -87,8 +95,6 @@ async function runWebServer() {
     webServer.listen(listenPort, listenIp, () => {
       const listenIps = config.mediasoup.webRtcTransport.listenIps[0];
       const ip = listenIps.announcedIp || listenIps.ip;
-      console.log('server is running');
-      console.log(`open https://${ip}:${listenPort} in your web browser`);
       resolve();
     });
   });
@@ -118,13 +124,6 @@ async function runSocketServer() {
   });
 
   socketServer.on('connection', (socket) => {
-    console.log(socket.id + ', client connected');
-
-    // inform the client about existence of producer
-    if (producer) {
-      socket.to(socket.id).emit('newProducer');
-    }
-
     socket.on('roomExists', async (data) => {
       socket.emit('validRoom', data in rooms);
     });
@@ -147,19 +146,14 @@ async function runSocketServer() {
       callback(rooms[data.roomId].hostRouterObj.rtpCapabilities);
     });
 
-    // !< FOR GUEST
-    // socket.on('getGuestRouterRtpCapabilities', (data, callback) => {
-    //   var roomList = [];
-    //   for(router in rooms[roomId].otherRouters){
-    //       roomList.push(router.rtpCapabilities);
-    //   }
-    //   callback(roomList);
-    // });
+    socket.on('getConsumerRouterRtpCapabilities', (data, callback) => {
+      callback(rooms[data.roomId].otherRouters[data.cId].rtpCapabilities);
+    });
 
     socket.on('createProducerTransport', async (data, callback) => {
       try {
         const { transport, params } = await createWebRtcTransport(data.roomId);
-        rooms[data.roomId].producerTransport = transport;
+        rooms[data.roomId].producerTransport[data.cId] = transport;
         callback(params);
       } catch (err) {
         console.error(err);
@@ -171,7 +165,6 @@ async function runSocketServer() {
       try {
         const { transport, params } = await createWebRtcTransport(data.roomId);
         rooms[data.roomId].consumerTransport[data.cId] = transport;
-        console.log(rooms[data.roomId].consumerTransport[data.cId])
         callback(params);
       } catch (err) {
         console.error(err);
@@ -179,8 +172,48 @@ async function runSocketServer() {
       }
     });
 
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> e858519707d383d159473623e726e2b33224733b
+    socket.on('getConsumerTransport', async (data, callback) => {
+      try {
+        const transport = rooms[data.roomId].consumerTransport[data.cId];
+        const params = {
+          id: transport.id,
+          iceParameters: transport.iceParameters,
+          iceCandidates: transport.iceCandidates,
+          dtlsParameters: transport.dtlsParameters
+        }
+        callback(params);
+      } catch (err) {
+        console.error(err);
+        callback({ error: err.message });
+      }
+    });
+<<<<<<< HEAD
+=======
+    // socket.on('getConsumerTransport', async (data, callback) => {
+    //   try {
+    //     const transport = rooms[data.roomId].consumerTransport[data.cId];
+    //     const params = {
+    //       id: transport.id,
+    //       iceParameters: transport.iceParameters,
+    //       iceCandidates: transport.iceCandidates,
+    //       dtlsParameters: transport.dtlsParameters
+    //     }
+    //     callback(params);
+    //   } catch (err) {
+    //     console.error(err);
+    //     callback({ error: err.message });
+    //   }
+    // });
+>>>>>>> afd3d9312ff516225a8c6a413366882702989bf4
+=======
+>>>>>>> e858519707d383d159473623e726e2b33224733b
+
     socket.on('connectProducerTransport', async (data, callback) => {
-      await rooms[data.roomId].producerTransport.connect({ dtlsParameters: data.dtlsParameters });
+      await rooms[data.roomId].producerTransport[data.cId].connect({ dtlsParameters: data.dtlsParameters });
       callback();
     });
 
@@ -191,26 +224,41 @@ async function runSocketServer() {
 
     socket.on('produce', async (data, callback) => {
       const {kind, rtpParameters} = data;
-      rooms[data.roomId].producer = await rooms[data.roomId].producerTransport.produce({ kind, rtpParameters });
+      rooms[data.roomId].producer = await rooms[data.roomId].producerTransport[data.cId].produce({ kind, rtpParameters });
       callback({ id: rooms[data.roomId].producer.id });
 
-      // inform clients about new producer
       socket.broadcast.to(socket.id).emit('newProducer');
     });
 
     socket.on('clientproduce', async (data, callback) => {
       const {kind, rtpParameters} = data;
-      producer = await rooms[data.roomId].consumerTransport[data.cId].produce({ kind, rtpParameters });
+      rooms[data.roomId].consumers[data.cId] = await rooms[data.roomId].consumerTransport[data.cId].produce({ kind, rtpParameters });
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
       callback({ id: rooms[data.roomId].producer.id });
+=======
+      console.log('CLIENTPRODUCE ::::::::::: ' + rooms[data.roomId].consumers[data.cId].id)
+=======
+>>>>>>> b06e21ca8bbc39e5e21a7c372dde47423a34a6d2
+=======
+      console.log('CLIENTSSS :::: ' + rooms[data.roomId].consumers[data.cId].id)
+>>>>>>> 7c82b773d2f5a9d7460969ef4b5339540ac98668
+=======
+>>>>>>> e858519707d383d159473623e726e2b33224733b
+      callback({ id: rooms[data.roomId].consumers[data.cId].id });
+>>>>>>> afd3d9312ff516225a8c6a413366882702989bf4
 
-      // inform clients about new producer
-      socket.broadcast.to(socket.id).emit('newProducer');
+      socket.broadcast.to(socket.id).emit('newCProducer');
     });
 
     socket.on('consume', async (data, callback) => {
-      console.log(rooms[data.roomId].producer)
-      console.log(rooms[data.roomId].producer.id)
       callback(await createConsumer(rooms[data.roomId].producer, data.rtpCapabilities, data.roomId, data.cId));
+    });
+
+    socket.on('consumehost', async (data, callback) => {
+      callback(await createConsumer(rooms[data.roomId].consumers[data.cId], data.rtpCapabilities, data.roomId, data.cId));
     });
 
     socket.on('resume', async (data, callback) => {
@@ -226,7 +274,24 @@ async function createWebRtcTransport(roomId) {
     initialAvailableOutgoingBitrate
   } = config.mediasoup.webRtcTransport;
 
+<<<<<<< HEAD
+<<<<<<< HEAD
   const transport = await rooms[roomId].hostRouterObj.createWebRtcTransport({
+=======
+  console.log(roomId === cId)
+  console.log(roomId + '   __   ' + cId)
+
+  const transport = (roomId === cId) ? await rooms[roomId].hostRouterObj.createWebRtcTransport({
+    listenIps: config.mediasoup.webRtcTransport.listenIps,
+    enableUdp: true,
+    enableTcp: true,
+    preferUdp: true,
+    initialAvailableOutgoingBitrate,
+  }) : await rooms[roomId].otherRouters[cId].createWebRtcTransport({
+>>>>>>> 271569c3d1576126b59535833a10546bdc3a1e16
+=======
+  const transport = await rooms[roomId].hostRouterObj.createWebRtcTransport({
+>>>>>>> 0c2a3799f1a54326c530bc856b5a82ce32e59442
     listenIps: config.mediasoup.webRtcTransport.listenIps,
     enableUdp: true,
     enableTcp: true,
@@ -284,3 +349,4 @@ async function createConsumer(producer, rtpCapabilities, roomId, cId) {
     producerPaused: consumer.producerPaused
   };
 }
+
