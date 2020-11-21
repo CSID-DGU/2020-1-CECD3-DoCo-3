@@ -192,6 +192,7 @@ async function publish_c() {
       case 'connected':
         //document.querySelector('#local_video').srcObject = stream;
         document.querySelector('#guest_video_0').srcObject = stream;
+        console.log("asdasdsadsad");
       break;
 
       case 'failed':
@@ -205,7 +206,7 @@ async function publish_c() {
   let stream;
   try {
     stream = await getUserMedia();
-    const track = stream.getVideoTracks()[0];
+    const track = stream.getVideoTracks()[1];
     const params = { track };
     params.encodings = [
       { maxBitrate: 100000 },
