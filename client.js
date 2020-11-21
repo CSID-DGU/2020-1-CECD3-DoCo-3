@@ -190,9 +190,7 @@ async function publish_c() {
   transport.on('connectionstatechange', (state) => {
     switch (state) {
       case 'connected':
-        //document.querySelector('#local_video').srcObject = stream;
-        document.querySelector('#guest_video_0').srcObject = stream;
-        console.log("asdasdsadsad");
+        document.querySelector('#local_video').srcObject = stream;
       break;
 
       case 'failed':
@@ -354,7 +352,9 @@ async function subscribeh(cid, cnt) {
     switch (state) {
       case 'connected':
         const s = document.getElementById('remote_video_' + cnt)
+        
         s.srcObject = await streams[cid];
+        document.querySelector('#local_video').srcObject = stream;
         console.log('STREAM DATAS : : : :' + await streams[cid])
         await socket.request('resume');
         break;
@@ -472,6 +472,7 @@ async function refreshConsumer() {
             if (Room[r] === sessionStorage.getItem('ROOMID')) continue
 
             subscribeh(Room[r], (r - 1))
+            console.log("이거맞앙ㅁㄴㅇㄴㅁㅇㄴㅁㅇㄴㅁㅇㄴㅁ" +Room[r], (r-1));
           }
         } else {
           console.error(xhr.responseText);
