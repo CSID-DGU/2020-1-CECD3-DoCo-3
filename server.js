@@ -234,11 +234,11 @@ async function createWebRtcTransport(roomId, cId) {
     maxIncomingBitrate,
     initialAvailableOutgoingBitrate
   } = config.mediasoup.webRtcTransport;
-console.log("roomiddddddddddddddddddd" + roomId);
-console.log("ciddddddddddddddddddd" + cId);
-
+  console.log("roomiddddddddddddddddddd" + roomId);
+  console.log("ciddddddddddddddddddd" + cId);
+  const transport;
   if(roomId === cId){
-  const transport = await rooms[roomId].hostRouterObj.createWebRtcTransport({
+  transport = await rooms[roomId].hostRouterObj.createWebRtcTransport({
     listenIps: config.mediasoup.webRtcTransport.listenIps,
     enableUdp: true,
     enableTcp: true,
@@ -247,7 +247,7 @@ console.log("ciddddddddddddddddddd" + cId);
   });
   }
   else{
-    const transport = await rooms[roomId].otherRouters[cId].createWebRtcTransport({
+    transport = await rooms[roomId].otherRouters[cId].createWebRtcTransport({
       listenIps: config.mediasoup.webRtcTransport.listenIps,
       enableUdp: true,
       enableTcp: true,
