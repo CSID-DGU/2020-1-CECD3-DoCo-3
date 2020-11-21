@@ -83,6 +83,7 @@ async function loadDevice(routerRtpCapabilities) {
 }
 
 async function publish() {
+  console.log("roomId ===== " +sessionStorage.getItem('ROOMID'))
   const data = await socket.request('createProducerTransport', {
     roomId : sessionStorage.getItem('ROOMID'),
     cId : sessionStorage.getItem('ROOMID'),
