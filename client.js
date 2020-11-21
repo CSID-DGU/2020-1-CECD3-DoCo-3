@@ -365,6 +365,7 @@ async function subscribeh(cid, cnt) {
       default: break;
     }
   });
+  streams[cid] = consumeh(cid, transport);
 }
 
 
