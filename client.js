@@ -116,10 +116,11 @@ async function publish() {
     }
   });
 
+  // host 자신 비디오
   transport.on('connectionstatechange', (state) => {
     switch (state) {
       case 'connected':
-        //document.querySelector('#local_video').srcObject = stream;
+        document.querySelector('#local_video').srcObject = stream;
       break;
 
       case 'failed':
@@ -189,7 +190,7 @@ async function publish_c() {
   transport.on('connectionstatechange', (state) => {
     switch (state) {
       case 'connected':
-        document.querySelector('#local_video').srcObject = stream;
+        //document.querySelector('#local_video').srcObject = stream;
       break;
 
       case 'failed':
