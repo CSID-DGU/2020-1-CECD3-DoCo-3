@@ -347,14 +347,14 @@ async function subscribeh(cid, cnt) {
       .then(callback)
       .catch(errback);
   });
-  streams[cid] = consumeh(cid, transport);
+
   transport.on('connectionstatechange', async (state) => {
     switch (state) {
       case 'connected':
         //const s = document.getElementById('remote_video_' + cnt)
         
-        //s.srcObject = await streams[cid];
-        document.querySelector('#guest_video_0').srcObject = await streams[cid];
+        s.srcObject = await streams[cid];
+        s = document.querySelector('#guest_video_0').srcObject;
 
         //console.log('STREAM DATAS : : : :' + await streams[cid])
         await socket.request('resume');
@@ -368,7 +368,7 @@ async function subscribeh(cid, cnt) {
     }
   });
 
-  
+  streams[cid] = consumeh(cid, transport);
 }
 
 
