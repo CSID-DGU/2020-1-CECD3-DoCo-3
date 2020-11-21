@@ -119,7 +119,7 @@ async function publish() {
   transport.on('connectionstatechange', (state) => {
     switch (state) {
       case 'connected':
-        document.querySelector('#local_video').srcObject = stream;
+        //document.querySelector('#local_video').srcObject = stream;
       break;
 
       case 'failed':
@@ -425,11 +425,11 @@ async function guestPublish() {
     }
   });
 
+  // client 자신 비디오 
   transport.on('connectionstatechange', (state) => {
     switch (state) {
       case 'connected':
-        //document.querySelector('#local_video').srcObject = stream;
-        console.log("guest video " + stream);
+        document.querySelector('#local_video').srcObject = stream;
       break;
 
       case 'failed':
