@@ -152,7 +152,7 @@ async function runSocketServer() {
 
     socket.on('createProducerTransport', async (data, callback) => {
       try {
-        const { transport, params } = await createWebRtcTransport(data.roomId);
+        const { transport, params } = await createWebRtcTransport(data.roomId, data.cId);
         rooms[data.roomId].producerTransport[data.cId] = transport;
         callback(params);
       } catch (err) {
@@ -163,7 +163,7 @@ async function runSocketServer() {
 
     socket.on('createConsumerTransport', async (data, callback) => {
       try {
-        const { transport, params } = await createWebRtcTransport(data.roomId);
+        const { transport, params } = await createWebRtcTransport(data.roomId, data.cId);
         rooms[data.roomId].consumerTransport[data.cId] = transport;
         callback(params);
       } catch (err) {
@@ -229,12 +229,13 @@ async function runSocketServer() {
   });
 }
 
-async function createWebRtcTransport(roomId) {
+async function createWebRtcTransport(roomId, cId) {
   const {
     maxIncomingBitrate,
     initialAvailableOutgoingBitrate
   } = config.mediasoup.webRtcTransport;
 
+  if(roomId === cId){
   const transport = await rooms[roomId].hostRouterObj.createWebRtcTransport({
     listenIps: config.mediasoup.webRtcTransport.listenIps,
     enableUdp: true,
@@ -242,6 +243,16 @@ async function createWebRtcTransport(roomId) {
     preferUdp: true,
     initialAvailableOutgoingBitrate,
   });
+  }
+  else{
+    const transport = await rooms[roomId].otherRouters[cId].createWebRtcTransport({
+      listenIps: config.mediasoup.webRtcTransport.listenIps,
+      enableUdp: true,
+      enableTcp: true,
+      preferUdp: true,
+      initialAvailableOutgoingBitrate,
+    });
+  }
   if (maxIncomingBitrate) {
     try {
       await transport.setMaxIncomingBitrate(maxIncomingBitrate);
