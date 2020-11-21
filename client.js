@@ -356,20 +356,9 @@ async function subscribeh(cid, cnt) {
   transport.on('connectionstatechange', async (state) => {
     switch (state) {
       case 'connected':
-<<<<<<< HEAD
-<<<<<<< HEAD
-        const s = document.getElementById('remote_video_' + cnt)
-=======
-        
         const s = document.querySelector('#remote_video_' + cnt)
->>>>>>> 271569c3d1576126b59535833a10546bdc3a1e16
         s.srcObject = await stream;
         console.log('STREAM DATAS : : : :' + await stream)
-=======
-        const s = document.getElementById('remote_video_' + cnt)
-        s.srcObject = await streams[cid];
-        console.log('STREAM DATAS : : : :' + await streams[cid])
->>>>>>> 0c2a3799f1a54326c530bc856b5a82ce32e59442
         await socket.request('resume');
         break;
 
