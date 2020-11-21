@@ -236,7 +236,7 @@ async function createWebRtcTransport(roomId, cId) {
   } = config.mediasoup.webRtcTransport;
   console.log("roomiddddddddddddddddddd" + roomId);
   console.log("ciddddddddddddddddddd" + cId);
-  const transport;
+  var transport;
   if(roomId === cId){
   transport = await rooms[roomId].hostRouterObj.createWebRtcTransport({
     listenIps: config.mediasoup.webRtcTransport.listenIps,
