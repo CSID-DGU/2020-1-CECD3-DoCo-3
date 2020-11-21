@@ -153,76 +153,77 @@ async function publish() {
 }
 
 
-async function publish_c() {
+// async function publish_c() {
 
-  const data = await socket.request('createConsumerTransport', {
-    roomId : sessionStorage.getItem('ROOMID'),
-    forceTcp: false,
-    rtpCapabilities: device.rtpCapabilities,
-  });
+//   const data = await socket.request('createConsumerTransport', {
+//     roomId : sessionStorage.getItem('ROOMID'),
+//     cId : sessionStorage.getItem('CLIENTID'),
+//     forceTcp: false,
+//     rtpCapabilities: device.rtpCapabilities,
+//   });
 
-  if (data.error) {
-    console.error(data.error);
-    return;
-  }
+//   if (data.error) {
+//     console.error(data.error);
+//     return;
+//   }
 
-  const transport = device.createSendTransport(data);
-  transport.on('connect', async ({ dtlsParameters }, callback, errback) => {
-    socket.request('connectConsumerTransport', { roomId : sessionStorage.getItem('ROOMID'), 
-                                                 cId : sessionStorage.getItem('CLIENTID'), dtlsParameters })
-      .then(callback)
-      .catch(errback);
-  });
+//   const transport = device.createSendTransport(data);
+//   transport.on('connect', async ({ dtlsParameters }, callback, errback) => {
+//     socket.request('connectConsumerTransport', { roomId : sessionStorage.getItem('ROOMID'), 
+//                                                  cId : sessionStorage.getItem('CLIENTID'), dtlsParameters })
+//       .then(callback)
+//       .catch(errback);
+//   });
 
-  transport.on('produce', async ({ kind, rtpParameters }, callback, errback) => {
-    try {
-      const { id } = await socket.request('clientproduce', {
-        roomId : sessionStorage.getItem('ROOMID'),
-        cId : sessionStorage.getItem('CLIENTID'),
-        transportId: transport.id,
-        kind,
-        rtpParameters,
-      });
-      callback({ id });
-    } catch (err) {
-      errback(err);
-    }
-  });
+//   transport.on('produce', async ({ kind, rtpParameters }, callback, errback) => {
+//     try {
+//       const { id } = await socket.request('clientproduce', {
+//         roomId : sessionStorage.getItem('ROOMID'),
+//         cId : sessionStorage.getItem('CLIENTID'),
+//         transportId: transport.id,
+//         kind,
+//         rtpParameters,
+//       });
+//       callback({ id });
+//     } catch (err) {
+//       errback(err);
+//     }
+//   });
 
-  transport.on('connectionstatechange', (state) => {
-    switch (state) {
-      case 'connected':
-        document.querySelector('#local_video').srcObject = stream;
-        console.log('STREAM DATAS : : : :' + stream)
-        console.log( stream);
-      break;
+//   transport.on('connectionstatechange', (state) => {
+//     switch (state) {
+//       case 'connected':
+//         document.querySelector('#local_video').srcObject = stream;
+//         console.log('STREAM DATAS : : : :' + stream)
+//         console.log( stream);
+//       break;
 
-      case 'failed':
-        transport.close();
-      break;
+//       case 'failed':
+//         transport.close();
+//       break;
 
-      default: break;
-    }
-  });
+//       default: break;
+//     }
+//   });
 
-  let stream;
-  try {
-    stream = await getUserMedia();
-    const track = stream.getVideoTracks()[1];
-    const params = { track };
-    params.encodings = [
-      { maxBitrate: 100000 },
-      { maxBitrate: 300000 },
-      { maxBitrate: 900000 },
-    ];
-    params.codecOptions = {
-      videoGoogleStartBitrate : 1000
-    };
-    producer = await transport.produce(params);
-  } catch (err) {
-    console.log(err)
-  }
-}
+//   let stream;
+//   try {
+//     stream = await getUserMedia();
+//     const track = stream.getVideoTracks()[1];
+//     const params = { track };
+//     params.encodings = [
+//       { maxBitrate: 100000 },
+//       { maxBitrate: 300000 },
+//       { maxBitrate: 900000 },
+//     ];
+//     params.codecOptions = {
+//       videoGoogleStartBitrate : 1000
+//     };
+//     producer = await transport.produce(params);
+//   } catch (err) {
+//     console.log(err)
+//   }
+// }
 
 async function getUserMedia() {
   if (!device.canProduce('video')) {
@@ -333,6 +334,7 @@ async function consume(transport) {
 async function subscribeh(cid, cnt) {
   const data = await socket.request('createConsumerTransport', {
     roomId : sessionStorage.getItem('ROOMID'),
+    cId : sessionStorage.getItem('CLIENTID'),
     cId : cid,
     forceTcp: false,
   });
