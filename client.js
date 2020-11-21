@@ -354,9 +354,9 @@ async function subscribeh(cid, cnt) {
         //const s = document.getElementById('remote_video_' + cnt)
         
         //s.srcObject = await streams[cid];
-        document.querySelector('#guest_video_0').srcObject = streams[cid];
+        document.querySelector('#guest_video_0').srcObject = await streams[cid];
 
-        console.log('STREAM DATAS : : : :' + await streams[cid])
+        //console.log('STREAM DATAS : : : :' + await streams[cid])
         await socket.request('resume');
         break;
 
