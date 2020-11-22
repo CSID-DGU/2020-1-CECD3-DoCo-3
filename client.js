@@ -331,6 +331,7 @@ async function refreshConsumer() {
             if (Room[r] === sessionStorage.getItem('ROOMID')) continue
 
             subscribeh(Room[r], (r - 1))
+            console.log(Room[r])
           }
         } else {
           console.error(xhr.responseText);
@@ -339,5 +340,4 @@ async function refreshConsumer() {
   };
   xhr.open('GET', 'https://docoex.page/roomClients?roomId='+sessionStorage.getItem('ROOMID')); // 메소드와 주소 설정
   xhr.send(); // 요청 전 
-
 }
