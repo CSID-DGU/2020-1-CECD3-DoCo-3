@@ -217,19 +217,13 @@ async function runSocketServer() {
   });
 }
 
-async function createWebRtcTransport(roomId, otherId) {
+async function createWebRtcTransport(roomId) {
   const {
     maxIncomingBitrate,
     initialAvailableOutgoingBitrate
   } = config.mediasoup.webRtcTransport;
 
-  const transport = otherId === undefined ? await rooms[roomId].hostRouterObj.createWebRtcTransport({
-    listenIps: config.mediasoup.webRtcTransport.listenIps,
-    enableUdp: true,
-    enableTcp: true,
-    preferUdp: true,
-    initialAvailableOutgoingBitrate,
-  }) : await rooms[roomId].otherRouters[otherId].createWebRtcTransport({
+  const transport = await rooms[roomId].hostRouterObj.createWebRtcTransport({
     listenIps: config.mediasoup.webRtcTransport.listenIps,
     enableUdp: true,
     enableTcp: true,
