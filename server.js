@@ -39,6 +39,7 @@ async function runExpressApp() {
     const mediasoupRouter = await worker.createRouter({ mediaCodecs });
 
     rooms[mediasoupRouter.id] = new Room(mediasoupRouter.id, mediasoupRouter);
+
     
     res.json({roomId: mediasoupRouter.id});
   });
@@ -67,7 +68,7 @@ async function runExpressApp() {
   expressApp.get("/roomList", async (req, res) => {
     var roomList = [];
     for(key in rooms){
-      if(ptprt[key].isisOfficial) roomList.push(rooms[key].roomId);
+      if(ptprt[key].isOfficial) roomList.push(rooms[key].roomId);
     }
 
     res.json(roomList);
