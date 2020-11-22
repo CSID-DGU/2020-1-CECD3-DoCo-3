@@ -85,7 +85,6 @@ async function loadDevice(routerRtpCapabilities) {
 async function publish() {
   const data = await socket.request('createProducerTransport', {
     roomId : sessionStorage.getItem('CLIENTID') ? sessionStorage.getItem('CLIENTID') : sessionStorage.getItem('ROOMID'),
-    cId : sessionStorage.getItem('CLIENTID') ? sessionStorage.getItem('CLIENTID') : sessionStorage.getItem('ROOMID'),
     forceTcp: false,
     rtpCapabilities: device.rtpCapabilities,
   });
@@ -98,7 +97,6 @@ async function publish() {
   transport.on('connect', async ({ dtlsParameters }, callback, errback) => {
     socket.request('connectProducerTransport', {  
       roomId : sessionStorage.getItem('CLIENTID') ? sessionStorage.getItem('CLIENTID') : sessionStorage.getItem('ROOMID'),
-      cId : sessionStorage.getItem('CLIENTID') ? sessionStorage.getItem('CLIENTID') : sessionStorage.getItem('ROOMID'),
       dtlsParameters })
       .then(callback)
       .catch(errback);
@@ -108,7 +106,6 @@ async function publish() {
     try {
       const { id } = await socket.request('produce', {
         roomId : sessionStorage.getItem('CLIENTID') ? sessionStorage.getItem('CLIENTID') : sessionStorage.getItem('ROOMID'),
-        cId : sessionStorage.getItem('CLIENTID') ? sessionStorage.getItem('CLIENTID') : sessionStorage.getItem('ROOMID'),
         transportId: transport.id,
         kind,
         rtpParameters,
