@@ -6,71 +6,70 @@ const hostname = window.location.hostname;
 
 let device;
 let socket;
+let streams = {};
 
 const $ = document.querySelector.bind(document);
-const $fsPublish = $('#fs_publish');
-const $fsSubscribe = $('#fs_subscribe');
-const $btnConnect = $('#btn_connect');
+const $btnCreate = $('.CreateRoom'); //방 생성 by hoon
 const $btnWebcam = $('#btn_webcam');
 const $btnScreen = $('#btn_screen');
 const $btnSubscribe = $('#btn_subscribe');
-const $chkSimulcast = $('#chk_simulcast');
-const $txtConnection = $('#connection_status');
-const $txtWebcam = $('#webcam_status');
+const $btnShare = $('#btn_share');
 const $txtScreen = $('#screen_status');
-const $txtSubscription = $('#sub_status');
-let $txtPublish;
+const $btn_refresh = $('#btn_refresh');
 
-$btnConnect.addEventListener('click', connect);
-$btnWebcam.addEventListener('click', publish);
-$btnScreen.addEventListener('click', publish);
-$btnSubscribe.addEventListener('click', subscribe);
+if ($btnCreate) $btnCreate.addEventListener('click', create);
+if ($btnWebcam) $btnWebcam.addEventListener('click', connect);
+if ($btnSubscribe) $btnSubscribe.addEventListener('click', connect);
+if ($btnShare) $btnShare.addEventListener('click', publish);
+if ($btn_refresh) $btn_refresh.addEventListener('click', addConsumer);
 
 if (typeof navigator.mediaDevices.getDisplayMedia === 'undefined') {
   $txtScreen.innerHTML = 'Not supported';
   $btnScreen.disabled = true;
 }
 
-async function connect() {
-  $btnConnect.disabled = true;
-  $txtConnection.innerHTML = 'Connecting...'; // delete
+function create() {
+  const xhr = new XMLHttpRequest();
+  xhr.onreadystatechange = function() { // 요청에 대한 콜백
+      if (xhr.readyState === xhr.DONE) { // 요청이 완료되면
+        if (xhr.status === 200 || xhr.status === 201) {
+          const Room = JSON.parse(xhr.responseText);
 
+          sessionStorage.setItem('ROOMID', Room.roomId);
+          sessionStorage.setItem('ISHOST', true);
+          location.href = `http://docoex.page/host.html?${sessionStorage.getItem('ROOMID')}`; //방 이동          
+        } else {
+          console.error(xhr.responseText);
+       }
+    }
+  };
+  xhr.open('GET', 'https://docoex.page/createRoom'); // 메소드와 주소 설정
+  xhr.send(); // 요청 전 
+}
+
+async function connect() {
   const opts = {
-    path: '/rooms',
+    path: '/server',
     transports: ['websocket'],
   };
 
   const serverUrl = `https://${hostname}`;
   socket = socketClient(serverUrl, opts);
-  console.log(socket);
   socket.request = socketPromise(socket);
 
   socket.on('connect', async () => {
-    $txtConnection.innerHTML = 'Connected';
-    $fsPublish.disabled = false;
-    $fsSubscribe.disabled = false;
-
-    const data = await socket.request('getRouterRtpCapabilities');
+    const data = await socket.request('getRouterRtpCapabilities', { roomId : sessionStorage.getItem('ROOMID') });
     await loadDevice(data);
+    if (sessionStorage.getItem('ISHOST')) publish()
+    else subscribe_b()
   });
 
-  socket.on('disconnect', () => {
-    $txtConnection.innerHTML = 'Disconnected';
-    $btnConnect.disabled = false;
-    $fsPublish.disabled = true;
-    $fsSubscribe.disabled = true;
-  });
-
-  socket.on('connect_error', (error) => {
-    console.error('could not connect to %s%s (%s)', serverUrl, opts.path, error.message);
-    $txtConnection.innerHTML = 'Connection failed';
-    $btnConnect.disabled = false;
-  });
-
-  socket.on('newProducer', () => {
-    $fsSubscribe.disabled = false;
-  });
+  socket.on('disconnect', () => { });
+  socket.on('connect_error', (error) => { console.error('could not connect to %s%s (%s)', serverUrl, opts.path, error.message); });
+  socket.on('newProducer', () => { });
+  socket.on('newCProducer', () => { });
 }
+
 
 async function loadDevice(routerRtpCapabilities) {
   try {
@@ -83,15 +82,12 @@ async function loadDevice(routerRtpCapabilities) {
   await device.load({ routerRtpCapabilities });
 }
 
-async function publish(e) {
-  const isWebcam = (e.target.id === 'btn_webcam');
-  $txtPublish = isWebcam ? $txtWebcam : $txtScreen;
-
+async function publish() {
   const data = await socket.request('createProducerTransport', {
+    roomId : sessionStorage.getItem('CLIENTID') ? sessionStorage.getItem('CLIENTID') : sessionStorage.getItem('ROOMID'),
     forceTcp: false,
     rtpCapabilities: device.rtpCapabilities,
   });
-  console.log(data);
   if (data.error) {
     console.error(data.error);
     return;
@@ -99,7 +95,9 @@ async function publish(e) {
 
   const transport = device.createSendTransport(data);
   transport.on('connect', async ({ dtlsParameters }, callback, errback) => {
-    socket.request('connectProducerTransport', { dtlsParameters })
+    socket.request('connectProducerTransport', {  
+      roomId : sessionStorage.getItem('CLIENTID') ? sessionStorage.getItem('CLIENTID') : sessionStorage.getItem('ROOMID'),
+      dtlsParameters })
       .then(callback)
       .catch(errback);
   });
@@ -107,6 +105,7 @@ async function publish(e) {
   transport.on('produce', async ({ kind, rtpParameters }, callback, errback) => {
     try {
       const { id } = await socket.request('produce', {
+        roomId : sessionStorage.getItem('CLIENTID') ? sessionStorage.getItem('CLIENTID') : sessionStorage.getItem('ROOMID'),
         transportId: transport.id,
         kind,
         rtpParameters,
@@ -119,24 +118,12 @@ async function publish(e) {
 
   transport.on('connectionstatechange', (state) => {
     switch (state) {
-      case 'connecting':
-        $txtPublish.innerHTML = 'publishing...';
-        $fsPublish.disabled = true;
-        $fsSubscribe.disabled = true;
-      break;
-
       case 'connected':
         document.querySelector('#local_video').srcObject = stream;
-        $txtPublish.innerHTML = 'published';
-        $fsPublish.disabled = true;
-        $fsSubscribe.disabled = false;
       break;
 
       case 'failed':
         transport.close();
-        $txtPublish.innerHTML = 'failed';
-        $fsPublish.disabled = false;
-        $fsSubscribe.disabled = true;
       break;
 
       default: break;
@@ -145,26 +132,24 @@ async function publish(e) {
 
   let stream;
   try {
-    stream = await getUserMedia(transport, isWebcam);
+    stream = await getUserMedia();
     const track = stream.getVideoTracks()[0];
     const params = { track };
-    if ($chkSimulcast.checked) {
-      params.encodings = [
-        { maxBitrate: 100000 },
-        { maxBitrate: 300000 },
-        { maxBitrate: 900000 },
-      ];
-      params.codecOptions = {
-        videoGoogleStartBitrate : 1000
-      };
-    }
+    params.encodings = [
+      { maxBitrate: 100000 },
+      { maxBitrate: 300000 },
+      { maxBitrate: 900000 },
+    ];
+    params.codecOptions = {
+      videoGoogleStartBitrate : 1000
+    };
     producer = await transport.produce(params);
   } catch (err) {
-    $txtPublish.innerHTML = 'failed';
+    console.log(err)
   }
 }
 
-async function getUserMedia(transport, isWebcam) {
+async function getUserMedia() {
   if (!device.canProduce('video')) {
     console.error('cannot produce video');
     return;
@@ -172,9 +157,7 @@ async function getUserMedia(transport, isWebcam) {
 
   let stream;
   try {
-    stream = isWebcam ?
-      await navigator.mediaDevices.getUserMedia({ video: true }) :
-      await navigator.mediaDevices.getDisplayMedia({ video: true });
+    stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true })
   } catch (err) {
     console.error('getUserMedia() failed:', err.message);
     throw err;
@@ -182,10 +165,36 @@ async function getUserMedia(transport, isWebcam) {
   return stream;
 }
 
+function subscribe_b() {
+  if (!sessionStorage.getItem('CLIENTID')) {
+    const xhr = new XMLHttpRequest();
+      xhr.onreadystatechange = function() { // 요청에 대한 콜백
+      if (xhr.readyState === xhr.DONE) { // 요청이 완료되면
+      if (xhr.status === 200 || xhr.status === 201) {
+        const data = JSON.parse(xhr.responseText);
+        if (data.exists) {
+          sessionStorage.setItem('CLIENTID', data.clientId);
+          subscribe();
+        }
+      } else {
+        console.error(xhr.responseText);
+      }
+    }
+    };
+    xhr.open('GET', 'https://docoex.page/roomExists?roomId='+sessionStorage.getItem('ROOMID')); // 메소드와 주소 설정
+    xhr.send(); // 요청 전송 
+  } else {
+    subscribe();
+  }
+}
+
 async function subscribe() {
   const data = await socket.request('createConsumerTransport', {
+    roomId : sessionStorage.getItem('ROOMID'),
+    cId : sessionStorage.getItem('CLIENTID'),
     forceTcp: false,
   });
+
   if (data.error) {
     console.error(data.error);
     return;
@@ -194,6 +203,8 @@ async function subscribe() {
   const transport = device.createRecvTransport(data);
   transport.on('connect', ({ dtlsParameters }, callback, errback) => {
     socket.request('connectConsumerTransport', {
+      roomId : sessionStorage.getItem('ROOMID'),
+      cId : sessionStorage.getItem('CLIENTID'),
       transportId: transport.id,
       dtlsParameters
     })
@@ -203,22 +214,13 @@ async function subscribe() {
 
   transport.on('connectionstatechange', async (state) => {
     switch (state) {
-      case 'connecting':
-        $txtSubscription.innerHTML = 'subscribing...';
-        $fsSubscribe.disabled = true;
-        break;
-
       case 'connected':
         document.querySelector('#remote_video').srcObject = await stream;
         await socket.request('resume');
-        $txtSubscription.innerHTML = 'subscribed';
-        $fsSubscribe.disabled = true;
         break;
 
       case 'failed':
         transport.close();
-        $txtSubscription.innerHTML = 'failed';
-        $fsSubscribe.disabled = false;
         break;
 
       default: break;
@@ -230,7 +232,7 @@ async function subscribe() {
 
 async function consume(transport) {
   const { rtpCapabilities } = device;
-  const data = await socket.request('consume', { rtpCapabilities });
+  const data = await socket.request('consume', { roomId : sessionStorage.getItem('ROOMID'), cId : sessionStorage.getItem('CLIENTID'), rtpCapabilities });
   const {
     producerId,
     id,
@@ -249,4 +251,93 @@ async function consume(transport) {
   const stream = new MediaStream();
   stream.addTrack(consumer.track);
   return stream;
+}
+
+async function subscribeh(cid, cnt) {
+  const data = await socket.request('createConsumerTransport', {
+    roomId : cid,
+    cId : sessionStorage.getItem('ROOMID'),
+    forceTcp: false,
+  });
+
+  if (data.error) {
+    console.error(data.error);
+    return;
+  }
+
+  const transport = device.createRecvTransport(data);
+  transport.on('connect', ({ dtlsParameters }, callback, errback) => {
+    socket.request('connectConsumerTransport', {
+      roomId : cid,
+      cId : sessionStorage.getItem('ROOMID'),
+      transportId: transport.id,
+      dtlsParameters
+    })
+      .then(callback)
+      .catch(errback);
+  });
+
+  transport.on('connectionstatechange', async (state) => {
+    switch (state) {
+      case 'connected':
+        document.getElementById('remote_video_' + cnt).srcObject = await streams[cid];
+        await socket.request('resume');
+        break;
+
+      case 'failed':
+        transport.close();
+        break;
+
+      default: break;
+    }
+  });
+
+  streams[cid] = consumeh(cid, transport);
+}
+
+
+async function consumeh(cid, transport) {
+  const { rtpCapabilities } = device;
+  const data = await socket.request('consume', { roomId : cid, cId : sessionStorage.getItem('ROOMID'), rtpCapabilities });
+  const {
+    producerId,
+    id,
+    kind,
+    rtpParameters,
+  } = data;
+
+  let codecOptions = {};
+  const consumer = await transport.consume({
+    id,
+    producerId,
+    kind,
+    rtpParameters,
+    codecOptions,
+  });
+  const stream = new MediaStream();
+  stream.addTrack(consumer.track);
+  return stream;
+}
+
+async function addConsumer() {
+  const xhr = new XMLHttpRequest();
+  xhr.onreadystatechange = function() { // 요청에 대한 콜백
+      if (xhr.readyState === xhr.DONE) { // 요청이 완료되면
+        if (xhr.status === 200 || xhr.status === 201) {
+          const Room = JSON.parse(xhr.responseText);
+          for (r in Room) {
+            if (Room[r] === sessionStorage.getItem('ROOMID')) continue
+            if (streams[Room[r]]) continue
+
+            subscribeh(Room[r], (r - 1))
+            console.log(r - 1)
+            break
+          }
+        } else {
+          console.error(xhr.responseText);
+       }
+    }
+  };
+  xhr.open('GET', 'https://docoex.page/roomClients?roomId='+sessionStorage.getItem('ROOMID')); // 메소드와 주소 설정
+  xhr.send(); // 요청 전 
 }

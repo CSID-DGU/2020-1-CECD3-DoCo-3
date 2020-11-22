@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Client</title>
+    </head>
+    <style>
+        fieldset {
+            min-height: 100%;
+            height: 600px;
+            border: 1px solid silver;
+        }
+    </style>
+    <body onload="init();">
+        
+        <table style="position: fixed; bottom:10%">
+            <tr>
+              <td>
+                <fieldset id="Host" style="width:1050px;">
+                    <legend>Host</legend>
+                    <button id="btn_subscribe" style="float: right; margin-bottom: 15px;">영상보기</button>
+                    <video id="remote_video" style="width: 1050px; height: 500px;" controls autoplay playsinline></video>
+                </fieldset>  
+            </td>
+              <td style="vertical-align: top;">
+                <fieldset id="Client" style="width:300px; height: 250px;">
+                    <legend>My</legend>
+                    <button id="btn_share" style="float: right; margin-bottom: 10px;">송출하기</button>
+                    <video id="local_video" style="width: 300px; height: 200px;" controls autoplay playsinline></video>
+                </fieldset>  
+              </td>
+            </tr>
+          </table>
+
+    </body>
+    <script type="text/javascript" src="app-bundle.js"></script>
+    <script>
+        console.log(location.href.split('?')[1])
+        sessionStorage.setItem('ROOMID', location.href.split('?')[1])
+        
+        function init(){
+        const xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function() { // 요청에 대한 콜백
+                if (xhr.readyState === xhr.DONE) { // 요청이 완료되면
+                    console.log('comp');
+                }
+            };
+            xhr.open('GET', 'https://docoex.page/roomExists?roomId='+sessionStorage.getItem("ROOMID")); // 메소드와 주소 설정
+            xhr.send();
+        }
+
+    </script>
+
+</html>
