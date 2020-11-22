@@ -52,7 +52,6 @@ async function runExpressApp() {
     rooms[mediasoupRouter.id] = new Room(mediasoupRouter.id, mediasoupRouter);
     rooms[mediasoupRouter.id].isOfficial = false
     rooms[roomId].consumerRooms[mediasoupRouter.id] = mediasoupRouter.id;
-    console.log(mediasoupRouter.id)
     res.json({ exists: roomId in rooms, clientId: mediasoupRouter.id });
   });
 
@@ -224,7 +223,6 @@ async function createWebRtcTransport(roomId) {
     initialAvailableOutgoingBitrate
   } = config.mediasoup.webRtcTransport;
 
-  console.log(roomId)
   const transport = await rooms[roomId].hostRouterObj.createWebRtcTransport({
     listenIps: config.mediasoup.webRtcTransport.listenIps,
     enableUdp: true,

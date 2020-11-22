@@ -271,8 +271,8 @@ async function subscribeh(cid, cnt) {
   const transport = device.createRecvTransport(data);
   transport.on('connect', ({ dtlsParameters }, callback, errback) => {
     socket.request('connectConsumerTransport', {
-      roomId : sessionStorage.getItem('ROOMID'),
-      cId : cid,
+      roomId : cid,
+      cId : sessionStorage.getItem('ROOMID'),
       transportId: transport.id,
       dtlsParameters
     })
