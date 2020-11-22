@@ -259,7 +259,7 @@ async function consume(transport) {
 async function subscribeh(cid, cnt) {
   const data = await socket.request('createConsumerTransport', {
     roomId : cid,
-    cId : cid,
+    cId : sessionStorage.getItem('ROOMID'),
     forceTcp: false,
   });
 
