@@ -280,9 +280,7 @@ async function subscribeh(cid, cnt) {
   transport.on('connectionstatechange', async (state) => {
     switch (state) {
       case 'connected':
-        const s = document.getElementById('remote_video_' + cnt)
-        s.srcObject = await streams[cid];
-        console.log('STREAM DATAS : : : :' + await streams[cid])
+        document.getElementById('remote_video_' + cnt).srcObject = await streams[cid];
         await socket.request('resume');
         break;
 
@@ -329,10 +327,10 @@ async function addConsumer() {
           const Room = JSON.parse(xhr.responseText);
           for (r in Room) {
             if (Room[r] === sessionStorage.getItem('ROOMID')) continue
-            console.log(streams[Room[r]])
             if (streams[Room[r]]) continue
 
             subscribeh(Room[r], (r - 1))
+            console.log(r - 1)
             break
           }
         } else {
