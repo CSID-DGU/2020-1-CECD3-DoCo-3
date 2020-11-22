@@ -50,7 +50,7 @@ async function runExpressApp() {
     const mediasoupRouter = await worker.createRouter({ mediaCodecs });
 
     rooms[mediasoupRouter.id] = new Room(mediasoupRouter.id, mediasoupRouter);
-    //rooms[mediasoupRouter.id].isOfficial = false
+    rooms[mediasoupRouter.id].isOfficial = false
     rooms[roomId].consumerRooms[mediasoupRouter.id] = mediasoupRouter.id;
     res.json({ exists: roomId in rooms, clientId: mediasoupRouter.id });
   });

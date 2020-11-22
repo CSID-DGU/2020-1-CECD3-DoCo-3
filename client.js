@@ -96,7 +96,10 @@ async function publish() {
 
   const transport = device.createSendTransport(data);
   transport.on('connect', async ({ dtlsParameters }, callback, errback) => {
-    socket.request('connectProducerTransport', { roomId : sessionStorage.getItem('ROOMID'), cId : sessionStorage.getItem('ROOMID'), dtlsParameters })
+    socket.request('connectProducerTransport', {  
+      roomId : sessionStorage.getItem('CLIENTID') ? sessionStorage.getItem('CLIENTID') : sessionStorage.getItem('ROOMID'),
+      cId : sessionStorage.getItem('CLIENTID') ? sessionStorage.getItem('CLIENTID') : sessionStorage.getItem('ROOMID'),
+      dtlsParameters })
       .then(callback)
       .catch(errback);
   });
@@ -104,8 +107,8 @@ async function publish() {
   transport.on('produce', async ({ kind, rtpParameters }, callback, errback) => {
     try {
       const { id } = await socket.request('produce', {
-        roomId : sessionStorage.getItem('ROOMID'),
-        cId : sessionStorage.getItem('ROOMID'),
+        roomId : sessionStorage.getItem('CLIENTID') ? sessionStorage.getItem('CLIENTID') : sessionStorage.getItem('ROOMID'),
+        cId : sessionStorage.getItem('CLIENTID') ? sessionStorage.getItem('CLIENTID') : sessionStorage.getItem('ROOMID'),
         transportId: transport.id,
         kind,
         rtpParameters,
