@@ -210,10 +210,6 @@ async function runSocketServer() {
       callback(await createConsumer(rooms[data.roomId].producer, data.rtpCapabilities, data.roomId, data.cId));
     });
 
-    socket.on('consumehost', async (data, callback) => {
-      callback(await createConsumer(rooms[data.roomId].consumers[data.cId], data.rtpCapabilities, data.roomId, data.cId));
-    });
-
     socket.on('resume', async (data, callback) => {
       await consumer.resume();
       callback();

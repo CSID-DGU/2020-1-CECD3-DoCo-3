@@ -300,7 +300,7 @@ async function subscribeh(cid, cnt) {
 
 async function consumeh(cid, transport) {
   const { rtpCapabilities } = device;
-  const data = await socket.request('consumehost', { roomId : sessionStorage.getItem('ROOMID'), cId : cid, rtpCapabilities });
+  const data = await socket.request('consume', { roomId : cid, cId : cid, rtpCapabilities });
   const {
     producerId,
     id,
