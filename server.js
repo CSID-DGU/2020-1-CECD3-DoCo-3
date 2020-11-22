@@ -68,7 +68,7 @@ async function runExpressApp() {
   expressApp.get("/roomList", async (req, res) => {
     var roomList = [];
     for(key in rooms){
-      if(ptprt[key].isOfficial) roomList.push(rooms[key].roomId);
+      if(rooms[key].isOfficial) roomList.push(rooms[key].roomId);
     }
 
     res.json(roomList);
