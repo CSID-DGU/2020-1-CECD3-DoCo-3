@@ -393,7 +393,7 @@ async function consumeh(cid, transport) {
 }
 
 async function guestPublish() {
-  const data = await socket.request('createProducerTransport', {
+  const data = await socket.request('createConsumeToProducerTransport', {
     roomId : sessionStorage.getItem('ROOMID'),
     cId : sessionStorage.getItem('CLIENTID'),
     forceTcp: false,
