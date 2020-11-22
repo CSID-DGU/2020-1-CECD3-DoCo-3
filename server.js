@@ -160,7 +160,24 @@ async function runSocketServer() {
         callback({ error: err.message });
       }
     });
+    
+    
 
+    socket.on('createConsumeToProducerTransport', async (data, callback) => {
+      try {
+        const { transport, params } = await createWebRtcTransport(data.roomId, data.cId);
+        rooms[data.roomId].producerTransport[data.cId] = transport;
+        callback(params);
+      } catch (err) {
+        console.error(err);
+        callback({ error: err.message });
+      }
+    });
+
+    socket.on('connectConsumerTransport', async (data, callback) => {
+      await rooms[data.roomId].consumerTransport[data.cId].connect({ dtlsParameters: data.dtlsParameters });
+      callback();
+    });
 
     socket.on('createConsumerTransport', async (data, callback) => {
       try {
