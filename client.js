@@ -21,7 +21,7 @@ if ($btnCreate) $btnCreate.addEventListener('click', create);
 if ($btnWebcam) $btnWebcam.addEventListener('click', connect);
 if ($btnSubscribe) $btnSubscribe.addEventListener('click', connect);
 if ($btnShare) $btnShare.addEventListener('click', publish);
-if ($btn_refresh) $btn_refresh.addEventListener('click', refreshConsumer);
+if ($btn_refresh) $btn_refresh.addEventListener('click', addConsumer);
 
 if (typeof navigator.mediaDevices.getDisplayMedia === 'undefined') {
   $txtScreen.innerHTML = 'Not supported';
@@ -321,7 +321,7 @@ async function consumeh(cid, transport) {
   return stream;
 }
 
-async function refreshConsumer() {
+async function addConsumer() {
   const xhr = new XMLHttpRequest();
   xhr.onreadystatechange = function() { // 요청에 대한 콜백
       if (xhr.readyState === xhr.DONE) { // 요청이 완료되면
@@ -329,9 +329,11 @@ async function refreshConsumer() {
           const Room = JSON.parse(xhr.responseText);
           for (r in Room) {
             if (Room[r] === sessionStorage.getItem('ROOMID')) continue
+            console.log(streams[Room[r]])
+            if (streams[Room[r]]) continue
 
             subscribeh(Room[r], (r - 1))
-            console.log(Room[r])
+            break
           }
         } else {
           console.error(xhr.responseText);
