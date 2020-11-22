@@ -6,8 +6,10 @@ class Room {
         this.producer;
         this.producerTransport = {};
         this.consumerTransport = {};
+        this.consumerRooms = {}
         this.consumers = {};
         this.total = 0;
+        this.isOfficial = true;
     }
 }
 
