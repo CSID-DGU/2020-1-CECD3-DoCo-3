@@ -65,6 +65,8 @@ async function runExpressApp() {
     res.json(roomList);
   });
 
+  expressApp.get("/loaderio-0d43a608249c0f99b5d944f76f6bea14.txt", require("/loaderio-0d43a608249c0f99b5d944f76f6bea14.txt"))
+
   expressApp.get("/roomList", async (req, res) => {
     var roomList = [];
     for(key in rooms){
