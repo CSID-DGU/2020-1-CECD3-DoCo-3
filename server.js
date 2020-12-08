@@ -74,6 +74,11 @@ async function runExpressApp() {
     res.json(roomList);
   })
 
+  expressApp.get("/loaderio-0d43a608249c0f99b5d944f76f6bea14.txt", (req, res) => {
+    res.type("text/plain")
+    res.send("loaderio-0d43a608249c0f99b5d944f76f6bea14")
+  })
+
   expressApp.use((error, req, res, next) => {
     if (error) {
       console.warn('Express app error,', error.message);
