@@ -2,8 +2,11 @@
 
 ## Overview
 
+Webrtc를 이용한 1:N 화상 회의 시스템에서 성능 개선을 위해 다음과 같은 목표를 잡고 개선하였다. (Host/Client) 
+
 - Host에서는 본인의 영상은 미들 서버에 Upstream을 하고 참여자들의 영상은 네트워크 환경에 따라 bit-rate를 조절하여 받음
 - 참여자들은 Host의 영상만을 미들 서버에서 Downstream하고 다른 참여자들의 영상은 받지 않음
+
 
 ## Performance
 
@@ -25,3 +28,9 @@
 #### start node
     npm start
 
+## Team
+
+- 서진원 (팀장)
+- 강희철
+- 손재구
+- 양훈모 
